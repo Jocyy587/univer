@@ -1,0 +1,47 @@
+// c:/Users/dell/Desktop/univer/Front/src/app/components/info-modal/info-modal.component.scss
+
+:host {
+  // --- Variables de color (tomadas de la página principal) ---
+  --brand-green: #5a9c00;
+  --brand-header: #1e1a0d;
+  --brand-dark: #000000;
+  --text-light: #f4f4f4;
+
+  // --- Estilos del Header del Modal ---
+  .modal-header {
+    --background: var(--brand-header);
+    --color: var(--text-light);
+    border-bottom: 1px solid var(--brand-green);
+
+    ion-title {
+      color: var(--text-light);
+      font-weight: bold;
+    }
+
+    // Estilo para el botón de cerrar
+    ion-button {
+      --color: var(--brand-green);
+
+      &:hover {
+        --color: var(--text-light);
+      }
+    }
+  }
+
+  // --- Estilos del Contenido del Modal ---
+  .modal-content {
+    --background: var(--brand-dark);
+    --color: var(--text-light);
+
+    h2 {
+      color: var(--brand-green);
+      font-weight: bold;
+    }
+
+    p {
+      color: var(--text-light);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+  }
+}

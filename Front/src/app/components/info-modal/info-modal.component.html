@@ -1,0 +1,21 @@
+<!-- c:/Users/dell/Desktop/univer/Front/src/app/components/info-modal/info-modal.component.html -->
+
+<ion-header>
+  <!-- Aplicamos la clase para el header oscuro -->
+  <ion-toolbar class="modal-header">
+    <ion-title>{{ title }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<!-- Aplicamos la clase para el contenido oscuro y el padding -->
+<ion-content class="modal-content ion-padding">
+  <h2>{{ title }}</h2>
+  <p>
+    Este es un texto genérico de explicación sobre el tema seleccionado. Aquí iría la descripción detallada de la noticia, proyecto o actividad. Por ahora, sirve como un marcador de posición para demostrar la funcionalidad del modal.
+  </p>
+</ion-content>

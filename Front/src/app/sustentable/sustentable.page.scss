@@ -1,0 +1,201 @@
+/* Versión final para STANDALONE. 
+  Todo está envuelto en :host { ... } 
+  para asegurar que se aplique correctamente.
+*/
+
+:host {
+  // --- Variables de color (tomadas de la imagen) ---
+  --brand-green: #5a9c00;   /* El verde específico para títulos y enlaces */
+  --brand-dark: #000000;    /* Fondo negro puro */
+  --brand-header: #1e1a0d;  /* El marrón/oliva oscuro del header */
+  --brand-divider: #8c6d36; /* El color dorado/marrón de las líneas */
+  --text-light: #f4f4f4;
+  --text-muted: #ccc;
+
+  // --- Estilos del Header ---
+  // Hacemos referencia a la clase que pusimos en el HTML
+  .header-dark {
+    --background: var(--brand-header);
+    --color: var(--text-light);
+    border-bottom: 1px solid var(--brand-green);
+  }
+
+  .logo-icon {
+    color: var(--brand-green);
+    font-size: 1.8rem;
+    margin-right: 8px;
+  }
+
+  .header-title {
+    color: var(--text-light);
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+
+  .nav-link {
+    --color: var(--brand-green);
+    text-transform: none;
+    font-weight: 500;
+    
+    &:hover {
+      --color: var(--text-light);
+    }
+  }
+
+  // --- Estilos del Contenido ---
+  /* IMPORTANTE: Así seleccionamos el ion-content 
+    que está DENTRO de este componente.
+  */
+  ion-content.content-dark {
+    --background: var(--brand-dark);
+    --color: var(--text-light);
+  }
+
+  // --- Columna Izquierda ---
+  .video-placeholder {
+    position: relative;
+    width: 100%;
+    cursor: pointer;
+    
+    .main-image {
+      width: 100%;
+      border-radius: 12px;
+      display: block;
+    }
+
+    .play-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 6rem;
+      color: rgba(255, 255, 255, 0.85);
+      transition: all 0.2s ease-in-out;
+    }
+
+    &:hover .play-icon {
+      transform: translate(-50%, -50%) scale(1.1);
+      color: rgba(255, 255, 255, 1);
+    }
+  }
+
+  /* Divisor actualizado con línea y círculo */
+  .divider {
+    display: flex;
+    margin: 2rem 0;
+    width: 100%;
+    align-items: center;
+
+    &::before {
+      content: "";
+      flex-grow: 1;
+      height: 1px;
+      background-color: var(--brand-divider);
+      opacity: 0.8;
+    }
+
+    &::after {
+      content: "";
+      display: block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1px solid var(--brand-divider);
+      background-color: transparent;
+      margin-left: 10px;
+    }
+  }
+
+
+  .title-green {
+    color: var(--brand-green);
+    font-size: 2.2rem; /* Letra más grande para el título */
+    font-weight: bold;
+  }
+
+  .text-light {
+    color: var(--text-light);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  // --- Columna Derecha (Noticias) ---
+  .news-list {
+    background: transparent;
+    padding: 0;
+  }
+
+  .news-card {
+    --background: #1c1c1c; // Un fondo ligeramente más claro para la tarjeta
+    background: #1c1c1c;
+    margin-bottom: 1.5rem;
+    margin-left: 0;
+    align-items: flex-start;
+    position: relative;
+    padding-left: 25px;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 4px;
+      top: 10px;
+      bottom: -1.5rem;
+      width: 1px;
+      background-color: var(--brand-divider);
+      opacity: 0.8;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 5px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1px solid var(--brand-divider);
+      background-color: var(--brand-dark); /* Fondo negro para el círculo */
+      z-index: 1;
+    }
+
+    .news-item {
+      --background: transparent;
+      --padding-start: 0;
+      --inner-padding-end: 0;
+    }
+
+    ion-thumbnail {
+      --size: 90px;
+      --border-radius: 8px;
+      margin-right: 1rem;
+      /* Recortamos solo las miniaturas con la forma de hoja */
+clip-path: path('M 90 0 C 100 15 60 100 10 150 C 1 1 1 200 0 55 C 5 30 30 5 85 0 Z');    }
+
+    ion-label {
+      white-space: normal;
+      padding-left: 10px;
+    }
+
+    h3.title-green {
+      font-size: 1.25rem;
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+    }
+
+    .text-date {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .read-more-button {
+      color: var(--brand-green);
+      font-weight: bold;
+      --padding-start: 0;
+      --padding-end: 0;
+      height: auto;
+      text-transform: none;
+
+    }
+  }
+} // Cierre de :host
