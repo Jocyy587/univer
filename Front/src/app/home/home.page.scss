@@ -42,10 +42,7 @@
     }
   }
 
-  // --- Estilos del Contenido ---
-  /* IMPORTANTE: Así seleccionamos el ion-content 
-    que está DENTRO de este componente.
-  */
+
   ion-content.content-dark {
     --background: var(--brand-dark);
     --color: var(--text-light);
@@ -79,6 +76,15 @@
     }
   }
 
+  .main-title {
+    color: var(--brand-green);
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center; // Centramos el título
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+  }
+
   /* Divisor actualizado con línea y círculo */
   .divider {
     display: flex;
@@ -106,10 +112,52 @@
     }
   }
 
+  // Contenedor para el divisor, para evitar que se corte
+  .divider-container {
+    padding: 0.5rem 0; // Este padding asegura que el círculo no se corte
+    margin: 1.5rem 0;
+  }
+
+  .simple-divider {
+    position: relative;
+    width: 100%;
+    height: 1px; // La altura del propio div será la línea
+    background-color: var(--brand-divider);
+    opacity: 0.8;
+
+    // Ocultamos el extremo derecho de la línea para dar espacio al círculo
+    &::before {
+      content: '';
+      position: absolute;
+      right: -1px; // Posición para ocultar el borde
+      top: -5px;
+      bottom: -5px;
+      width: 6px; // Ancho para tapar el final de la línea
+      background-color: var(--brand-dark); // Mismo color que el fondo
+    }
+
+    // El círculo
+    &::after {
+      content: '';
+      position: absolute;
+      top: -5px; // Centrado verticalmente
+      right: 0;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1px solid var(--brand-divider);
+      background-color: var(--brand-dark); // El fondo tapa el final de la línea
+    }
+  }
 
   .title-green {
     color: var(--brand-green);
     font-weight: bold;
+  }
+
+  .subtitle {
+    text-align: center;
+    margin-top: 2rem;
   }
 
   .text-light {
@@ -122,49 +170,53 @@
   .news-list {
     background: transparent;
     padding: 0;
+    margin-top: 8rem; // Aumentamos el margen para bajar un poco más las tarjetas
   }
 
   .news-card {
-    --background: #1c1c1c; // Un fondo ligeramente más claro para la tarjeta
-    background: #1c1c1c;
+    --background: transparent;
+    background: transparent;
+    margin: 0;
+    padding-bottom: 1.5rem;
     margin-bottom: 1.5rem;
-    margin-left: 0;
-    align-items: flex-start;
-    position: relative;
-    padding-left: 25px;
+    border: none; // Quitamos el borde simple
+    box-shadow: none;
+    position: relative; // Necesario para posicionar la línea
+    cursor: pointer; // Cambia el cursor para indicar que es clicleable
 
-    &::before {
-      content: '';
-      position: absolute;
-      left: 4px;
-      top: 10px;
-      bottom: -1.5rem;
-      width: 1px;
-      background-color: var(--brand-divider);
-      opacity: 0.8;
+    // El área que sí es un enlace
+    .card-link-area {
+      display: flex;
+      align-items: flex-start;
+      width: 100%;
     }
 
-    &::after {
-      content: '';
+    // Contenedor para la fecha y el botón "Leer más"
+    .card-footer {
+      // Lo sacamos del flujo normal para posicionarlo abajo
       position: absolute;
-      left: 0;
-      top: 5px;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      border: 1px solid var(--brand-divider);
-      background-color: var(--brand-dark); /* Fondo negro para el círculo */
-      z-index: 1;
+      bottom: 0;
+      left: 90px; // <-- Ajuste clave: El footer empieza después de la imagen
+      left: 106px; // Ajustamos para el tamaño original de la imagen (90px + 1rem de margen)
+      right: 0;
+      // Estilos que ya tenía
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      // position: relative; // Ya no es necesario
+      padding-bottom: 1rem; // Espacio para que la línea no se pegue al texto
     }
 
     .news-item {
       --background: transparent;
       --padding-start: 0;
       --inner-padding-end: 0;
+      padding-bottom: 4rem; // Dejamos espacio para el footer que está posicionado absolutamente
     }
 
     ion-thumbnail {
-      --size: 90px;
+      --size: 70px; // Hacemos la imagen un poco más pequeña
+      --size: 90px; // Devolvemos al tamaño original para que el clip-path funcione
       --border-radius: 8px;
       margin-right: 1rem;
       /* Recortamos solo las miniaturas con la forma de hoja */
@@ -172,19 +224,46 @@ clip-path: path('M 90 0 C 100 15 60 100 10 150 C 1 1 1 200 0 55 C 5 30 30 5 85 0
 
     ion-label {
       white-space: normal;
-      padding-left: 10px;
+      padding-left: 0; // Eliminamos el padding para que la línea empiece más a la izquierda
+      width: 100%; // Hacemos que la etiqueta ocupe todo el ancho para centrar el título
+    }
+
+    // Línea inferior (ahora en el footer)
+    .card-footer::after {
+      content: '';
+      position: absolute;
+      bottom: 5px; // Un poco hacia arriba
+      left: 5px; // Hacemos que la línea empiece después del borde del círculo
+      right: 0; // La línea se extiende hasta el final
+      height: 1px;
+      background-color: var(--brand-green);
+    }
+
+    // Círculo (ahora en el footer)
+    .card-footer::before {
+      content: '';
+      position: absolute;
+      bottom: 0; // Alineado con la línea
+      left: 0;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      border: 1px solid var(--brand-green);
+      background-color: var(--brand-dark);
+      z-index: 1;
     }
 
     h3.title-green {
-      font-size: 1.25rem;
-      margin-top: 0;
-      margin-bottom: 0.5rem;
+      font-size: 1rem; // Hacemos el título aún más pequeño
+      font-size: 1.1rem; // Reajustamos el tamaño del título
+      text-align: center; // Centramos el título
+      margin: 0 0 0.5rem 0;
     }
 
     .text-date {
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      margin-bottom: 0.5rem;
+      color: var(--brand-green); // Cambiamos el color a verde
+      font-size: 0.7rem; // Hacemos la fecha un poco más pequeña
+      font-size: 0.8rem; // Reajustamos el tamaño de la fecha
     }
 
     .read-more-button {

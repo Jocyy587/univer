@@ -32,69 +32,91 @@
     <ion-row class="ion-justify-content-center">
 
       <!-- Columna Izquierda (Video/Imagen principal) -->
-      <ion-col size-lg="7" size-md="7" size-xs="12" class="ion-padding">
+      <ion-col size-lg="6" size-md="6" size-xs="12" class="ion-padding">
         
+        <h1 class="main-title">UTCJ-CA-19</h1>
+        <div class="divider-container">
+          <div class="simple-divider"></div>
+        </div>
+
         <!-- Contenedor de la imagen principal con ícono de play -->
         <div class="video-placeholder">
           <img src="https://placehold.co/600x400/2c3e50/ffffff?text=Video+Placeholder" alt="Video principal" class="main-image" />
           <ion-icon name="play-circle-outline" class="play-icon"></ion-icon>
         </div>
 
-        <hr class="divider" />
-
-        <h2 class="title-green">LIIADT-</h2>
+        <div class="divider-container">
+          <div class="simple-divider"></div>
+        </div>
+        
+        <h2 class="title-green subtitle">LIIADT</h2>
         <p class="text-light">
           Gestión y aplicación de las tecnologías de la información al sector educativo y productivo, implementación de las TIC's en los entornos virtuales así como administración de proyectos de TI y sistemas basados en inteligencia artificial.
         </p>
-
-        <hr class="divider" />
-
       </ion-col>
 
       <!-- Columna Derecha (Lista de noticias) -->
-      <ion-col size-lg="4" size-md="5" size-xs="12" class="ion-padding">
+      <ion-col size-lg="5" size-md="6" size-xs="12" class="ion-padding">
         
         <div class="news-list">
 
           <!-- Item 1 -->
           <ion-card class="news-card">
             <ion-item lines="none" class="news-item">
-              <ion-thumbnail slot="start">
-                <img src="/assets/img/img1.png" alt="Noticia 1" />
-              </ion-thumbnail>
-              <ion-label>
-                <h3 class="title-green">UTCJ Sustentable</h3>
+              <!-- Contenedor que redirige -->
+              <div class="card-link-area" [routerLink]="['/pueba']">
+                <ion-thumbnail slot="start">
+                  <img src="/assets/img/img1.png" alt="Noticia 1" />
+                </ion-thumbnail>
+                <ion-label>
+                  <h3 class="title-green">UTCJ Sustentable</h3>
+                </ion-label>
+              </div>
+              <!-- Footer fuera del área de redirección -->
+              <div class="card-footer" slot="end">
                 <p class="text-date">01-02-2003</p>
                 <ion-button fill="clear" size="small" class="read-more-button" (click)="openModal('UTCJ Sustentable')">Leer más &gt;</ion-button>
-              </ion-label>
+              </div>
             </ion-item>
           </ion-card>
 
           <!-- Item 2 -->
           <ion-card class="news-card">
             <ion-item lines="none" class="news-item">
-              <ion-thumbnail slot="start">
-                <img src="/assets/img/img1.png" alt="Noticia 2" />
-              </ion-thumbnail>
-              <ion-label>
-                <h3 class="title-green">Proyectos del cuerpo Académico</h3>
+              <!-- Contenedor que redirige -->
+              <div class="card-link-area" [routerLink]="['/pueba']">
+                <ion-thumbnail slot="start">
+                  <img src="/assets/img/img1.png" alt="Noticia 2" />
+                </ion-thumbnail>
+                <ion-label>
+                  <h3 class="title-green">Proyectos del cuerpo Académico</h3>
+                </ion-label>
+              </div>
+              <!-- Footer fuera del área de redirección -->
+              <div class="card-footer" slot="end">
                 <p class="text-date">01-02-2003</p>
                 <ion-button fill="clear" size="small" class="read-more-button" (click)="openModal('Proyectos del cuerpo Académico')">Leer más &gt;</ion-button>
-              </ion-label>
+              </div>
             </ion-item>
           </ion-card>
 
           <!-- Item 3 -->
           <ion-card class="news-card">
             <ion-item lines="none" class="news-item">
-              <ion-thumbnail slot="start">
-                <img src="/assets/img/img1.png" alt="Noticia 3" />
-              </ion-thumbnail>
-              <ion-label>
-                <h3 class="title-green">Cuerpo Académico</h3>
+              <!-- Contenedor que redirige -->
+              <div class="card-link-area" [routerLink]="['/pueba']">
+                <ion-thumbnail slot="start">
+                  <img src="/assets/img/img1.png" alt="Noticia 3" />
+                </ion-thumbnail>
+                <ion-label>
+                  <h3 class="title-green">Cuerpo Académico</h3>
+                </ion-label>
+              </div>
+              <!-- Footer fuera del área de redirección -->
+              <div class="card-footer" slot="end">
                 <p class="text-date">01-02-2003</p>
                 <ion-button fill="clear" size="small" class="read-more-button" (click)="openModal('Cuerpo Académico')">Leer más &gt;</ion-button>
-              </ion-label>
+              </div>
             </ion-item>
           </ion-card>
         </div>
