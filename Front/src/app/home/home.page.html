@@ -41,7 +41,7 @@
 
         <!-- Contenedor de la imagen principal con ícono de play -->
         <div class="video-placeholder">
-          <img src="https://placehold.co/600x400/2c3e50/ffffff?text=Video+Placeholder" alt="Video principal" class="main-image" />
+          <img src="https://placehold.co/100x100/2c3e50/ffffff?text=Video+Placeholder" alt="Video principal" class="main-image" />
           <ion-icon name="play-circle-outline" class="play-icon"></ion-icon>
         </div>
 
@@ -53,10 +53,13 @@
         <p class="text-light">
           Gestión y aplicación de las tecnologías de la información al sector educativo y productivo, implementación de las TIC's en los entornos virtuales así como administración de proyectos de TI y sistemas basados en inteligencia artificial.
         </p>
+        <div class="divider-container">
+          <div class="simple-divider"></div>
+        </div>
       </ion-col>
 
       <!-- Columna Derecha (Lista de noticias) -->
-      <ion-col size-lg="5" size-md="6" size-xs="12" class="ion-padding">
+      <ion-col size-lg="4" size-md="4" size-xs="12" class="ion-padding news-column">
         
         <div class="news-list">
 
@@ -124,4 +127,383 @@
 
     </ion-row>
   </ion-grid>
+
+  <section class="members-section">
+    <div class="line-decorator left-1"></div>
+    <div class="line-decorator right-1"></div>
+
+    <h2 class="members-heading">Integrantes del<br/>grupo académico</h2>
+
+    <div class="line-decorator left-2"></div>
+    <div class="line-decorator right-2"></div>
+  </section>
+
+  <h3 class="titulares-heading">Titulares</h3>
+
+  <!-- Sección de Integrantes con Tarjetas -->
+  <ion-grid class="team-grid">
+    <ion-row class="ion-justify-content-center ion-align-items-center">
+      <!-- Integrante 1 -->
+      <ion-col size-lg="4" size-md="6" size-xs="12">
+        <div class="member-card" (click)="toggleMemberCard($event)">
+          <div class="member-image-container">
+            <div class="line-connector top">
+              <span></span>
+            </div>
+            <img src="https://placehold.co/150x150/e8e8e8/2c3e50?text=Integrante" alt="Foto del integrante" class="member-image" />
+            <div class="line-connector bottom">
+              <span></span>
+            </div>
+            <ion-icon name="leaf-outline" class="leaf-icon bottom-left"></ion-icon>
+            <ion-icon name="leaf-outline" class="leaf-icon bottom-right"></ion-icon>
+          </div>
+          <h3 class="member-name">Nombre del Integrante</h3>
+          <p class="member-role">Rol en el Grupo</p>
+          <div class="member-details">
+            <div class="projects-title-container">
+              <div class="projects-line left"></div>
+              <div class="title-wrapper">
+                <div class="orange-divider top"></div>
+                <h4 class="projects-title">Proyectos</h4>
+                <div class="orange-divider bottom"></div>
+              </div>
+              <div class="projects-line right"></div>
+            </div>
+            <div class="project-list">
+              <a href="https://github.com/ionic-team/ionic-framework" target="_blank" rel="noopener noreferrer" class="project-item">Proyecto de Investigación 1</a>
+              <a href="https://angular.io/" target="_blank" rel="noopener noreferrer" class="project-item">Colaboración Académica 2</a>
+              <a href="https://stenciljs.com/" target="_blank" rel="noopener noreferrer" class="project-item">Desarrollo de Software 3</a>
+            </div>
+          </div>
+        </div>
+      </ion-col>
+
+      <!-- Integrante 2 -->
+      <ion-col size-lg="4" size-md="6" size-xs="12">
+        <div class="member-card" (click)="toggleMemberCard($event)">
+          <div class="member-image-container">
+            <div class="line-connector top">
+              <span></span>
+            </div>
+            <img src="https://placehold.co/150x150/e8e8e8/2c3e50?text=Integrante" alt="Foto del integrante" class="member-image" />
+            <div class="line-connector bottom">
+              <span></span>
+            </div>
+            <ion-icon name="leaf-outline" class="leaf-icon bottom-left"></ion-icon>
+            <ion-icon name="leaf-outline" class="leaf-icon bottom-right"></ion-icon>
+          </div>
+          <h3 class="member-name">Nombre del Integrante</h3>
+          <p class="member-role">Rol en el Grupo</p>
+          <div class="member-details">
+            <div class="projects-title-container">
+              <div class="projects-line left"></div>
+              <div class="title-wrapper">
+                <div class="orange-divider top"></div>
+                <h4 class="projects-title">Proyectos</h4>
+                <div class="orange-divider bottom"></div>
+              </div>
+              <div class="projects-line right"></div>
+            </div>
+            <div class="project-list">
+              <a href="https://github.com/ionic-team/ionic-framework" target="_blank" rel="noopener noreferrer" class="project-item">Proyecto de Investigación 1</a>
+              <a href="https://angular.io/" target="_blank" rel="noopener noreferrer" class="project-item">Colaboración Académica 2</a>
+              <a href="https://stenciljs.com/" target="_blank" rel="noopener noreferrer" class="project-item">Desarrollo de Software 3</a>
+            </div>
+          </div>
+        </div>
+      </ion-col>
+
+      <!-- Integrante 3 -->
+      <ion-col size-lg="4" size-md="6" size-xs="12">
+        <div class="member-card" (click)="toggleMemberCard($event)">
+          <div class="member-image-container">
+            <div class="line-connector top">
+              <span></span>
+            </div>
+            <img src="https://placehold.co/150x150/e8e8e8/2c3e50?text=Integrante" alt="Foto del integrante" class="member-image" />
+            <div class="line-connector bottom">
+              <span></span>
+            </div>
+            <ion-icon name="leaf-outline" class="leaf-icon bottom-left"></ion-icon>
+            <ion-icon name="leaf-outline" class="leaf-icon bottom-right"></ion-icon>
+          </div>
+          <h3 class="member-name">Nombre del Integrante</h3>
+          <p class="member-role">Rol en el Grupo</p>
+          <div class="member-details">
+            <div class="projects-title-container">
+              <div class="projects-line left"></div>
+              <div class="title-wrapper">
+                <div class="orange-divider top"></div>
+                <h4 class="projects-title">Proyectos</h4>
+                <div class="orange-divider bottom"></div>
+              </div>
+              <div class="projects-line right"></div>
+            </div>
+            <div class="project-list">
+              <a href="https://github.com/ionic-team/ionic-framework" target="_blank" rel="noopener noreferrer" class="project-item">Proyecto de Investigación 1</a>
+              <a href="https://angular.io/" target="_blank" rel="noopener noreferrer" class="project-item">Colaboración Académica 2</a>
+              <a href="https://stenciljs.com/" target="_blank" rel="noopener noreferrer" class="project-item">Desarrollo de Software 3</a>
+            </div>
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- Separador de Módulo con 3 Líneas -->
+  <section class="module-separator-right">
+    <div class="separator-line"></div>
+    <div class="separator-line"></div>
+    <div class="separator-line"></div>
+  </section>
+
+  <h3 class="titulares-heading">Colaboradores</h3>
+
+  <!-- Sección de Colaboradores con Tarjetas -->
+  <ion-grid class="team-grid collaborators-grid">
+    <ion-row class="ion-justify-content-center ion-align-items-center">
+      <!-- Colaborador 1 -->
+      <ion-col size-lg="4" size-md="6" size-xs="12">
+        <div class="member-card" (click)="toggleMemberCard($event)">
+          <div class="member-image-container">
+            <img src="https://placehold.co/150x150/e8e8e8/2c3e50?text=Colaborador" alt="Foto del integrante" class="member-image" />
+          </div>
+          <h3 class="member-name">Nombre del Colaborador</h3>
+          <p class="member-role">Rol en el Grupo</p>
+          <div class="member-details">
+            <div class="projects-title-container">
+              <div class="projects-line left"></div>
+              <div class="title-wrapper">
+                <div class="orange-divider top"></div>
+                <h4 class="projects-title">Proyectos</h4>
+                <div class="orange-divider bottom"></div>
+              </div>
+              <div class="projects-line right"></div>
+            </div>
+            <div class="project-list">
+              <a href="https://github.com/ionic-team/ionic-framework" target="_blank" rel="noopener noreferrer" class="project-item">Proyecto de Investigación 1</a>
+              <a href="https://angular.io/" target="_blank" rel="noopener noreferrer" class="project-item">Colaboración Académica 2</a>
+              <a href="https://stenciljs.com/" target="_blank" rel="noopener noreferrer" class="project-item">Desarrollo de Software 3</a>
+            </div>
+          </div>
+        </div>
+      </ion-col>
+
+      <!-- Colaborador 2 -->
+      <ion-col size-lg="4" size-md="6" size-xs="12">
+        <div class="member-card" (click)="toggleMemberCard($event)">
+          <div class="member-image-container">
+            <img src="https://placehold.co/150x150/e8e8e8/2c3e50?text=Colaborador" alt="Foto del integrante" class="member-image" />
+          </div>
+          <h3 class="member-name">Nombre del Colaborador</h3>
+          <p class="member-role">Rol en el Grupo</p>
+          <div class="member-details">
+            <div class="projects-title-container">
+              <div class="projects-line left"></div>
+              <div class="title-wrapper">
+                <div class="orange-divider top"></div>
+                <h4 class="projects-title">Proyectos</h4>
+                <div class="orange-divider bottom"></div>
+              </div>
+              <div class="projects-line right"></div>
+            </div>
+            <div class="project-list">
+              <a href="https://github.com/ionic-team/ionic-framework" target="_blank" rel="noopener noreferrer" class="project-item">Proyecto de Investigación 1</a>
+              <a href="https://angular.io/" target="_blank" rel="noopener noreferrer" class="project-item">Colaboración Académica 2</a>
+              <a href="https://stenciljs.com/" target="_blank" rel="noopener noreferrer" class="project-item">Desarrollo de Software 3</a>
+            </div>
+          </div>
+        </div>
+      </ion-col>
+
+      <!-- Colaborador 3 -->
+      <ion-col size-lg="4" size-md="6" size-xs="12">
+        <div class="member-card" (click)="toggleMemberCard($event)">
+          <div class="member-image-container">
+            <img src="https://placehold.co/150x150/e8e8e8/2c3e50?text=Colaborador" alt="Foto del integrante" class="member-image" />
+          </div>
+          <h3 class="member-name">Nombre del Colaborador</h3>
+          <p class="member-role">Rol en el Grupo</p>
+          <div class="member-details">
+            <div class="projects-title-container">
+              <div class="projects-line left"></div>
+              <div class="title-wrapper">
+                <div class="orange-divider top"></div>
+                <h4 class="projects-title">Proyectos</h4>
+                <div class="orange-divider bottom"></div>
+              </div>
+              <div class="projects-line right"></div>
+            </div>
+            <div class="project-list">
+              <a href="https://github.com/ionic-team/ionic-framework" target="_blank" rel="noopener noreferrer" class="project-item">Proyecto de Investigación 1</a>
+              <a href="https://angular.io/" target="_blank" rel="noopener noreferrer" class="project-item">Colaboración Académica 2</a>
+              <a href="https://stenciljs.com/" target="_blank" rel="noopener noreferrer" class="project-item">Desarrollo de Software 3</a>
+            </div>
+          </div>
+        </div>
+      </ion-col>
+
+      <!-- Colaborador 4 -->
+      <ion-col size-lg="4" size-md="6" size-xs="12">
+        <div class="member-card" (click)="toggleMemberCard($event)">
+          <div class="member-image-container">
+            <img src="https://placehold.co/150x150/e8e8e8/2c3e50?text=Colaborador" alt="Foto del integrante" class="member-image" />
+          </div>
+          <h3 class="member-name">Nombre del Colaborador</h3>
+          <p class="member-role">Rol en el Grupo</p>
+          <div class="member-details">
+            <div class="projects-title-container">
+              <div class="projects-line left"></div>
+              <div class="title-wrapper">
+                <div class="orange-divider top"></div>
+                <h4 class="projects-title">Proyectos</h4>
+                <div class="orange-divider bottom"></div>
+              </div>
+              <div class="projects-line right"></div>
+            </div>
+            <div class="project-list">
+              <a href="https://github.com/ionic-team/ionic-framework" target="_blank" rel="noopener noreferrer" class="project-item">Proyecto de Investigación 1</a>
+              <a href="https://angular.io/" target="_blank" rel="noopener noreferrer" class="project-item">Colaboración Académica 2</a>
+              <a href="https://stenciljs.com/" target="_blank" rel="noopener noreferrer" class="project-item">Desarrollo de Software 3</a>
+            </div>
+          </div>
+        </div>
+      </ion-col>
+
+      <!-- Colaborador 5 -->
+      <ion-col size-lg="4" size-md="6" size-xs="12">
+        <div class="member-card" (click)="toggleMemberCard($event)">
+          <div class="member-image-container">
+            <img src="https://placehold.co/150x150/e8e8e8/2c3e50?text=Colaborador" alt="Foto del integrante" class="member-image" />
+          </div>
+          <h3 class="member-name">Nombre del Colaborador</h3>
+          <p class="member-role">Rol en el Grupo</p>
+          <div class="member-details">
+            <div class="projects-title-container">
+              <div class="projects-line left"></div>
+              <div class="title-wrapper">
+                <div class="orange-divider top"></div>
+                <h4 class="projects-title">Proyectos</h4>
+                <div class="orange-divider bottom"></div>
+              </div>
+              <div class="projects-line right"></div>
+            </div>
+            <div class="project-list">
+              <a href="https://github.com/ionic-team/ionic-framework" target="_blank" rel="noopener noreferrer" class="project-item">Proyecto de Investigación 1</a>
+              <a href="https://angular.io/" target="_blank" rel="noopener noreferrer" class="project-item">Colaboración Académica 2</a>
+              <a href="https://stenciljs.com/" target="_blank" rel="noopener noreferrer" class="project-item">Desarrollo de Software 3</a>
+            </div>
+          </div>
+        </div>
+      </ion-col>
+
+      <!-- Colaborador 6 -->
+      <ion-col size-lg="4" size-md="6" size-xs="12">
+        <div class="member-card" (click)="toggleMemberCard($event)">
+          <div class="member-image-container">
+            <img src="https://placehold.co/150x150/e8e8e8/2c3e50?text=Colaborador" alt="Foto del integrante" class="member-image" />
+          </div>
+          <h3 class="member-name">Nombre del Colaborador</h3>
+          <p class="member-role">Rol en el Grupo</p>
+          <div class="member-details">
+            <div class="projects-title-container">
+              <div class="projects-line left"></div>
+              <div class="title-wrapper">
+                <div class="orange-divider top"></div>
+                <h4 class="projects-title">Proyectos</h4>
+                <div class="orange-divider bottom"></div>
+              </div>
+              <div class="projects-line right"></div>
+            </div>
+            <div class="project-list">
+              <a href="https://github.com/ionic-team/ionic-framework" target="_blank" rel="noopener noreferrer" class="project-item">Proyecto de Investigación 1</a>
+              <a href="https://angular.io/" target="_blank" rel="noopener noreferrer" class="project-item">Colaboración Académica 2</a>
+              <a href="https://stenciljs.com/" target="_blank" rel="noopener noreferrer" class="project-item">Desarrollo de Software 3</a>
+            </div>
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- Separador de Módulo Izquierdo -->
+  <section class="module-separator-left">
+    <div class="separator-line"></div>
+    <div class="separator-line"></div>
+    <div class="separator-line"></div>
+  </section>
+
+  <!-- Título Final con Hojas Intercaladas -->
+  <section class="final-title-section">
+    <div class="interleaved-title">
+      <span class="letter green">M</span>
+      <ion-icon name="leaf-outline" class="leaf-separator orange"></ion-icon>
+      <span class="letter orange">O</span>
+      <ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
+      <span class="letter green">D</span>
+      <ion-icon name="leaf-outline" class="leaf-separator orange"></ion-icon>
+      <span class="letter orange">U</span>
+      <ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
+      <span class="letter green">L</span>
+      <ion-icon name="leaf-outline" class="leaf-separator orange"></ion-icon>
+      <span class="letter orange">O</span>
+      <span class="space"></span>
+      <!-- Espacio entre palabras -->
+    </div>
+  </section>
+
+  <!-- Línea decorativa debajo de MODULO -->
+  <section class="module-line-separator">
+    <div class="line-with-circles"></div>
+  </section>
+
+  <!-- Sección de Carrusel de Proyectos -->
+  <section class="projects-carousel-section">
+    <div class="projects-carousel-wrapper">
+      <!-- Simple, responsive horizontal scroller (fallback and reliable) -->
+      <div class="projects-swiper" #projectsSlides>
+        <!-- Slide 1 -->
+        <div class="project-slide">
+          <div class="project-carousel-card" (mouseenter)="ensureCardVisible($event)" (touchstart)="ensureCardVisible($event)">
+            <img src="https://placehold.co/400x300/3498db/ffffff?text=Proyecto+1" alt="Proyecto 1" class="project-carousel-image">
+            <h3 class="project-carousel-title">Desarrollo de Software</h3>
+          </div>
+        </div>
+        <!-- Slide 2 -->
+        <div class="project-slide">
+          <div class="project-carousel-card" (mouseenter)="ensureCardVisible($event)" (touchstart)="ensureCardVisible($event)">
+            <img src="https://placehold.co/400x300/2ecc71/ffffff?text=Proyecto+2" alt="Proyecto 2" class="project-carousel-image">
+            <h3 class="project-carousel-title">Investigación Aplicada</h3>
+          </div>
+        </div>
+        <!-- Slide 3 -->
+        <div class="project-slide">
+          <div class="project-carousel-card" (mouseenter)="ensureCardVisible($event)" (touchstart)="ensureCardVisible($event)">
+            <img src="https://placehold.co/400x300/e74c3c/ffffff?text=Proyecto+3" alt="Proyecto 3" class="project-carousel-image">
+            <h3 class="project-carousel-title">Inteligencia Artificial</h3>
+          </div>
+        </div>
+        <!-- Slide 4 -->
+        <div class="project-slide">
+          <div class="project-carousel-card" (mouseenter)="ensureCardVisible($event)" (touchstart)="ensureCardVisible($event)">
+            <img src="https://placehold.co/400x300/f1c40f/ffffff?text=Proyecto+4" alt="Proyecto 4" class="project-carousel-image">
+            <h3 class="project-carousel-title">TICs en Educación</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation buttons -->
+      <ion-button fill="clear" class="carousel-nav prev" (click)="prevSlide()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" class="carousel-nav next" (click)="nextSlide()">
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </ion-button>
+    </div>
+  </section>
+
+  <!-- Línea decorativa debajo del carrusel -->
+  <section class="module-line-separator2">
+    <div class="line-with-circles"></div>
+  </section>
 </ion-content>

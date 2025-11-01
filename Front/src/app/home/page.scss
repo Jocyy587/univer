@@ -803,7 +803,7 @@ clip-path: path('M 90 0 C 100 15 60 100 10 150 C 1 1 1 200 0 55 C 5 30 30 5 85 0
 
   /* --- Línea decorativa debajo de MODULO --- */
   .module-line-separator {
-    padding: 2rem 1rem;
+    padding: 0 1rem 2rem; // Reducimos el padding superior
     display: flex;
     justify-content: center;
     background-color: var(--brand-dark);
@@ -841,7 +841,7 @@ clip-path: path('M 90 0 C 100 15 60 100 10 150 C 1 1 1 200 0 55 C 5 30 30 5 85 0
 
   /* --- Sección Carrusel de Proyectos --- */
   .projects-carousel-section {
-    padding: 3rem 1rem 0; // Reducimos el padding inferior a 0
+    padding: 3rem 1rem;
     background-color: var(--brand-dark);
 
     /* Scoped styles for the projects carousel (flex scroller) */
@@ -855,8 +855,7 @@ clip-path: path('M 90 0 C 100 15 60 100 10 150 C 1 1 1 200 0 55 C 5 30 30 5 85 0
       /* ampliar el padding inferior para que los títulos que se mueven abajo queden visibles
          sin que el usuario tenga que scrollear la página */
       padding-bottom: 7rem;
-      margin-bottom: 4rem;
-      margin-bottom: 0.0rem; // Reducimos el margen inferior
+      margin-bottom: 2rem; // Reducimos el margen inferior
       -ms-overflow-style: none; /* IE and Edge */
       scrollbar-width: none; /* Firefox */
     }
@@ -1015,14 +1014,6 @@ clip-path: path('M 90 0 C 100 15 60 100 10 150 C 1 1 1 200 0 55 C 5 30 30 5 85 0
     align-items: center;
     justify-content: center;
     flex-wrap: wrap; // Para que se ajuste en pantallas pequeñas
-  }
-
-  /* --- Línea decorativa debajo del carrusel --- */
-  .module-line-separator2 {
-    padding: 0 0.1rem 4rem; // Espacio arriba y abajo
-    display: flex;
-    justify-content: center;
-    background-color: var(--brand-dark);
   }
 
 } // Cierre de :host
