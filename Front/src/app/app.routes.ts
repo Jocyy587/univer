@@ -17,5 +17,9 @@ export const routes: Routes = [
   {
     path: 'sustentable',
     loadComponent: () => import('./sustentable/sustentable.page').then( m => m.SustentablePage)
+  },  {
+    path: 'login',
+    loadComponent: () => import('./login/login.page').then( m => m.LoginPage)
   },
+
 ];

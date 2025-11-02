@@ -3,36 +3,14 @@
   Usa un <ion-toolbar> personalizado y un <ion-grid> 
   para crear el diseño de dos columnas que se ve en la imagen.
 -->
-<ion-header [translucent]="true">
-  <ion-toolbar class="header-dark">
-    <!-- Logo y Título a la Izquierda -->
-    <ion-buttons slot="start" class="ion-padding-start">
-      <ion-icon name="leaf-outline" class="logo-icon"></ion-icon>
-      <ion-title class="header-title">UTCJ-CA-19</ion-title>
-    </ion-buttons>
 
-    <!-- Menú de hamburguesa para móviles -->
-    <ion-buttons slot="end" class="ion-hide-md-up">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
 
-    <!-- Enlaces de navegación para pantallas más grandes -->
-    <ion-buttons slot="end" class="ion-hide-md-down ion-padding-end">
-      <ion-button class="nav-link">Inicio</ion-button>
-      <ion-button class="nav-link">Extracurricular</ion-button>
-      <ion-button class="nav-link">Actividades</ion-button>
-      <ion-button class="nav-link">Iniciar sesión</ion-button>
-      <ion-button class="nav-link">Registro</ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true" class="content-dark">
+<ion-content [fullscreen]="true" class="content-dark" [scrollY]="true">
   <ion-grid>
     <ion-row class="ion-justify-content-center">
 
       <!-- Columna Izquierda (Video/Imagen principal) -->
-      <ion-col size-lg="6" size-md="6" size-xs="12" class="ion-padding">
+      <ion-col size-lg="7" size-md="7" size-xs="12" class="ion-padding">
         
         <h1 class="main-title">UTCJ-CA-19</h1>
         <div class="divider-container">
@@ -59,8 +37,7 @@
       </ion-col>
 
       <!-- Columna Derecha (Lista de noticias) -->
-      <ion-col size-lg="4" size-md="4" size-xs="12" class="ion-padding news-column">
-        
+      <ion-col size-lg="5" size-md="5" size-xs="12" class="ion-padding news-column">
         <div class="news-list">
 
           <!-- Item 1 -->
@@ -124,7 +101,6 @@
           </ion-card>
         </div>
       </ion-col>
-
     </ion-row>
   </ion-grid>
 

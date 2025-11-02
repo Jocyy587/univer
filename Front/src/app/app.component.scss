@@ -1,0 +1,151 @@
+// Header styles
+.header-dark {
+  --background: var(--ion-background-color);
+  --border-color: transparent;
+
+  .logo-section {
+    padding-left: 2rem;
+  }
+
+  .logo-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 1rem 2rem;
+
+    ion-title {
+      color: var(--ion-color-success);
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+    .leaf-icon {
+      position: absolute;
+      display: block;
+      font-size: 3.2rem;
+      color: var(--ion-color-success, #6ff34a);
+      line-height: 1;
+      z-index: 50;
+
+      &.bottom-left {
+        bottom: 10px; /* subir un poco */
+        left: -20px;
+      }
+
+      &.bottom-right {
+        bottom: 18px; /* subir un poco */
+        right: -28px;
+        transform: scaleX(-1);
+      }
+    }
+
+  }
+
+  .nav-links {
+    padding-right: 2rem;
+  }
+
+  .nav-link {
+    --color: var(--ion-color-success);
+    --padding-start: 1rem;
+    --padding-end: 1rem;
+    font-weight: 500;
+    font-size: 1rem;
+    
+    &:hover {
+      --color: var(--ion-color-warning);
+    }
+  }
+
+  ion-menu-button {
+    --color: var(--ion-color-success);
+  }
+}
+
+// Footer styles
+ion-footer {
+  background: var(--ion-color-dark);
+  padding: 1rem 0;
+
+  .final-title-section {
+    margin-bottom: 1rem;
+  }
+
+  .interleaved-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    
+    .letter {
+      font-size: 1.5rem;
+      font-weight: bold;
+      
+      &.green {
+        color: var(--ion-color-success);
+      }
+      
+      &.orange {
+        color: var(--ion-color-warning);
+      }
+    }
+
+    .leaf-separator {
+      font-size: 1.2rem;
+      
+      &.green {
+        color: var(--ion-color-success);
+      }
+      
+      &.orange {
+        color: var(--ion-color-warning);
+      }
+    }
+
+    .space {
+      width: 1rem;
+    }
+  }
+
+  .module-line-separator2 {
+    .line-with-circles {
+      height: 2px;
+      background: linear-gradient(
+        to right,
+        var(--ion-color-success),
+        var(--ion-color-warning)
+      );
+      position: relative;
+      margin: 0 2rem;
+
+      &::before,
+      &::after {
+        content: '';
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--ion-color-warning);
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      &::before {
+        left: 0;
+      }
+
+      &::after {
+        right: 0;
+      }
+    }
+  }
+}
+
+/*
+  Solución para el header superpuesto:
+  Añade un padding superior a todo el contenido que está dentro de un ion-router-outlet
+  para compensar la altura del header fijo.
+*/
+::ng-deep ion-router-outlet + ion-content {
+  // 60px es una altura común para el header, puedes ajustarlo si es necesario.
+  --padding-top: 60px;
+}

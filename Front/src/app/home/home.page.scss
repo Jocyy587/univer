@@ -22,17 +22,6 @@
     border-bottom: 1px solid var(--brand-green);
   }
 
-  /* Asegura que el header quede por encima del contenido al hacer scroll */
-  ion-header {
-    position: sticky;
-    top: 0;
-    z-index: 9999;
-  }
-
-  .header-dark {
-    z-index: 10000; /* toolbar encima de header si hace falta */
-  }
-
   .logo-icon {
     color: var(--brand-green);
     font-size: 1.8rem;
@@ -59,6 +48,11 @@
   ion-content.content-dark {
     --background: var(--brand-dark);
     --color: var(--text-light);
+
+    // Añadimos un margen superior al grid principal para bajar el contenido.
+    ion-grid {
+      margin-top: 4rem; // Puedes ajustar este valor si necesitas más o menos espacio.
+    }
   }
 
   // --- Columna Izquierda ---

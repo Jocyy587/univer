@@ -1,3 +1,28 @@
 <ion-app>
+  <ion-header [translucent]="true">
+    <ion-toolbar class="header-dark">
+      <!-- Logo y Título a la Izquierda -->
+      <ion-buttons slot="start" class="logo-section">
+        <div class="logo-container">
+          <ion-icon name="leaf-outline" class="leaf-icon bottom-left"></ion-icon>
+          <ion-title>UTCJ-CA-19</ion-title>
+        </div>
+      </ion-buttons>
+
+      <!-- Menú de hamburguesa para móviles -->
+      <ion-buttons slot="end" class="ion-hide-md-up">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+
+      <!-- Enlaces de navegación para pantallas más grandes -->
+      <ion-buttons slot="end" class="nav-links ion-hide-md-down">
+        <ion-button class="nav-link" routerLink="/home">INICIO</ion-button>
+        <ion-button class="nav-link" routerLink="/extracurricular">EXTRACURRICULAR</ion-button>
+        <ion-button class="nav-link" routerLink="/actividades">ACTIVIDADES</ion-button>
+        <ion-button class="nav-link" routerLink="/login">INICIAR SESIÓN</ion-button>
+        <ion-button class="nav-link" routerLink="/registro">REGISTRO</ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
   <ion-router-outlet></ion-router-outlet>
 </ion-app>
