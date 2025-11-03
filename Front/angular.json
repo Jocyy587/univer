@@ -80,7 +80,14 @@
               "buildTarget": "app:build:production"
             },
             "development": {
-              "buildTarget": "app:build:development"
+              "buildTarget": "app:build:development",
+              "host": "0.0.0.0",
+              "allowedHosts": [
+                "wish-belt-lane-fighting.trycloudflare.com",
+                ".trycloudflare.com",
+                "votes-tide-dawn-fridge.trycloudflare.com",
+                "https://votes-tide-dawn-fridge.trycloudflare.com/"
+              ]
             },
             "ci": {
               "progress": false

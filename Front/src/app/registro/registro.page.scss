@@ -1,0 +1,221 @@
+/* Login page styles: full-screen video background + translucent panel */
+:host {
+  display: block;
+}
+
+.login-page {
+  position: relative;
+  min-height: 100vh;
+  padding: 0;
+  overflow: hidden;
+}
+
+.bg-video {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .video-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55));
+    pointer-events: none;
+  }
+}
+
+.login-wrapper {
+  position: relative;
+  z-index: 5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem ;
+}
+
+.login-title {
+  color: var(--ion-color-success, #6ff34a);
+  font-size: 3.2rem;
+  margin: 0 0 1rem 0;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.login-panel {
+  width: min(760px, 92%);
+  background: rgba(20,20,20,0.45);
+  border-radius: 14px;
+  padding: 2rem;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+  border: 1px solid rgba(111,243,74,0.08);
+  backdrop-filter: blur(6px);
+}
+
+.input-item {
+  margin-bottom: 1rem;
+  --background: transparent;
+  --border-color: transparent;
+}
+
+.input-item ion-label {
+  color: var(--ion-color-success, #6ff34a);
+  font-size: 1.05rem;
+  margin-bottom: 6px;
+}
+
+.input-item ion-input {
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --background: rgba(255,255,255,0.03);
+  color: #e8ffe8;
+  border-radius: 999px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+}
+.login-btn-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.leaf-icon {
+  font-size: 1.5rem;
+  color: var(--ion-color-success, #6ff34a);
+  opacity: 0.6;
+  margin: 0 1rem;
+}
+
+.leaf-icon.right {
+  transform: scaleX(-1);
+}
+
+.login-btn {
+  --background: transparent;
+  color: var(--ion-color-success, #6ff34a);
+  border: 2px solid rgba(111,243,74,0.25);
+  height: 48px;
+  border-radius: 28px;
+  background: linear-gradient(90deg, rgba(111,243,74,0.06), rgba(111,243,74,0.02));
+  flex-grow: 1;
+  max-width: 400px;
+}
+
+/* small screens adjustments */
+@media (max-width: 600px) {
+  .login-title { font-size: 2.2rem; }
+  .login-panel { padding: 1.2rem; }
+}
+
+/* --- Estilos para las líneas decorativas --- */
+.decorative-line-container {
+  width: 100%; /* El contenedor ocupa todo el ancho */
+  box-sizing: border-box;
+  margin: 0.75rem 0;
+  position: relative; /* Necesario para mover las líneas */
+  height: 2px; /* Damos altura al contenedor */
+}
+
+.decorative-line {
+  position: relative;
+  width: 50vw; /* La línea ocupa la mitad del ancho de la pantalla */
+  height: 2px;
+  background-color: var(--ion-color-success, #6ff34a);
+  position: absolute; /* Posicionamiento absoluto dentro del contenedor */
+  top: 0;
+
+  /* El círculo al final de la línea */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    border: 1px solid var(--ion-color-success, #6ff34a);
+    /* Usamos un color de fondo que contraste con el video oscuro */
+    background-color: transparent; 
+    z-index: 1;
+  }
+
+  /* Línea de izquierda a derecha (la de arriba) */
+  &.from-left {
+    &::before {
+      /* Círculo al final (derecha), justo en el centro de la pantalla */
+      right: -10px; 
+    }
+    right: 50%; /* La línea termina en el centro */
+  }
+
+  /* Línea de derecha a izquierda (la de abajo) */
+  &.from-right {
+    &::before {
+      /* Círculo al inicio (izquierda), justo en el centro de la pantalla */
+      left: -10px; 
+    }
+    left: 50%; /* La línea empieza en el centro */
+  }
+}
+
+/* Ajuste para que el título no esté tan pegado a las líneas */
+.login-title { margin: 0.5rem 0; }
+
+/* --- Estilos para las formas decorativas (shapes) --- */
+.shape-container {
+  position: absolute;
+  z-index: 1; /* Por debajo del login-wrapper pero por encima del video */
+  width: 200px;
+  height: 200px;
+  pointer-events: none; /* Para que no interfieran con el click */
+}
+
+.shape {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 25%; /* Cuadrado con esquinas redondeadas */
+}
+
+/* Forma con relleno verde */
+.shape.green-solid {
+  background-color: var(--ion-color-success, #6ff34a);
+  transform: rotate(15deg);
+  top: 30px;
+  left: 50px;
+}
+
+/* Forma con contorno naranja */
+.shape.orange-outline {
+  /* Usamos la variable de home.page.scss o la definimos aquí */
+  --brand-orange: #d35400; 
+  background-color: transparent;
+  border: 2px solid var(--brand-orange);
+  transform: rotate(-25deg);
+  top: 55px;
+  left: 25px;
+}
+
+/* Posicionamiento de los contenedores */
+.shape-container.top-left {
+  top: 50%; /* Empezamos desde el centro vertical */
+  right: 15%; /* Lo movemos desde el borde derecho */
+  /* Invertimos la rotación y lo bajamos */
+  transform: translateY(120px) rotate(180deg) scale(0.8);
+}
+
+.shape-container.bottom-right {
+  top: 50%; /* Empezamos desde el centro vertical */
+  left: 15%; /* Lo movemos desde el borde izquierdo */
+  /* Lo subimos */
+  transform: translateY(-120px) scale(0.8);
+}
