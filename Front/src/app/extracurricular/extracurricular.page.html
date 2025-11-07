@@ -1,13 +1,127 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>extracurricular</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="login-page">
+  <ion-grid>
+    <ion-row class="ion-align-items-center">
+      <!-- Columna Izquierda (Formulario) -->
+      <ion-col size-lg="7" size-md="7" size-xs="12">
+        <div class="login-wrapper">
+          <!-- Formas decorativas de fondo, ahora relativas al wrapper -->
+          <div class="shape-container top-left">
+            <div class="shape green-solid"></div>
+            <div class="shape orange-outline"></div>
+            <div class="shape green-outline"></div>
+          </div>
+          <div class="shape-container bottom-right">
+            <div class="shape green-solid"></div>
+            <div class="shape green-outline"></div>
+          </div>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">extracurricular</ion-title>
-    </ion-toolbar>
-  </ion-header>
+          <!-- Línea decorativa superior -->
+          <div class="decorative-line-container">
+            <div class="decorative-line from-left"></div>
+          </div>
+          <h1 class="login-title">Registrar extracurricular</h1>
+          <!-- Línea decorativa inferior -->
+          <div class="decorative-line-container">
+            <div class="decorative-line from-right"></div>
+          </div>
+
+          <div class="login-panel">
+            <form (ngSubmit)="onRegister()" #registroForm="ngForm" class="login-form">
+              <ion-item lines="none" class="input-item">
+                <ion-label position="fixed">Nombre Completo</ion-label>
+                <ion-input type="text" [(ngModel)]="credentials.nombre" name="nombre" required></ion-input>
+              </ion-item>
+
+              <ion-item lines="none" class="input-item">
+                <ion-label position="fixed">Apellidos</ion-label>
+                <ion-input type="text" [(ngModel)]="credentials.matricula" name="matricula" required></ion-input>
+              </ion-item>
+
+              <ion-item lines="none" class="input-item">
+                <ion-label position="fixed">Matricula</ion-label>
+                <ion-input type="email" [(ngModel)]="credentials.correo" name="correo" required email></ion-input>
+              </ion-item>
+
+              <ion-item lines="none" class="input-item">
+                <ion-label position="fixed">Contraseña</ion-label>
+                <ion-input type="password" [(ngModel)]="credentials.password" name="password" required></ion-input>
+              </ion-item>
+
+              <ion-item lines="none" class="input-item">
+                <ion-label position="fixed">Tutora</ion-label>
+                <ion-input type="password" [(ngModel)]="credentials.confirmPassword" name="confirmPassword" required></ion-input>
+              </ion-item>
+              <ion-item lines="none" class="input-item">
+                <ion-label position="fixed">Moodulo a aplicar</ion-label>
+                <ion-input type="password" [(ngModel)]="credentials.confirmPassword" name="confirmPassword" required></ion-input>
+              </ion-item>
+
+              <div class="login-btn-wrapper">
+                <ion-icon name="leaf-outline" class="leaf-icon left"></ion-icon>
+                <ion-button expand="block" type="submit" class="login-btn">Registrarse</ion-button>
+                <ion-icon name="leaf-outline" class="leaf-icon right"></ion-icon>
+              </div>
+            </form>
+          </div>
+        </div>
+      </ion-col>
+
+      <!-- Columna Derecha (Lista de noticias) -->
+      <ion-col size-lg="5" size-md="5" size-xs="12" class="ion-padding news-column">
+        <div class="news-list">
+          <!-- Item 1 -->
+          <ion-card class="news-card">
+            <ion-item lines="none" class="news-item">
+              <div class="card-link-area" [routerLink]="['/pueba']">
+                <ion-thumbnail slot="start">
+                  <img src="/assets/img/img1.png" alt="Noticia 1" />
+                </ion-thumbnail>
+                <ion-label>
+                  <h3 class="title-green">UTCJ Sustentable</h3>
+                </ion-label>
+              </div>
+              <div class="card-footer" slot="end">
+                <p class="text-date">01-02-2003</p>
+                <ion-button fill="clear" size="small" class="read-more-button" (click)="openModal('UTCJ Sustentable')">Leer más &gt;</ion-button>
+              </div>
+            </ion-item>
+          </ion-card>
+          <!-- Item 2 -->
+          <ion-card class="news-card">
+            <ion-item lines="none" class="news-item">
+              <div class="card-link-area" [routerLink]="['/pueba']">
+                <ion-thumbnail slot="start">
+                  <img src="/assets/img/img1.png" alt="Noticia 2" />
+                </ion-thumbnail>
+                <ion-label>
+                  <h3 class="title-green">Proyectos del cuerpo Académico</h3>
+                </ion-label>
+              </div>
+              <div class="card-footer" slot="end">
+                <p class="text-date">01-02-2003</p>
+                <ion-button fill="clear" size="small" class="read-more-button" (click)="openModal('Proyectos del cuerpo Académico')">Leer más &gt;</ion-button>
+              </div>
+            </ion-item>
+          </ion-card>
+          <!-- Item 3 -->
+          <ion-card class="news-card">
+            <ion-item lines="none" class="news-item">
+              <div class="card-link-area" [routerLink]="['/pueba']">
+                <ion-thumbnail slot="start">
+                  <img src="/assets/img/img1.png" alt="Noticia 3" />
+                </ion-thumbnail>
+                <ion-label>
+                  <h3 class="title-green">Cuerpo Académico</h3>
+                </ion-label>
+              </div>
+              <div class="card-footer" slot="end">
+                <p class="text-date">01-02-2003</p>
+                <ion-button fill="clear" size="small" class="read-more-button" (click)="openModal('Cuerpo Académico')">Leer más &gt;</ion-button>
+              </div>
+            </ion-item>
+          </ion-card>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

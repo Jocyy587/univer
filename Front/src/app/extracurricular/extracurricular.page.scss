@@ -1,0 +1,364 @@
+/* Login page styles: full-screen video background + translucent panel */
+:host {
+  display: block;
+}
+
+.login-page {
+  position: relative;
+  min-height: 100vh;
+  padding: 0;
+  overflow: hidden;
+  --background: #000; // Fondo negro
+}
+
+.bg-video {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.login-wrapper {
+  position: relative;
+  z-index: 5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column; // Mantenemos la dirección de columna para el contenido del formulario
+  justify-content: center;
+  align-items: flex-start; // Alinear a la izquierda
+  padding: 3rem;
+}
+
+.login-title {
+  color: var(--ion-color-success, #6ff34a);
+  font-size: 2.8rem; // Reducimos un poco la fuente para que quepa mejor
+  margin: 0 0 1rem 0;
+  text-align: left; // Alinear texto a la izquierda
+  letter-spacing: 1px;
+}
+
+.login-panel {
+  width: min(860px, 92%); // Hacemos el panel un poco más ancho
+  background: rgba(20, 20, 20, 0.45);
+  border-radius: 14px;
+  padding: 2rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(111, 243, 74, 0.08);
+  backdrop-filter: blur(6px);
+}
+
+.input-item {
+  margin-bottom: 1rem;
+  --background: transparent;
+  --border-color: transparent;
+  display: flex;
+  align-items: center;
+}
+
+.input-item ion-label {
+  color: var(--ion-color-success, #6ff34a);
+  font-size: 1.05rem;
+  margin-bottom: 6px;
+  flex: 0 0 150px; // Ancho fijo para la etiqueta
+  margin-right: 1rem; // Espacio entre etiqueta e input
+  text-align: left; // Alinear texto de la etiqueta a la izquierda
+}
+
+.input-item ion-input {
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --background: rgba(255, 255, 255, 0.03);
+  color: #e8ffe8;
+  --border-radius: 25px; // Usamos la variable CSS para el componente
+  height: 44px;
+  display: flex;
+  align-items: center;
+  flex: 1; // El input toma el espacio restante
+}
+.login-btn-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+  padding-left: 166px; // Alinear con los inputs (150px de label + 1rem de margen)
+}
+
+.leaf-icon {
+  font-size: 1.5rem;
+  color: var(--ion-color-success, #6ff34a);
+  opacity: 0.6;
+  margin: 0 1rem;
+  transition: transform 0.3s ease-out; // Transición para la animación
+}
+
+.leaf-icon.right {
+  transform: scaleX(-1);
+}
+
+// Animación al pasar el mouse sobre el contenedor del botón
+.login-btn-wrapper:hover {
+  .leaf-icon.left {
+    transform: translateY(-5px); // Levanta el ícono izquierdo
+  }
+  .leaf-icon.right {
+    transform: scaleX(-1) translateY(-5px); // Levanta el ícono derecho manteniendo la rotación
+  }
+}
+
+.login-btn {
+  --background: transparent;
+  color: var(--ion-color-success, #6ff34a);
+  border: 2px solid rgba(111, 243, 74, 0.25);
+  height: 48px;
+  border-radius: 28px;
+  background: linear-gradient(
+    90deg,
+    rgba(111, 243, 74, 0.06),
+    rgba(111, 243, 74, 0.02)
+  );
+  flex-grow: 1;
+  max-width: 400px;
+}
+
+/* small screens adjustments */
+@media (max-width: 600px) {
+  .login-title {
+    font-size: 2.2rem;
+  }
+  .login-panel {
+    padding: 1.2rem;
+  }
+  .login-wrapper {
+    align-items: center; // Centrar en pantallas pequeñas
+  }
+  .input-item {
+    flex-direction: column; // Apilar en pantallas pequeñas
+    align-items: stretch;
+  }
+  .input-item ion-label {
+    text-align: left; // Alinear a la izquierda en pantallas pequeñas
+    margin-right: 0;
+    margin-bottom: 6px;
+  }
+  .login-btn-wrapper {
+    padding-left: 0; // Quitar padding en pantallas pequeñas
+  }
+}
+
+/* --- Estilos para las líneas decorativas --- */
+.decorative-line-container {
+  width: 100%; /* El contenedor ocupa todo el ancho */
+  box-sizing: border-box;
+  margin: 0.75rem 0;
+  position: relative; /* Necesario para mover las líneas */
+  height: 2px; /* Damos altura al contenedor */
+}
+
+.decorative-line {
+  position: relative;
+  width: 50vw; /* La línea ocupa la mitad del ancho de la pantalla */
+  height: 2px;
+  background-color: var(--ion-color-success, #6ff34a);
+  position: absolute; /* Posicionamiento absoluto dentro del contenedor */
+  top: 0;
+
+  /* El círculo al final de la línea */
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    border: 1px solid var(--ion-color-success, #6ff34a);
+    /* Usamos un color de fondo que contraste con el video oscuro */
+    background-color: transparent;
+    z-index: 1;
+  }
+
+  /* Línea de izquierda a derecha (la de arriba) */
+  &.from-left {
+    &::before {
+      /* Círculo al final (derecha), justo en el centro de la pantalla */
+      right: -10px;
+    }
+    right: 48%; /* La línea termina en el centro */
+  }
+
+  /* Línea de derecha a izquierda (la de abajo) */
+  &.from-right {
+    &::before {
+      /* Círculo al inicio (izquierda), justo en el centro de la pantalla */
+      left: -10px;
+    }
+    right: 5%; /* La línea termina en el centro */
+  }
+}
+
+/* Ajuste para que el título no esté tan pegado a las líneas */
+.login-title {
+  margin: 0.5rem 0;
+}
+
+/* --- Estilos para las formas decorativas (shapes) --- */
+.shape-container {
+  position: absolute;
+  z-index: 1; /* Por debajo del login-wrapper pero por encima del video */
+  width: 200px;
+  height: 200px;
+  pointer-events: none; /* Para que no interfieran con el click */
+}
+
+.shape {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 25%; /* Cuadrado con esquinas redondeadas */
+}
+
+/* Forma con relleno verde */
+.shape.green-solid {
+  background-color: var(--ion-color-success, #6ff34a);
+  transform: rotate(15deg);
+  top: 30px;
+  left: 50px;
+}
+
+/* Forma con contorno naranja */
+.shape.orange-outline {
+  /* Usamos la variable de home.page.scss o la definimos aquí */
+  --brand-orange: #d35400;
+  background-color: transparent;
+  border: 2px solid var(--brand-orange);
+  transform: rotate(-25deg);
+  top: 55px;
+  left: 25px;
+}
+
+/* Forma con contorno verde */
+.shape.green-outline {
+  background-color: transparent;
+  border: 2px solid var(--ion-color-success, #6ff34a);
+  transform: rotate(45deg);
+  top: 80px;
+  left: 60px;
+}
+
+/* Posicionamiento de los contenedores */
+.shape-container.top-left {
+  top: 10%; /* Lo subimos cerca del título */
+  right: 20%; /* Lo movemos desde el borde derecho */
+  transform: rotate(180deg) scale(0.7);
+}
+
+.shape-container.bottom-right {
+  top: 10%; /* Lo subimos cerca del título */
+  left: 0; /* Lo movemos desde el borde izquierdo */
+  transform: scale(0.7);
+}
+
+// --- Estilos para las tarjetas de noticias (copiado de home.page.scss) ---
+.news-column {}
+
+.news-list {
+  background: transparent;
+  padding: 0;
+  margin-top: 2rem;
+}
+
+.news-card {
+  --background: transparent;
+  background: transparent;
+  margin: 0;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: none;
+  box-shadow: none;
+  position: relative;
+  cursor: pointer;
+
+  .card-link-area {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .card-footer {
+    position: absolute;
+    bottom: 0;
+    left: 106px;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .news-item {
+    --background: transparent;
+    --padding-start: 0;
+    --inner-padding-end: 0;
+    padding-bottom: 4rem;
+  }
+
+  ion-thumbnail {
+    --size: 90px;
+    --border-radius: 8px;
+    margin-right: 1rem;
+    clip-path: path('M 90 0 C 100 15 60 100 10 150 C 1 1 1 200 0 55 C 5 30 30 5 85 0 Z');
+  }
+
+  ion-label {
+    white-space: normal;
+    padding-left: 0;
+    width: 100%;
+  }
+
+  .card-footer::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    right: 0;
+    height: 1px;
+    background-color: var(--ion-color-success, #5a9c00);
+  }
+
+  .card-footer::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    border: 1px solid var(--ion-color-success, #5a9c00);
+    background-color: #000; // Asumiendo fondo negro
+    z-index: 1;
+  }
+
+  h3.title-green {
+    color: var(--ion-color-success, #5a9c00);
+    font-weight: bold;
+    font-size: 1.1rem;
+    text-align: center;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .text-date {
+    color: var(--ion-color-success, #5a9c00);
+    font-size: 0.8rem;
+  }
+
+  .read-more-button {
+    color: var(--ion-color-success, #5a9c00);
+    font-weight: bold;
+    --padding-start: 0;
+    --padding-end: 0;
+    height: auto;
+    text-transform: none;
+  }
+}

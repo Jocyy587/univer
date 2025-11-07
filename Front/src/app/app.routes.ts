@@ -14,10 +14,8 @@ export const routes: Routes = [
     path: 'pueba',
     loadComponent: () => import('./pueba/pueba.page').then( m => m.PuebaPage)
   },
+
   {
-    path: 'sustentable',
-    loadComponent: () => import('./sustentable/sustentable.page').then( m => m.SustentablePage)
-  },  {
     path: 'login',
     loadComponent: () => import('./login/login.page').then( m => m.LoginPage)
   },
