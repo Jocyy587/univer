@@ -10,7 +10,7 @@
     <ion-row class="ion-justify-content-center">
 
       <!-- Columna Izquierda (Video/Imagen principal) -->
-      <ion-col size-lg="7" size-md="7" size-xs="12" class="ion-padding">
+      <ion-col size-lg="7" size-md="7" size-xs="12" class="ion-padding ion-text-center">
         
         <h1 class="main-title">UTCJ-CA-19</h1>
         <div class="divider-container">
@@ -19,18 +19,10 @@
 
         <!-- Contenedor de la imagen principal con ícono de play -->
         <div class="video-placeholder">
-          <img src="https://placehold.co/100x100/2c3e50/ffffff?text=Video+Placeholder" alt="Video principal" class="main-image" />
+          <img src="https://placehold.co/400x225/2c3e50/ffffff?text=Video" alt="Video principal" class="main-image" />
           <ion-icon name="play-circle-outline" class="play-icon"></ion-icon>
         </div>
 
-        <div class="divider-container">
-          <div class="simple-divider"></div>
-        </div>
-        
-        <h2 class="title-green subtitle">LIIADT</h2>
-        <p class="text-light">
-          Gestión y aplicación de las tecnologías de la información al sector educativo y productivo, implementación de las TIC's en los entornos virtuales así como administración de proyectos de TI y sistemas basados en inteligencia artificial.
-        </p>
         <div class="divider-container">
           <div class="simple-divider"></div>
         </div>
@@ -103,6 +95,20 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+
+  <!-- Nueva sección para LIIADT, fuera de la grilla de columnas -->
+  <section class="centered-section">
+    <div class="divider-container full-width">
+      <div class="simple-divider flipped"></div>
+    </div>
+    <h2 class="title-green subtitle">LIIADT</h2>
+    <p class="text-light">
+      Gestión y aplicación de las tecnologías de la información al sector educativo y productivo, implementación de las TIC's en los entornos virtuales así como administración de proyectos de TI y sistemas basados en inteligencia artificial.
+    </p>
+    <div class="divider-container full-width">
+      <div class="simple-divider"></div>
+    </div>
+  </section>
 
   <section class="members-section">
     <div class="line-decorator left-1"></div>
@@ -413,16 +419,16 @@
   <section class="final-title-section">
     <div class="interleaved-title">
       <span class="letter green">M</span>
-      <ion-icon name="leaf-outline" class="leaf-separator orange"></ion-icon>
-      <span class="letter orange">O</span>
+      <ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
+      <span class="letter green">O</span>
       <ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
       <span class="letter green">D</span>
-      <ion-icon name="leaf-outline" class="leaf-separator orange"></ion-icon>
-      <span class="letter orange">U</span>
+      <ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
+      <span class="letter green">U</span>
       <ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
       <span class="letter green">L</span>
-      <ion-icon name="leaf-outline" class="leaf-separator orange"></ion-icon>
-      <span class="letter orange">O</span>
+      <ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
+      <span class="letter green">O</span>
       <span class="space"></span>
       <!-- Espacio entre palabras -->
     </div>
@@ -441,28 +447,28 @@
         <!-- Slide 1 -->
         <div class="project-slide">
           <div class="project-carousel-card" (mouseenter)="ensureCardVisible($event)" (touchstart)="ensureCardVisible($event)">
-            <img src="https://placehold.co/400x300/3498db/ffffff?text=Proyecto+1" alt="Proyecto 1" class="project-carousel-image">
+            <img src="https://placehold.co/400x300/5a9c00/ffffff?text=Proyecto+1" alt="Proyecto 1" class="project-carousel-image">
             <h3 class="project-carousel-title">Desarrollo de Software</h3>
           </div>
         </div>
         <!-- Slide 2 -->
         <div class="project-slide">
           <div class="project-carousel-card" (mouseenter)="ensureCardVisible($event)" (touchstart)="ensureCardVisible($event)">
-            <img src="https://placehold.co/400x300/2ecc71/ffffff?text=Proyecto+2" alt="Proyecto 2" class="project-carousel-image">
+            <img src="https://placehold.co/400x300/5a9c00/ffffff?text=Proyecto+2" alt="Proyecto 2" class="project-carousel-image">
             <h3 class="project-carousel-title">Investigación Aplicada</h3>
           </div>
         </div>
         <!-- Slide 3 -->
         <div class="project-slide">
           <div class="project-carousel-card" (mouseenter)="ensureCardVisible($event)" (touchstart)="ensureCardVisible($event)">
-            <img src="https://placehold.co/400x300/e74c3c/ffffff?text=Proyecto+3" alt="Proyecto 3" class="project-carousel-image">
+            <img src="https://placehold.co/400x300/5a9c00/ffffff?text=Proyecto+3" alt="Proyecto 3" class="project-carousel-image">
             <h3 class="project-carousel-title">Inteligencia Artificial</h3>
           </div>
         </div>
         <!-- Slide 4 -->
         <div class="project-slide">
           <div class="project-carousel-card" (mouseenter)="ensureCardVisible($event)" (touchstart)="ensureCardVisible($event)">
-            <img src="https://placehold.co/400x300/f1c40f/ffffff?text=Proyecto+4" alt="Proyecto 4" class="project-carousel-image">
+            <img src="https://placehold.co/400x300/5a9c00/ffffff?text=Proyecto+4" alt="Proyecto 4" class="project-carousel-image">
             <h3 class="project-carousel-title">TICs en Educación</h3>
           </div>
         </div>
