@@ -1,0 +1,158 @@
+:host {
+    --brand-dark: #000000;
+    --brand-green: #5a9c00;
+    --brand-orange: #d35400;
+
+    ion-content {
+        --background: var(--brand-dark);
+    }
+
+    .final-title-section {
+        padding-top: 0rem; /* Reducimos el espacio superior para acercarlo a la línea */
+        background-color: var(--brand-dark);
+        display: flex;
+        margin-top: 0;
+        margin-left: 800px;
+        justify-content: center;
+    }
+
+    .letter {
+        font-size: 6rem;
+        font-weight: 500;
+    }
+
+    .leaf-separator {
+        font-size: 2.2rem;
+        margin: 0 0.25rem;
+        --ionicon-stroke-width: 24px;
+    }
+
+    .space {
+        width: 1.5rem; // Espacio entre "TÍTULO" y "FINAL"
+    }
+
+    .green {
+        color: var(--brand-green);
+    }
+
+    .orange {
+        color: var(--brand-orange);
+    }
+
+    .interleaved-title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap; // Para que se ajuste en pantallas pequeñas
+    }
+
+    /* --- Línea decorativa --- */
+    .module-line-separator {
+        padding: 2rem 1rem;
+        display: flex;
+        justify-content: center;
+        background-color: var(--brand-dark);
+    }
+
+    /* Modificador para la línea superior */
+    .module-line-separator.top-line {
+        justify-content: flex-end; /* Alinea la línea a la derecha */
+        padding-right: 0; /* Pega la línea al borde derecho */
+        padding-top: 5rem; /* Aumentamos el padding para bajar la línea */
+
+        .line-with-circles {
+            max-width: none; /* Permite que la línea se extienda */
+            width: 70%; /* Reducimos el ancho para moverla a la derecha */
+
+            /* Ocultamos el círculo del extremo derecho */
+            &::after {
+                display: none;
+            }
+        }
+    }
+
+    /* Modificador para la línea inferior */
+    .module-line-separator.bottom-line {
+        justify-content: flex-start; /* Alinea la línea a la izquierda */
+        padding-left: 0; /* Pega la línea al borde izquierdo */
+        .line-with-circles {
+            max-width: none; /* Permite que la línea se extienda */
+            width: 70%; /* Ancho igual a la línea superior */
+
+            /* Ocultamos el círculo del extremo izquierdo */
+            &::before {
+                display: none;
+            }
+        }
+    }
+
+    .line-with-circles {
+        position: relative;
+        width: 80%;
+        max-width: 900px;
+        height: 2px;
+        background-color: var(--brand-green);
+
+        &::before,
+        &::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            border: 1px solid var(--brand-green);
+            background-color: var(--brand-dark);
+            z-index: 2;
+        }
+
+        &::before {
+            left: -5px;
+        }
+        &::after {
+            right: -5px;
+        }
+    }
+
+    /* Contenedor para la gráfica */
+    .chart-container {
+        position: absolute; /* Lo sacamos del flujo normal */
+        top: 5rem; /* Lo bajamos un poco */
+        left: 5%; /* Lo posicionamos a la izquierda */
+        z-index: 10; /* Lo ponemos en una capa superior */
+        width: 80%;
+        max-width: 310px; /* Ancho máximo para la gráfica */
+    }
+
+    /* Aseguramos que la columna de la gráfica tenga un z-index alto */
+    ion-col[size="5"] {
+        position: relative;
+        z-index: 20;
+    }
+
+    .main-row {
+        position: relative; /* Contenedor de referencia para el posicionamiento absoluto */
+        min-height: 400px; /* Altura mínima para que quepa todo */
+    }
+
+    .title-column {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-left: 25%; /* Empujamos el contenido del título a la derecha */
+        position: relative; /* Necesario para el z-index */
+        z-index: 1; /* Un valor menor que el z-index de la gráfica (10) */
+    }
+
+    /* Ícono en el centro de la gráfica */
+    .chart-center-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 4rem; /* Tamaño del ícono */
+        color: var(--brand-green);
+        opacity: 0.8;
+    }
+}

@@ -26,6 +26,10 @@ export const routes: Routes = [
   {
     path: 'extracurricular',
     loadComponent: () => import('./extracurricular/extracurricular.page').then( m => m.ExtracurricularPage)
+  },  {
+    path: 'actividades',
+    loadComponent: () => import('./actividades/actividades.page').then( m => m.ActividadesPage)
   },
+
 
 ];
