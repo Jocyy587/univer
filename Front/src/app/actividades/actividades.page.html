@@ -5,6 +5,14 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <!-- Formas Decorativas de Fondo -->
+  <div class="decorative-shapes">
+    <div class="shape green shape-1"></div>
+    <div class="shape circle orange shape-2"></div>
+    <div class="shape green shape-3"></div>
+    <div class="shape orange shape-4"></div>
+  </div>
+
   <section class="module-line-separator top-line">
     <div class="line-with-circles"></div>
   </section><section class="final-title-section">
@@ -34,5 +42,196 @@
   </section>
   <section class="module-line-separator bottom-line">
     <div class="line-with-circles"></div>
+  </section>
+
+  <!-- Donut Chart Sticker -->
+  <div class="chart-container">
+    <canvas #donutCanvas></canvas>
+    <ion-icon name="leaf-outline" class="chart-center-icon"></ion-icon>
+  </div>
+
+  <!-- Sección de Tarjetas de Estado -->
+  <section class="task-cards-section">
+    <!-- Card 1: To-do -->
+    <ion-card class="task-card">
+      <ion-card-header>
+        <ion-card-title>To-do</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-accordion-group>
+          <ion-accordion value="first">
+            <div class="accordion-header-wrapper" slot="header">
+              <div class="accordion-main-content">
+                <ion-label>Tarea asignada</ion-label>
+                <div class="accordion-content-wrapper">
+                  <div class="assignee-info"><ion-icon name="leaf-outline"></ion-icon> <span>Margara Rosales</span></div>
+                  <span class="due-date">15/08/2024</span>
+                </div>
+              </div>
+              <ion-icon name="leaf-outline" class="header-leaf-icon"></ion-icon>
+            </div>
+            <div class="ion-padding" slot="content">
+              <p>Aquí va la descripción detallada de la tarea asignada.</p>
+            </div>
+          </ion-accordion>
+          <ion-accordion value="second">
+            <div class="accordion-header-wrapper" slot="header">
+              <div class="accordion-main-content">
+                <ion-label>Tarea asignada</ion-label>
+                <div class="accordion-content-wrapper">
+                  <div class="assignee-info"><ion-icon name="leaf-outline"></ion-icon> <span>Juan Pérez</span></div>
+                  <span class="due-date">20/08/2024</span>
+                </div>
+              </div>
+              <ion-icon name="leaf-outline" class="header-leaf-icon"></ion-icon>
+            </div>
+            <div class="ion-padding" slot="content">
+              <p>Descripción de la segunda tarea pendiente.</p>
+            </div>
+          </ion-accordion>
+          <ion-accordion value="third">
+            <div class="accordion-header-wrapper" slot="header">
+              <div class="accordion-main-content">
+                <ion-label>Tarea asignada</ion-label>
+                <div class="accordion-content-wrapper">
+                  <div class="assignee-info"><ion-icon name="leaf-outline"></ion-icon> <span>Ana García</span></div>
+                  <span class="due-date">25/08/2024</span>
+                </div>
+              </div>
+              <ion-icon name="leaf-outline" class="header-leaf-icon"></ion-icon>
+            </div>
+            <div class="ion-padding" slot="content">
+              <p>Descripción de la tercera tarea pendiente.</p>
+            </div>
+          </ion-accordion>
+        </ion-accordion-group>
+      </ion-card-content>
+    </ion-card>
+
+    <div class="card-separator">
+      <div class="separator-circle top"></div>
+      <ion-icon name="leaf-outline" class="separator-leaf top-left"></ion-icon>
+      <ion-icon name="leaf-outline" class="separator-leaf top-right"></ion-icon>
+      <div class="separator-circle bottom"></div>
+    </div>
+
+    <!-- Card 2: Doing -->
+    <ion-card class="task-card">
+      <ion-card-header>
+        <ion-card-title>Doing</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-accordion-group>
+          <ion-accordion value="first">
+            <div class="accordion-header-wrapper" slot="header">
+              <div class="accordion-main-content">
+                <ion-label>Tarea asignada</ion-label>
+                <div class="accordion-content-wrapper">
+                  <div class="assignee-info"><ion-icon name="leaf-outline"></ion-icon> <span>Margara Rosales</span></div>
+                  <span class="due-date">15/08/2024</span>
+                </div>
+              </div>
+              <ion-icon name="leaf-outline" class="header-leaf-icon"></ion-icon>
+            </div>
+            <div class="ion-padding" slot="content">
+              <p>Aquí va la descripción detallada de la tarea asignada.</p>
+            </div>
+          </ion-accordion>
+          <ion-accordion value="second">
+            <div class="accordion-header-wrapper" slot="header">
+              <div class="accordion-main-content">
+                <ion-label>Tarea asignada</ion-label>
+                <div class="accordion-content-wrapper">
+                  <div class="assignee-info"><ion-icon name="leaf-outline"></ion-icon> <span>Carlos López</span></div>
+                  <span class="due-date">18/08/2024</span>
+                </div>
+              </div>
+              <ion-icon name="leaf-outline" class="header-leaf-icon"></ion-icon>
+            </div>
+            <div class="ion-padding" slot="content">
+              <p>Descripción de la segunda tarea en progreso.</p>
+            </div>
+          </ion-accordion>
+          <ion-accordion value="third">
+            <div class="accordion-header-wrapper" slot="header">
+              <div class="accordion-main-content">
+                <ion-label>Tarea asignada</ion-label>
+                <div class="accordion-content-wrapper">
+                  <div class="assignee-info"><ion-icon name="leaf-outline"></ion-icon> <span>Sofía Hernández</span></div>
+                  <span class="due-date">22/08/2024</span>
+                </div>
+              </div>
+              <ion-icon name="leaf-outline" class="header-leaf-icon"></ion-icon>
+            </div>
+            <div class="ion-padding" slot="content">
+              <p>Descripción de la tercera tarea en progreso.</p>
+            </div>
+          </ion-accordion>
+        </ion-accordion-group>
+      </ion-card-content>
+    </ion-card>
+
+    <div class="card-separator">
+      <div class="separator-circle top"></div>
+      <ion-icon name="leaf-outline" class="separator-leaf top-left"></ion-icon>
+      <ion-icon name="leaf-outline" class="separator-leaf top-right"></ion-icon>
+      <div class="separator-circle bottom"></div>
+    </div>
+
+    <!-- Card 3: Done -->
+    <ion-card class="task-card">
+      <ion-card-header>
+        <ion-card-title>Done</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-accordion-group>
+          <ion-accordion value="first">
+            <div class="accordion-header-wrapper" slot="header">
+              <div class="accordion-main-content">
+                <ion-label>Tarea asignada</ion-label>
+                <div class="accordion-content-wrapper">
+                  <div class="assignee-info"><ion-icon name="leaf-outline"></ion-icon> <span>Margara Rosales</span></div>
+                  <span class="due-date">15/08/2024</span>
+                </div>
+              </div>
+              <ion-icon name="leaf-outline" class="header-leaf-icon"></ion-icon>
+            </div>
+            <div class="ion-padding" slot="content">
+              <p>Aquí va la descripción detallada de la tarea asignada.</p>
+            </div>
+          </ion-accordion>
+          <ion-accordion value="second">
+            <div class="accordion-header-wrapper" slot="header">
+              <div class="accordion-main-content">
+                <ion-label>Tarea asignada</ion-label>
+                <div class="accordion-content-wrapper">
+                  <div class="assignee-info"><ion-icon name="leaf-outline"></ion-icon> <span>Pedro Ramírez</span></div>
+                  <span class="due-date">05/08/2024</span>
+                </div>
+              </div>
+              <ion-icon name="leaf-outline" class="header-leaf-icon"></ion-icon>
+            </div>
+            <div class="ion-padding" slot="content">
+              <p>Descripción de la segunda tarea completada.</p>
+            </div>
+          </ion-accordion>
+          <ion-accordion value="third">
+            <div class="accordion-header-wrapper" slot="header">
+              <div class="accordion-main-content">
+                <ion-label>Tarea asignada</ion-label>
+                <div class="accordion-content-wrapper">
+                  <div class="assignee-info"><ion-icon name="leaf-outline"></ion-icon> <span>Elena Torres</span></div>
+                  <span class="due-date">10/08/2024</span>
+                </div>
+              </div>
+              <ion-icon name="leaf-outline" class="header-leaf-icon"></ion-icon>
+            </div>
+            <div class="ion-padding" slot="content">
+              <p>Descripción de la tercera tarea completada.</p>
+            </div>
+          </ion-accordion>
+        </ion-accordion-group>
+      </ion-card-content>
+    </ion-card>
   </section>
 </ion-content>

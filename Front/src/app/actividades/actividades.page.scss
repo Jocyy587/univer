@@ -3,7 +3,8 @@
     --brand-green: #5a9c00;
     --brand-orange: #d35400;
 
-    ion-content {
+    ion-content { 
+        --background: var(--brand-dark);
         --background: var(--brand-dark);
     }
 
@@ -12,7 +13,7 @@
         background-color: var(--brand-dark);
         display: flex;
         margin-top: 0;
-        margin-left: 800px;
+        margin-left: 700px;
         justify-content: center;
     }
 
@@ -117,32 +118,12 @@
 
     /* Contenedor para la gráfica */
     .chart-container {
-        position: absolute; /* Lo sacamos del flujo normal */
-        top: 5rem; /* Lo bajamos un poco */
-        left: 5%; /* Lo posicionamos a la izquierda */
-        z-index: 10; /* Lo ponemos en una capa superior */
-        width: 80%;
-        max-width: 310px; /* Ancho máximo para la gráfica */
-    }
-
-    /* Aseguramos que la columna de la gráfica tenga un z-index alto */
-    ion-col[size="5"] {
-        position: relative;
-        z-index: 20;
-    }
-
-    .main-row {
-        position: relative; /* Contenedor de referencia para el posicionamiento absoluto */
-        min-height: 400px; /* Altura mínima para que quepa todo */
-    }
-
-    .title-column {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        padding-left: 25%; /* Empujamos el contenido del título a la derecha */
-        position: relative; /* Necesario para el z-index */
-        z-index: 1; /* Un valor menor que el z-index de la gráfica (10) */
+        position: absolute;
+        top: 6rem; /* La subimos más */
+        left: 5%;  /* Distancia desde la izquierda */
+        width: 200%;
+        max-width: 300px; /* Ancho de la gráfica */
+        z-index: 100; /* Un z-index alto para que esté por encima de todo */
     }
 
     /* Ícono en el centro de la gráfica */
@@ -151,8 +132,217 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        font-size: 4rem; /* Tamaño del ícono */
+        font-size: 3.5rem; /* Tamaño del ícono */
         color: var(--brand-green);
         opacity: 0.8;
+    }
+
+    /* --- Sección de Tarjetas de Estado --- */
+    .task-cards-section {
+        display: flex;
+        flex-direction: row; /* Las alineamos en fila */
+        justify-content: space-around; /* Distribuimos el espacio */
+        align-items: stretch; /* Hacemos que todas tengan la misma altura */
+        padding: 4rem 1rem;
+        margin-top: 10rem; /* Espacio para que no se solape con el título */
+    }
+
+    .task-card {
+        --background: transparent; /* Fondo transparente */
+        background: transparent;
+        border: 1px solid transparent; /* Hacemos el borde transparente */
+        width: 30%; /* Cada tarjeta ocupa aproximadamente un tercio */
+        box-shadow: none; /* Sin sombra */
+        margin: 0;
+
+        ion-card-title {
+            color: var(--brand-green);
+            text-align: center;
+            font-size: 1.5rem; 
+        }
+    }
+
+    .card-separator {
+        position: relative; /* Contenedor de referencia para los íconos */
+        width: 2px; /* Ancho de la línea vertical */
+        min-height: 100px; /* Altura mínima del separador */
+        background-color: var(--brand-green); /* Color verde */
+        margin: 0 1rem; /* Margen horizontal para separar de las tarjetas */
+    }
+
+    .separator-circle {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        border: 1px solid var(--brand-green);
+        background-color: var(--brand-dark);
+
+        &.top { top: -1rem; }
+        &.bottom { bottom: -1rem; }
+    }
+
+    .separator-leaf {
+        position: absolute;
+        font-size: 1.5rem;
+        color: var(--brand-green);
+        top: -1.5rem; /* Posicionamos los íconos arriba de la línea */
+    }
+
+    .separator-leaf.top-left {
+        /* Posicionamos a la izquierda de la línea */
+        left: -2rem; 
+    }
+
+    .separator-leaf.top-right {
+        /* Posicionamos a la derecha de la línea */
+        right: -2rem;
+        transform: scaleX(-1); /* Efecto espejo horizontal */
+    }
+
+    .accordion-header-wrapper {
+        width: 100%;
+        padding: 1rem;
+        border-bottom: 1px solid rgba(90, 156, 0, 0.3);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .accordion-main-content {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        flex-grow: 1; /* Hacemos que este contenedor crezca para ocupar el espacio */
+
+        ion-label {
+            color: var(--brand-green);
+            font-size: 1.3rem; /* Hacemos el título más grande */
+            font-weight: 500;
+        }
+    }
+
+
+    .header-leaf-icon {
+        font-size: 1.2rem;
+        color: var(--brand-green);
+        transform: scaleX(-1); /* Efecto espejo horizontal */
+        position: relative;
+        top: 4px; /* La bajamos un poco */
+        transition: transform 0.3s ease;
+    }
+
+    /* --- Estilos para el Acordeón dentro de las tarjetas --- */
+    ion-accordion-group {
+        background: transparent;
+        border-top: 1px solid rgba(90, 156, 0, 0.3);
+    }
+
+    .accordion-content-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--text-light);
+        width: 100%; /* Hacemos que ocupe todo el ancho para empujar la fecha */
+        font-size: 0.9rem;
+    }
+
+    ion-accordion {
+        background: transparent;
+
+        &.accordion-expanded {
+            .header-leaf-icon {
+                transform: scaleX(-1) rotate(90deg); /* Gira la hoja al expandir */
+            }
+        }
+
+        .ion-padding {
+            background-color: rgba(90, 156, 0, 0.05); /* Fondo muy sutil para el contenido */
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Ocultamos el ícono de flecha por defecto del acordeón */
+        &::part(indicator) {
+            display: none;
+        }
+
+        .accordion-header-wrapper:hover {
+            background-color: rgba(90, 156, 0, 0.1);
+        }
+    }
+
+    .assignee-info {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        ion-icon {
+            color: var(--brand-green);
+        }
+    }
+
+    .due-date {
+        font-style: italic;
+    }
+
+    /* --- Formas Decorativas de Fondo --- */
+    .decorative-shapes {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 0; /* Las mantenemos en el fondo */
+    }
+
+    .shape {
+        position: absolute;
+        border-style: solid;
+        background: transparent; /* Sin relleno */
+    }
+
+    .shape.circle {
+        border-radius: 50%; /* Solo los que tengan la clase .circle serán círculos */
+    }
+
+    .shape.green { border-color: var(--brand-green); }
+    .shape.orange { border-color: var(--brand-orange); }
+
+    .shape-1 { /* Círculo grande verde arriba a la derecha */
+        width: 200px;
+        height: 400px;
+        border-width: 2px;
+        top: 250px; /* La bajamos */
+        right: -150px;
+    }
+
+    .shape-2 { /* Círculo mediano naranja abajo a la izquierda */
+        width: 300px;
+        height: 300px;
+        border-width: 1px;
+        bottom: 50px;
+        left: -100px;
+    }
+
+    .shape-3 { /* Cuadrado pequeño verde abajo a la derecha */
+        width: 150px;
+        height: 150px;
+        border-width: 2px;
+        bottom: 50px; /* La bajamos */
+        right: 50px;
+        transform: rotate(20deg);
+    }
+
+    .shape-4 { /* Cuadrado mediano naranja arriba a la derecha */
+        width: 250px;
+        height: 150px;
+        border-width: 1px;
+        top: 450px; /* La bajamos */
+        right: -120px;
     }
 }
