@@ -11,8 +11,10 @@ import {
   IonInput, 
   IonButton,
   IonIcon,
-  ToastController 
+  ToastController,
+  AlertController
 } from '@ionic/angular/standalone';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -28,7 +30,7 @@ import {
     IonInput, 
     IonButton,
     IonIcon
-  ]
+  ],
 })
 export class LoginPage {
   credentials = {
@@ -38,23 +40,28 @@ export class LoginPage {
 
   constructor(
     private router: Router,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private authService: AuthService, // Inyectar el servicio de autenticación
+    private alertController: AlertController // Inyectar el controlador de alertas
   ) {
     addIcons({ leafOutline });
   }
 
   async onLogin() {
-    // Here you would typically make an API call to validate credentials
     if (this.credentials.matricula && this.credentials.password) {
-      // For demo purposes, we'll just check if fields are not empty
-      try {
-        // TODO: Replace with actual API call
-        await this.router.navigate(['/home']);
-      } catch (error) {
-        this.showError('Error al iniciar sesión');
-      }
+      this.authService.login(this.credentials.matricula, this.credentials.password).subscribe({
+        next: (response) => {
+          console.log('Login exitoso desde login.page.ts:', response);
+          this.router.navigateByUrl('/home'); // Redirigir a home si el login es correcto
+        },
+        error: (error) => {
+          console.error('Error en el login:', error);
+          // Muestra el mensaje de error que viene del backend
+          this.showError(error.error.message || 'Error al conectar con el servidor.');
+        }
+      });
     } else {
-      this.showError('Por favor complete todos los campos');
+      this.showError('Por favor, complete todos los campos.');
     }
   }
 

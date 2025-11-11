@@ -7,7 +7,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'login',
     pathMatch: 'full',
   },
   {
@@ -26,10 +26,15 @@ export const routes: Routes = [
   {
     path: 'extracurricular',
     loadComponent: () => import('./extracurricular/extracurricular.page').then( m => m.ExtracurricularPage)
-  },  {
+  },
+  {
     path: 'actividades',
     loadComponent: () => import('./actividades/actividades.page').then( m => m.ActividadesPage)
+  },  {
+    path: 'cat19',
+    loadComponent: () => import('./cat19/cat19.page').then( m => m.Cat19Page)
   },
+
 
 
 ];

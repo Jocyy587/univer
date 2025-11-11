@@ -81,6 +81,7 @@
             },
             "development": {
               "buildTarget": "app:build:development",
+              "proxyConfig": "proxy.conf.json",
               "host": "0.0.0.0",
               "allowedHosts": [
                 "wish-belt-lane-fighting.trycloudflare.com",
