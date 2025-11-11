@@ -1,0 +1,23 @@
+# Dependencias de Node.js
+# Estas carpetas se pueden reinstalar con 'npm install', por lo que no se suben.
+/Front/node_modules
+/Back/node_modules
+
+# Archivos de secretos y configuración de entorno
+# ¡NUNCA subas archivos con claves privadas o contraseñas!
+/Back/firebase-service-account.json
+
+# Archivos de build y caché de Angular/Ionic
+# Estos archivos se generan automáticamente al compilar.
+/Front/www
+/Front/dist
+/Front/.angular
+
+# Archivos de log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos generados por el sistema operativo
+.DS_Store
+Thumbs.db
