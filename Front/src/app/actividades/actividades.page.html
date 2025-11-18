@@ -58,50 +58,20 @@
         <ion-card-title>To-do</ion-card-title>
       </ion-card-header>
       <ion-card-content>
-        <ion-accordion-group>
-          <ion-accordion value="first">
+        <ion-accordion-group *ngIf="todoTasks.length > 0">
+          <ion-accordion *ngFor="let task of todoTasks; let i = index" [value]="'todo-' + i">
             <div class="accordion-header-wrapper" slot="header">
               <div class="accordion-main-content">
-                <ion-label>Tarea asignada</ion-label>
+                <ion-label>{{ task.nombre }}</ion-label>
                 <div class="accordion-content-wrapper">
-                  <div class="assignee-info"><ion-icon name="leaf-outline"></ion-icon> <span>Margara Rosales</span></div>
-                  <span class="due-date">15/08/2024</span>
+                  <div class="assignee-info"><ion-icon name="leaf-outline"></ion-icon> <span>{{ task.creador.nombre }}</span></div>
+                  <span class="due-date">{{ task.fechaCreacion | date: 'dd/MM/yyyy' }}</span>
                 </div>
               </div>
               <ion-icon name="leaf-outline" class="header-leaf-icon"></ion-icon>
             </div>
             <div class="ion-padding" slot="content">
-              <p>Aquí va la descripción detallada de la tarea asignada.</p>
-            </div>
-          </ion-accordion>
-          <ion-accordion value="second">
-            <div class="accordion-header-wrapper" slot="header">
-              <div class="accordion-main-content">
-                <ion-label>Tarea asignada</ion-label>
-                <div class="accordion-content-wrapper">
-                  <div class="assignee-info"><ion-icon name="leaf-outline"></ion-icon> <span>Juan Pérez</span></div>
-                  <span class="due-date">20/08/2024</span>
-                </div>
-              </div>
-              <ion-icon name="leaf-outline" class="header-leaf-icon"></ion-icon>
-            </div>
-            <div class="ion-padding" slot="content">
-              <p>Descripción de la segunda tarea pendiente.</p>
-            </div>
-          </ion-accordion>
-          <ion-accordion value="third">
-            <div class="accordion-header-wrapper" slot="header">
-              <div class="accordion-main-content">
-                <ion-label>Tarea asignada</ion-label>
-                <div class="accordion-content-wrapper">
-                  <div class="assignee-info"><ion-icon name="leaf-outline"></ion-icon> <span>Ana García</span></div>
-                  <span class="due-date">25/08/2024</span>
-                </div>
-              </div>
-              <ion-icon name="leaf-outline" class="header-leaf-icon"></ion-icon>
-            </div>
-            <div class="ion-padding" slot="content">
-              <p>Descripción de la tercera tarea pendiente.</p>
+              <p>{{ task.descripcion }}</p>
             </div>
           </ion-accordion>
         </ion-accordion-group>
@@ -121,50 +91,27 @@
         <ion-card-title>Doing</ion-card-title>
       </ion-card-header>
       <ion-card-content>
-        <ion-accordion-group>
-          <ion-accordion value="first">
+        <ion-accordion-group *ngIf="doingTasks.length > 0">
+          <ion-accordion *ngFor="let task of doingTasks; let i = index" [value]="'doing-' + i">
             <div class="accordion-header-wrapper" slot="header">
               <div class="accordion-main-content">
-                <ion-label>Tarea asignada</ion-label>
+                <ion-label>{{ task.nombre }}</ion-label>
                 <div class="accordion-content-wrapper">
-                  <div class="assignee-info"><ion-icon name="leaf-outline"></ion-icon> <span>Margara Rosales</span></div>
-                  <span class="due-date">15/08/2024</span>
+                  <div class="assignee-info"><ion-icon name="leaf-outline"></ion-icon> <span>{{ task.creador.nombre }}</span></div>
+                  <span class="due-date">{{ task.fechaCreacion | date: 'dd/MM/yyyy' }}</span>
                 </div>
               </div>
               <ion-icon name="leaf-outline" class="header-leaf-icon"></ion-icon>
             </div>
             <div class="ion-padding" slot="content">
-              <p>Aquí va la descripción detallada de la tarea asignada.</p>
-            </div>
-          </ion-accordion>
-          <ion-accordion value="second">
-            <div class="accordion-header-wrapper" slot="header">
-              <div class="accordion-main-content">
-                <ion-label>Tarea asignada</ion-label>
-                <div class="accordion-content-wrapper">
-                  <div class="assignee-info"><ion-icon name="leaf-outline"></ion-icon> <span>Carlos López</span></div>
-                  <span class="due-date">18/08/2024</span>
-                </div>
+              <p>{{ task.descripcion }}</p><br>
+              <!-- Botón de entrega para estudiantes -->
+              <div *ngIf="isStudent$ | async">
+                <input type="file" [id]="'file-upload-' + task.id" (change)="onFileSelected($event, task.id)" accept="image/*,.pdf" style="display: none;">
+                <ion-button expand="block" color="success" (click)="triggerFileUpload(task.id)">
+                  Entregar Tarea
+                </ion-button>
               </div>
-              <ion-icon name="leaf-outline" class="header-leaf-icon"></ion-icon>
-            </div>
-            <div class="ion-padding" slot="content">
-              <p>Descripción de la segunda tarea en progreso.</p>
-            </div>
-          </ion-accordion>
-          <ion-accordion value="third">
-            <div class="accordion-header-wrapper" slot="header">
-              <div class="accordion-main-content">
-                <ion-label>Tarea asignada</ion-label>
-                <div class="accordion-content-wrapper">
-                  <div class="assignee-info"><ion-icon name="leaf-outline"></ion-icon> <span>Sofía Hernández</span></div>
-                  <span class="due-date">22/08/2024</span>
-                </div>
-              </div>
-              <ion-icon name="leaf-outline" class="header-leaf-icon"></ion-icon>
-            </div>
-            <div class="ion-padding" slot="content">
-              <p>Descripción de la tercera tarea en progreso.</p>
             </div>
           </ion-accordion>
         </ion-accordion-group>
@@ -184,54 +131,48 @@
         <ion-card-title>Done</ion-card-title>
       </ion-card-header>
       <ion-card-content>
-        <ion-accordion-group>
-          <ion-accordion value="first">
+        <ion-accordion-group *ngIf="doneTasks.length > 0">
+          <ion-accordion *ngFor="let task of doneTasks; let i = index" [value]="'done-' + i">
             <div class="accordion-header-wrapper" slot="header">
               <div class="accordion-main-content">
-                <ion-label>Tarea asignada</ion-label>
+                <ion-label>{{ task.nombre }}</ion-label>
                 <div class="accordion-content-wrapper">
-                  <div class="assignee-info"><ion-icon name="leaf-outline"></ion-icon> <span>Margara Rosales</span></div>
-                  <span class="due-date">15/08/2024</span>
+                  <div class="assignee-info"><ion-icon name="leaf-outline"></ion-icon> <span>{{ task.creador.nombre }}</span></div>
+                  <span class="due-date">{{ task.fechaCreacion | date: 'dd/MM/yyyy' }}</span>
                 </div>
               </div>
               <ion-icon name="leaf-outline" class="header-leaf-icon"></ion-icon>
             </div>
             <div class="ion-padding" slot="content">
-              <p>Aquí va la descripción detallada de la tarea asignada.</p>
-            </div>
-          </ion-accordion>
-          <ion-accordion value="second">
-            <div class="accordion-header-wrapper" slot="header">
-              <div class="accordion-main-content">
-                <ion-label>Tarea asignada</ion-label>
-                <div class="accordion-content-wrapper">
-                  <div class="assignee-info"><ion-icon name="leaf-outline"></ion-icon> <span>Pedro Ramírez</span></div>
-                  <span class="due-date">05/08/2024</span>
+              <p>{{ task.descripcion }}</p><br>
+              <!-- Información de la entrega -->
+              <div *ngIf="task.entrega">
+                <!-- Chip con el nombre del archivo entregado -->
+                <ion-chip *ngIf="task.entrega.nombreArchivo" outline="true" color="success">
+                  <ion-icon name="document-attach-outline"></ion-icon>
+                  <ion-label>{{ task.entrega.nombreArchivo }}</ion-label>
+                </ion-chip>
+                <!-- Enlace de descarga para profesores/admin -->
+                <div *ngIf="task.entrega.archivoUrl && (canCreateTasks$ | async)">
+                  <ion-button expand="block" color="tertiary" [href]="task.entrega.archivoUrl" target="_blank">
+                    Ver Entrega
+                  </ion-button>
                 </div>
               </div>
-              <ion-icon name="leaf-outline" class="header-leaf-icon"></ion-icon>
-            </div>
-            <div class="ion-padding" slot="content">
-              <p>Descripción de la segunda tarea completada.</p>
-            </div>
-          </ion-accordion>
-          <ion-accordion value="third">
-            <div class="accordion-header-wrapper" slot="header">
-              <div class="accordion-main-content">
-                <ion-label>Tarea asignada</ion-label>
-                <div class="accordion-content-wrapper">
-                  <div class="assignee-info"><ion-icon name="leaf-outline"></ion-icon> <span>Elena Torres</span></div>
-                  <span class="due-date">10/08/2024</span>
-                </div>
-              </div>
-              <ion-icon name="leaf-outline" class="header-leaf-icon"></ion-icon>
-            </div>
-            <div class="ion-padding" slot="content">
-              <p>Descripción de la tercera tarea completada.</p>
             </div>
           </ion-accordion>
         </ion-accordion-group>
       </ion-card-content>
     </ion-card>
   </section>
+
+  <!-- Botón flotante para agregar tareas (solo para admin/Profesor) -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="canCreateTasks$ | async">
+    <ion-fab-button (click)="openAddTaskModal()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button color="secondary" (click)="openSearchStudentModal()">
+      <ion-icon name="search-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

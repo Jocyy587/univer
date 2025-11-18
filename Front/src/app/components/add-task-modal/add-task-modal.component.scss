@@ -1,0 +1,21 @@
+ion-toolbar {
+  --background: var(--ion-color-primary);
+  --color: var(--ion-color-primary-contrast);
+}
+
+ion-content {
+  --background: var(--ion-color-light);
+}
+
+ion-item {
+  --background: var(--ion-color-light-tint);
+  --border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+ion-button[type="submit"] {
+  --background: var(--ion-color-primary);
+  --border-radius: 8px;
+  font-weight: bold;
+  margin-top: 1.5rem;
+}

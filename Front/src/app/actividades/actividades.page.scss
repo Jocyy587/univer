@@ -1,6 +1,7 @@
 :host {
     --brand-dark: #000000;
     --brand-green: #5a9c00;
+    --text-light: #a2ff3d; // Verde claro para texto secundario
     --brand-orange: #d35400;
 
     ion-content { 
@@ -219,7 +220,7 @@
         flex-grow: 1; /* Hacemos que este contenedor crezca para ocupar el espacio */
 
         ion-label {
-            color: var(--brand-green);
+            color: white;
             font-size: 1.3rem; /* Hacemos el título más grande */
             font-weight: 500;
         }
@@ -345,4 +346,10 @@
         top: 450px; /* La bajamos */
         right: -120px;
     }
+}
+
+/* Estilos para el botón flotante de agregar tarea */
+ion-fab-button {
+  --background: var(--brand-green);
+  --color: white;
 }

@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Buscar Entregas de Estudiante</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cancel()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="search-bar">
+    <ion-item>
+      <ion-input label="Matrícula del Estudiante" label-placement="floating" [(ngModel)]="matricula" (keyup.enter)="search()"></ion-input>
+    </ion-item>
+    <ion-button (click)="search()" expand="block" class="ion-margin-top">
+      Buscar
+    </ion-button>
+  </div>
+
+  <div *ngIf="isLoading" class="ion-text-center ion-padding">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <div *ngIf="!isLoading && searched">
+    <div *ngIf="studentTasks.length > 0; else noResults">
+      <ion-list-header>
+        <ion-label>Tareas Entregadas</ion-label>
+      </ion-list-header>
+      <ion-list>
+        <ion-item *ngFor="let task of studentTasks">
+          <ion-label>
+            <h2>{{ task.nombre }}</h2>
+            <p>Entregado: {{ task.entrega.nombreArchivo }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+    <ng-template #noResults>
+      <p class="ion-text-center ion-padding">El estudiante no ha entregado ninguna tarea.</p>
+    </ng-template>
+  </div>
+</ion-content>
+
