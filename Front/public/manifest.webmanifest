@@ -1,6 +1,8 @@
 {
-  "name": "app",
-  "short_name": "app",
+  "name": "Mi App Universitaria",
+  "short_name": "UniverApp",
+  "theme_color": "#488aff",
+  "background_color": "#f4f5f8",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
