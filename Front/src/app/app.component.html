@@ -19,11 +19,11 @@
         <ion-button class="nav-link" routerLink="/home">INICIO</ion-button> <!-- Siempre visible -->
         <ion-button class="nav-link" routerLink="/extracurricular">EXTRACURRICULAR</ion-button> <!-- Siempre visible -->
 
-        <!-- Actividades: Visible solo si está autenticado -->
-        <ion-button class="nav-link" routerLink="/actividades" *ngIf="isAuthenticated$ | async">ACTIVIDADES</ion-button>
+        <!-- Actividades: Visible solo para roles que NO son de estudiante (admin/profesor) -->
+        <ion-button class="nav-link" routerLink="/actividades" *ngIf="(isAuthenticated$ | async) && !(isStudent$ | async)">ACTIVIDADES</ion-button>
 
         <!-- CAT-19: Visible solo si está autenticado Y es admin -->
-        <ion-button class="nav-link" routerLink="/cat19" *ngIf="(isAuthenticated$ | async) && (isAdmin$ | async)">CAT-19</ion-button>
+        <ion-button class="nav-link" routerLink="/cat19" *ngIf="(isAuthenticated$ | async) && (isAdmin$ | async)">CA-19</ion-button>
 
         <!-- Iniciar Sesión y Registro: Visibles solo si NO está autenticado -->
         <ion-button class="nav-link" routerLink="/login" *ngIf="!(isAuthenticated$ | async)">INICIAR SESIÓN</ion-button>

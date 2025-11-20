@@ -4,5 +4,15 @@ export interface Usuario {
   matricula: string;
   nombre: string;
   Rol: string;
-  // No incluimos la contraseña en el modelo del frontend por seguridad.
+  apellidos: string; // <--- AÑADE ESTA LÍNEA
+
+}
+
+export interface UserSession {
+  id: string;
+  nombre: string;
+  apellidos: string; // <--- AÑADE ESTA LÍNEA
+  matricula: string;
+  correo: string;
+  Rol: string;
 }

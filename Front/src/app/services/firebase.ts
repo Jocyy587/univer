@@ -23,9 +23,13 @@ export class Firebase {
       })
     );
   }
+ getExtracurricularStatus(userId: string): Observable<{ isRegistered: boolean }> {
+  return this.http.get<{ isRegistered: boolean }>(`${environment.apiUrl}/extracurricular/status/${userId}`);
 
+}
   // Nuevo método para iniciar sesión
   login(matricula: string, password: string): Observable<any> {
     return this.http.post(`${environment.apiUrl}/login`, { matricula, password });
   }
+ 
 }

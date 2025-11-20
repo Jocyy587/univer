@@ -69,9 +69,9 @@ try {
 
   // Endpoint para registrar un nuevo usuario
   app.post('/register', async (req, res) => {
-    const { nombre, matricula, correo, password } = req.body;
+    const { nombre, apellidos, matricula, correo, password } = req.body;
 
-    if (!nombre || !matricula || !correo || !password) {
+    if (!nombre || !apellidos || !matricula || !correo || !password) {
       return res.status(400).json({ message: 'Todos los campos son requeridos.' });
     }
 
@@ -92,6 +92,7 @@ try {
       // Crear el nuevo usuario con el rol de "estudiante"
       const newUserRef = await usersRef.push({
         nombre,
+        apellidos,
         matricula,
         correo,
         contraseña: password, // Guardamos la contraseña
@@ -103,6 +104,60 @@ try {
       res.status(500).json({ message: 'Error interno del servidor.' });
     }
   });
+
+  // Endpoint para registrarse en una actividad extracurricular
+  app.post('/extracurricular', async (req, res) => {
+    // Extraemos los datos que envía el frontend
+    const { nombre, apellidos, matricula, modulo, userId } = req.body;
+
+    // Verificamos que los datos necesarios estén presentes
+    if (!userId || !matricula || !modulo) {
+      return res.status(400).json({ message: 'Faltan datos para el registro (usuario, matrícula o módulo).' });
+    }
+
+    try {
+      // Creamos una referencia a una nueva "tabla" en Firebase llamada 'registros_extracurriculares'
+      const registrosRef = db.ref('registros_extracurriculares');
+
+      // Creamos un nuevo registro con los datos del estudiante y la fecha
+      const nuevoRegistro = await registrosRef.push({
+        userId,
+        nombre,
+        apellidos,
+        matricula,
+        modulo,
+        fechaRegistro: new Date().toISOString() // Guardamos la fecha en que se registró
+      });
+
+      // Enviamos una respuesta de éxito al frontend
+      res.status(201).json({ message: 'Registro a actividad extracurricular exitoso', id: nuevoRegistro.key });
+    } catch (error) {
+      console.error('Error al registrar en actividad extracurricular:', error);
+      res.status(500).json({ message: 'Error interno del servidor.' });
+    }
+  });
+
+  // Endpoint para verificar si un usuario ya está registrado en una actividad extracurricular
+  app.get('/extracurricular/status/:userId', async (req, res) => {
+    const { userId } = req.params;
+
+    if (!userId) {
+      return res.status(400).json({ message: 'El ID de usuario es requerido.' });
+    }
+
+    try {
+      const registrosRef = db.ref('registros_extracurriculares');
+      const snapshot = await registrosRef.orderByChild('userId').equalTo(userId).once('value');
+
+      // Si snapshot.exists() es true, el usuario ya está registrado.
+      res.json({ isRegistered: snapshot.exists() });
+
+    } catch (error) {
+      console.error('Error al verificar el estado de registro extracurricular:', error);
+      res.status(500).json({ message: 'Error interno del servidor.' });
+    }
+  });
+
 
   // Endpoint para crear una nueva tarea
   app.post('/tareas', async (req, res) => {
@@ -155,14 +210,14 @@ try {
         tareasArray = tareasArray.map(tarea => {
           const estadoPersonal = tareasDelUsuario[tarea.id];
           if (estadoPersonal) {
-            // Si el estudiante tiene una entrega para esta tarea, usamos su estado y datos
+            // Si el estudiante tiene un registro para esta tarea (ej: una entrega), usamos su estado y datos
             return {
               ...tarea,
               estado: estadoPersonal.estado,
               entrega: estadoPersonal.entrega
             };
           } else {
-            // Si no tiene entrega, la tarea está "en progreso" para este estudiante.
+            // Si no tiene un registro, la tarea está "pendiente" para este estudiante.
             return { ...tarea, estado: 'Doing' }; // Por defecto, las tareas no entregadas están en "Doing"
           }
         });

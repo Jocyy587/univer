@@ -43,6 +43,8 @@ export class AppComponent implements OnInit {
   // Observables para el estado de autenticación y el rol de administrador
   isAuthenticated$: Observable<boolean>;
   isAdmin$: Observable<boolean>;
+  isStudent$: Observable<boolean>;
+  isRegistered$: Observable<boolean>;
 
   constructor(private authService: AuthService) { // Inyecta AuthService
     addIcons({ leafOutline });
@@ -51,6 +53,10 @@ export class AppComponent implements OnInit {
     this.isAdmin$ = this.authService.currentUser.pipe(
       map(user => user?.Rol === 'admin') // Comprueba si el rol del usuario es 'admin'
     );
+    this.isStudent$ = this.authService.currentUser.pipe(
+      map(user => user?.Rol?.toLowerCase() === 'estudiante')
+    );
+    this.isRegistered$ = this.authService.isRegisteredExtracurricular;
   }
 
   ngOnInit() {

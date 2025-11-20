@@ -5,166 +5,122 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <!-- Formas Decorativas de Fondo -->
-  <div class="decorative-shapes">
-    <div class="shape green shape-1"></div>
-    <div class="shape circle orange shape-2"></div>
-    <div class="shape green shape-3"></div>
-    <div class="shape orange shape-4"></div>
-  </div>
 
-  <section class="module-line-separator top-line">
-    <div class="line-with-circles"></div>
-  </section><section class="final-title-section">
-    <div class="interleaved-title">
-      <span class="letter green">A</span>
-      <ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
-      <span class="letter green">C</span>
-      <ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
-      <span class="letter green">T</span>
-      <ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
-      <span class="letter green">I</span>
-      <ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
-      <span class="letter green">V</span>
-      <ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
-      <span class="letter green">I</span>
-      <ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
-      <span class="letter green">D</span>
-      <ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
-      <span class="letter green">A</span>
-      <ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
-      <span class="letter green">D</span>
-      <ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
-      <span class="letter green">E</span>
-      <ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
-      <span class="letter green">S</span>
-    </div>
-  </section>
-  <section class="module-line-separator bottom-line">
-    <div class="line-with-circles"></div>
-  </section>
-
-  <!-- Donut Chart Sticker -->
-  <div class="chart-container">
-    <canvas #donutCanvas></canvas>
-    <ion-icon name="leaf-outline" class="chart-center-icon"></ion-icon>
-  </div>
-
-  <!-- Sección de Tarjetas de Estado -->
-  <section class="task-cards-section">
-    <!-- Card 1: To-do -->
-    <ion-card class="task-card">
-      <ion-card-header>
-        <ion-card-title>To-do</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-accordion-group *ngIf="todoTasks.length > 0">
-          <ion-accordion *ngFor="let task of todoTasks; let i = index" [value]="'todo-' + i">
-            <div class="accordion-header-wrapper" slot="header">
-              <div class="accordion-main-content">
-                <ion-label>{{ task.nombre }}</ion-label>
-                <div class="accordion-content-wrapper">
-                  <div class="assignee-info"><ion-icon name="leaf-outline"></ion-icon> <span>{{ task.creador.nombre }}</span></div>
-                  <span class="due-date">{{ task.fechaCreacion | date: 'dd/MM/yyyy' }}</span>
-                </div>
-              </div>
-              <ion-icon name="leaf-outline" class="header-leaf-icon"></ion-icon>
-            </div>
-            <div class="ion-padding" slot="content">
-              <p>{{ task.descripcion }}</p>
-            </div>
-          </ion-accordion>
-        </ion-accordion-group>
-      </ion-card-content>
-    </ion-card>
-
-    <div class="card-separator">
-      <div class="separator-circle top"></div>
-      <ion-icon name="leaf-outline" class="separator-leaf top-left"></ion-icon>
-      <ion-icon name="leaf-outline" class="separator-leaf top-right"></ion-icon>
-      <div class="separator-circle bottom"></div>
+  <!-- ====================================================== -->
+  <!-- VISTA PARA PROFESOR / ADMIN (DISEÑO ORIGINAL)          -->
+  <!-- ====================================================== -->
+  <ng-container *ngIf="(isStudent$ | async) === false">
+    <!-- Formas Decorativas de Fondo -->
+    <div class="decorative-shapes">
+      <div class="shape green shape-1"></div>
+      <div class="shape circle orange shape-2"></div>
+      <div class="shape green shape-3"></div>
+      <div class="shape orange shape-4"></div>
     </div>
 
-    <!-- Card 2: Doing -->
-    <ion-card class="task-card">
-      <ion-card-header>
-        <ion-card-title>Doing</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-accordion-group *ngIf="doingTasks.length > 0">
-          <ion-accordion *ngFor="let task of doingTasks; let i = index" [value]="'doing-' + i">
-            <div class="accordion-header-wrapper" slot="header">
-              <div class="accordion-main-content">
-                <ion-label>{{ task.nombre }}</ion-label>
-                <div class="accordion-content-wrapper">
-                  <div class="assignee-info"><ion-icon name="leaf-outline"></ion-icon> <span>{{ task.creador.nombre }}</span></div>
-                  <span class="due-date">{{ task.fechaCreacion | date: 'dd/MM/yyyy' }}</span>
-                </div>
-              </div>
-              <ion-icon name="leaf-outline" class="header-leaf-icon"></ion-icon>
-            </div>
-            <div class="ion-padding" slot="content">
-              <p>{{ task.descripcion }}</p><br>
-              <!-- Botón de entrega para estudiantes -->
-              <div *ngIf="isStudent$ | async">
-                <input type="file" [id]="'file-upload-' + task.id" (change)="onFileSelected($event, task.id)" accept="image/*,.pdf" style="display: none;">
-                <ion-button expand="block" color="success" (click)="triggerFileUpload(task.id)">
-                  Entregar Tarea
-                </ion-button>
-              </div>
-            </div>
-          </ion-accordion>
-        </ion-accordion-group>
-      </ion-card-content>
-    </ion-card>
+    <section class="module-line-separator top-line">
+      <div class="line-with-circles"></div>
+    </section>
+    <section class="final-title-section">
+      <div class="interleaved-title">
+        <span class="letter green">A</span><ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
+        <span class="letter green">C</span><ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
+        <span class="letter green">T</span><ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
+        <span class="letter green">I</span><ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
+        <span class="letter green">V</span><ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
+        <span class="letter green">I</span><ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
+        <span class="letter green">D</span><ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
+        <span class="letter green">A</span><ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
+        <span class="letter green">D</span><ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
+        <span class="letter green">E</span><ion-icon name="leaf-outline" class="leaf-separator green"></ion-icon>
+        <span class="letter green">S</span>
+      </div>
+    </section>
+    <section class="module-line-separator bottom-line">
+      <div class="line-with-circles"></div>
+    </section>
 
-    <div class="card-separator">
-      <div class="separator-circle top"></div>
-      <ion-icon name="leaf-outline" class="separator-leaf top-left"></ion-icon>
-      <ion-icon name="leaf-outline" class="separator-leaf top-right"></ion-icon>
-      <div class="separator-circle bottom"></div>
+    <!-- Donut Chart Sticker -->
+    <div class="chart-container">
+      <canvas #donutCanvas></canvas>
+      <ion-icon name="leaf-outline" class="chart-center-icon"></ion-icon>
     </div>
 
-    <!-- Card 3: Done -->
-    <ion-card class="task-card">
-      <ion-card-header>
-        <ion-card-title>Done</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-accordion-group *ngIf="doneTasks.length > 0">
-          <ion-accordion *ngFor="let task of doneTasks; let i = index" [value]="'done-' + i">
-            <div class="accordion-header-wrapper" slot="header">
-              <div class="accordion-main-content">
-                <ion-label>{{ task.nombre }}</ion-label>
-                <div class="accordion-content-wrapper">
-                  <div class="assignee-info"><ion-icon name="leaf-outline"></ion-icon> <span>{{ task.creador.nombre }}</span></div>
-                  <span class="due-date">{{ task.fechaCreacion | date: 'dd/MM/yyyy' }}</span>
+    <!-- Sección de Tarjetas de Estado -->
+    <section class="task-cards-section">
+      <!-- Card 1: To-do -->
+      <ion-card class="task-card">
+        <ion-card-header><ion-card-title>To-do</ion-card-title></ion-card-header>
+        <ion-card-content>
+          <!-- Contenido del acordeón para To-do -->
+          <ion-accordion-group *ngIf="todoTasks.length > 0" [multiple]="true">
+            <ion-accordion *ngFor="let task of todoTasks; let i = index" [value]="'todo-' + i">
+              <div class="accordion-header-wrapper" slot="header">
+                <div class="accordion-main-content"><ion-label>{{ task.nombre }}</ion-label></div>
+                <ion-icon name="leaf-outline" class="header-leaf-icon"></ion-icon>
+              </div>
+              <div class="ion-padding" slot="content"><p>{{ task.descripcion }}</p></div>
+            </ion-accordion>
+          </ion-accordion-group>
+        </ion-card-content>
+      </ion-card>
+
+      <div class="card-separator">
+        <div class="separator-circle top"></div><ion-icon name="leaf-outline" class="separator-leaf top-left"></ion-icon><ion-icon name="leaf-outline" class="separator-leaf top-right"></ion-icon><div class="separator-circle bottom"></div>
+      </div>
+
+      <!-- Card 2: Doing -->
+      <ion-card class="task-card">
+        <ion-card-header><ion-card-title>Doing</ion-card-title></ion-card-header>
+        <ion-card-content>
+          <!-- Contenido del acordeón para Doing -->
+          <ion-accordion-group *ngIf="doingTasks.length > 0" [multiple]="true">
+            <ion-accordion *ngFor="let task of doingTasks; let i = index" [value]="'doing-' + i">
+              <div class="accordion-header-wrapper" slot="header">
+                <div class="accordion-main-content"><ion-label>{{ task.nombre }}</ion-label></div>
+                <ion-icon name="leaf-outline" class="header-leaf-icon"></ion-icon>
+              </div>
+              <div class="ion-padding" slot="content"><p>{{ task.descripcion }}</p></div>
+            </ion-accordion>
+          </ion-accordion-group>
+        </ion-card-content>
+      </ion-card>
+
+      <div class="card-separator">
+        <div class="separator-circle top"></div><ion-icon name="leaf-outline" class="separator-leaf top-left"></ion-icon><ion-icon name="leaf-outline" class="separator-leaf top-right"></ion-icon><div class="separator-circle bottom"></div>
+      </div>
+
+      <!-- Card 3: Done -->
+      <ion-card class="task-card">
+        <ion-card-header><ion-card-title>Done</ion-card-title></ion-card-header>
+        <ion-card-content>
+          <!-- Contenido del acordeón para Done -->
+          <ion-accordion-group *ngIf="doneTasks.length > 0" [multiple]="true">
+            <ion-accordion *ngFor="let task of doneTasks; let i = index" [value]="'done-' + i">
+              <div class="accordion-header-wrapper" slot="header">
+                <div class="accordion-main-content"><ion-label>{{ task.nombre }}</ion-label></div>
+                <ion-icon name="leaf-outline" class="header-leaf-icon"></ion-icon>
+              </div>
+              <div class="ion-padding" slot="content">
+                <p>{{ task.descripcion }}</p>
+                <div *ngIf="task.entrega?.archivoUrl">
+                  <ion-button expand="block" color="tertiary" [href]="task.entrega?.archivoUrl" target="_blank">Ver Entrega</ion-button>
                 </div>
               </div>
-              <ion-icon name="leaf-outline" class="header-leaf-icon"></ion-icon>
-            </div>
-            <div class="ion-padding" slot="content">
-              <p>{{ task.descripcion }}</p><br>
-              <!-- Información de la entrega -->
-              <div *ngIf="task.entrega">
-                <!-- Chip con el nombre del archivo entregado -->
-                <ion-chip *ngIf="task.entrega.nombreArchivo" outline="true" color="success">
-                  <ion-icon name="document-attach-outline"></ion-icon>
-                  <ion-label>{{ task.entrega.nombreArchivo }}</ion-label>
-                </ion-chip>
-                <!-- Enlace de descarga para profesores/admin -->
-                <div *ngIf="task.entrega.archivoUrl && (canCreateTasks$ | async)">
-                  <ion-button expand="block" color="tertiary" [href]="task.entrega.archivoUrl" target="_blank">
-                    Ver Entrega
-                  </ion-button>
-                </div>
-              </div>
-            </div>
-          </ion-accordion>
-        </ion-accordion-group>
-      </ion-card-content>
-    </ion-card>
-  </section>
+            </ion-accordion>
+          </ion-accordion-group>
+        </ion-card-content>
+      </ion-card>
+    </section>
+  </ng-container>
+
+  <!-- ====================================================== -->
+  <!-- VISTA PARA ESTUDIANTE (NUEVO DISEÑO)                   -->
+  <!-- ====================================================== -->
+  <ng-container *ngIf="(isStudent$ | async)">
+    <!-- Usamos el nuevo componente reutilizable -->
+    <app-student-activitie></app-student-activitie>
+  </ng-container>
 
   <!-- Botón flotante para agregar tareas (solo para admin/Profesor) -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="canCreateTasks$ | async">
