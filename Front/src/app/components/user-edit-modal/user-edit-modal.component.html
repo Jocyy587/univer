@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar class="header-dark">
+    <ion-title>{{ isEditMode ? 'Editar Usuario' : 'Agregar Nuevo Usuario' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cancel()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" *ngIf="user">
+  <form (ngSubmit)="saveChanges()" #editForm="ngForm" >
+    <ion-list>
+      <ion-item>
+        <ion-label position="floating">Nombre</ion-label>
+        <ion-input [(ngModel)]="user.nombre" name="nombre" required type="text"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Apellidos</ion-label>
+        <ion-input [(ngModel)]="user.apellidos" name="apellidos" required type="text"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Matrícula</ion-label>
+        <ion-input [(ngModel)]="user.matricula" name="matricula" required type="text"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Correo</ion-label>
+        <ion-input [(ngModel)]="user.correo" name="correo" type="email" required [readonly]="isEditMode"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Rol</ion-label>
+        <ion-select [(ngModel)]="user.Rol" name="rol" interface="popover">
+          <ion-select-option value="estudiante">Estudiante</ion-select-option>
+          <ion-select-option value="maestro">Maestro</ion-select-option>
+          <ion-select-option value="admin">Admin</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <!-- Campo de contraseña solo para crear -->
+      <ion-item *ngIf="!isEditMode">
+        <ion-label position="floating">Contraseña</ion-label>
+        <ion-input [(ngModel)]="password" name="password" type="password" required></ion-input>
+      </ion-item>
+    </ion-list>
+    <ion-button type="submit" expand="block" [disabled]="!editForm.valid">Guardar Cambios</ion-button>
+  </form>
+
+  <!-- Zona de peligro solo para editar -->
+  <div class="danger-zone" *ngIf="isEditMode">
+    <ion-item-divider></ion-item-divider>
+    <ion-button expand="block" color="warning" (click)="resetPassword()">Reiniciar Contraseña</ion-button>
+    <ion-button expand="block" color="danger" (click)="deleteUser()">Eliminar Usuario</ion-button>
+  </div>
+</ion-content>

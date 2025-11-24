@@ -1,16 +1,17 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ModalController, IonicModule } from '@ionic/angular';
+import { ModalController, IonicModule, AlertController } from '@ionic/angular';
 import { Observable, Subscription, take } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { AddTaskModalComponent } from '../components/add-task-modal/add-task-modal.component';
 import { SearchStudentModalComponent } from '../components/search-student-modal/search-student-modal.component';
+import { TaskEditModalComponent } from '../components/task-edit-modal/task-edit-modal.component';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { CommonModule } from '@angular/common';
 import { Chart, registerables } from 'chart.js';
 import { addIcons } from 'ionicons';
-import { addOutline, leafOutline, documentAttachOutline, searchOutline, checkmarkCircle, hourglassOutline, checkmarkDoneCircleOutline, cloudUploadOutline, sunnyOutline, schoolOutline } from 'ionicons/icons';
+import { duplicateOutline, addOutline, leafOutline, documentAttachOutline, searchOutline, checkmarkCircle, hourglassOutline, checkmarkDoneCircleOutline, cloudUploadOutline, sunnyOutline, schoolOutline } from 'ionicons/icons';
 import { StudentActivitieComponent } from 'src/app/components/student-activitie/student-activitie.component';
 
 // Definimos una interfaz para las tareas para tener un tipado fuerte
@@ -21,7 +22,9 @@ interface Tarea {
   estado: 'To-do' | 'Doing' | 'Done';
   creador: { id: string; nombre: string; };
   fechaCreacion: string;
-  entrega?: { fecha: string; nombreArchivo: string; archivoUrl?: string; };
+  entrega?: { fecha: string; nombreArchivo: string; archivoUrl?: string; }; // Para estudiante
+  entregas?: any[]; // Para profesor
+  calificacion?: { nota: string, frase: string }; // Para estudiante
 }
 
 @Component({
@@ -47,9 +50,10 @@ export class ActividadesPage implements OnInit, AfterViewInit {
   constructor(
     private authService: AuthService,
     private modalCtrl: ModalController,
-    private http: HttpClient
+    private http: HttpClient,
+    private alertCtrl: AlertController // Inyectamos el AlertController
   ) {
-    addIcons({ addOutline, leafOutline, documentAttachOutline, searchOutline, checkmarkCircle, hourglassOutline, checkmarkDoneCircleOutline, cloudUploadOutline, sunnyOutline, schoolOutline });
+    addIcons({ duplicateOutline, addOutline, leafOutline, documentAttachOutline, searchOutline, checkmarkCircle, hourglassOutline, checkmarkDoneCircleOutline, cloudUploadOutline, sunnyOutline, schoolOutline });
     Chart.register(...registerables);
     this.canCreateTasks$ = this.authService.currentUser.pipe(
       map(user => {
@@ -88,7 +92,11 @@ export class ActividadesPage implements OnInit, AfterViewInit {
           // Lógica solo para profesores/admin
           this.todoTasks = tasks.filter(t => t.estado === 'To-do');
           this.doingTasks = tasks.filter(t => t.estado === 'Doing');
-          this.doneTasks = tasks.filter(t => t.estado === 'Done');
+          // Para el profesor, una tarea está "Done" si TODAS sus entregas están calificadas.
+          // O podemos simplificar y mostrar en "Done" las tareas que tienen al menos una entrega calificada.
+          // Por ahora, mantendremos la lógica simple y mostraremos las entregas en "Doing".
+          // Las tareas en "Done" serán las que no tienen entregas pendientes.
+          this.doneTasks = tasks.filter(t => t.estado === 'Done' || (t.entregas && t.entregas.every(e => e.estado === 'Calificado')));
 
           // Actualizamos el gráfico de dona con los datos reales
           this.updateDonutChartData();
@@ -135,6 +143,70 @@ export class ActividadesPage implements OnInit, AfterViewInit {
       component: SearchStudentModalComponent,
     });
     await modal.present();
+  }
+
+  async openEditTaskModal(task: Tarea) {
+    const modal = await this.modalCtrl.create({
+      component: TaskEditModalComponent,
+      componentProps: {
+        task: task // Pasamos la tarea seleccionada al modal
+      }
+    });
+
+    await modal.present();
+
+    const { data, role } = await modal.onWillDismiss();
+
+    if (role === 'confirm') {
+      // Si el modal se cerró con 'confirm', significa que se guardaron cambios.
+      // Recargamos la lista de tareas para ver los cambios reflejados.
+      this.loadTasks();
+    }
+  }
+
+  async openGradeModal(entrega: any, taskId: string) {
+    const frasesCalificacion = {
+      '10': '¡Excelente trabajo, superaste las expectativas!',
+      '9': 'Muy buen trabajo, bien estructurado y completo.',
+      '8': 'Buen trabajo, cumple con todos los requisitos.',
+      '7': 'Aprobado, cumple con lo mínimo esperado.',
+      'No Aprobada': 'No cumple con los requisitos mínimos, requiere revisión.'
+    };
+
+    const alert = await this.alertCtrl.create({
+      header: `Calificar a ${entrega.studentNombre}`,
+      inputs: Object.keys(frasesCalificacion).map(nota => ({
+        name: 'calificacion',
+        type: 'radio',
+        label: `${nota} - ${frasesCalificacion[nota as keyof typeof frasesCalificacion]}`,
+        value: nota,
+        checked: false
+      })),
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Confirmar',
+          handler: (notaSeleccionada: string) => {
+            if (!notaSeleccionada) return false; // No hacer nada si no se selecciona nada
+            const calificacionData = {
+              studentId: entrega.studentId,
+              taskId: taskId,
+              nota: notaSeleccionada,
+              frase: frasesCalificacion[notaSeleccionada as keyof typeof frasesCalificacion]
+            };
+                // La solución: Llamamos a loadTasks() DENTRO del subscribe,
+                // asegurando que se ejecute solo DESPUÉS de que el servidor confirme la calificación.
+                // ACTUALIZACIÓN: Cambiamos loadTasks() por una recarga completa de la página.
+                this.http.post(`${environment.apiUrl}/calificar`, calificacionData).subscribe({
+                  next: () => window.location.reload(),
+                  error: (err) => console.error('Error al calificar', err)
+                });
+            return true;
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 
   createDonutChart() {

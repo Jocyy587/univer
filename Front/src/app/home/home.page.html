@@ -17,10 +17,12 @@
           <div class="simple-divider"></div>
         </div>
 
-        <!-- Contenedor de la imagen principal con ícono de play -->
+        <!-- Contenedor del video principal -->
         <div class="video-placeholder">
-          <img src="https://placehold.co/400x225/2c3e50/ffffff?text=Video" alt="Video principal" class="main-image" />
-          <ion-icon name="play-circle-outline" class="play-icon"></ion-icon>
+          <video class="main-image" autoplay loop muted playsinline>
+            <source src="assets/Video_Animado_De_Perico_Y_Hojas (1).mp4" type="video/mp4">
+            Tu navegador no soporta el elemento de video.
+          </video>
         </div>
 
         <div class="divider-container">
@@ -132,15 +134,15 @@
             <div class="line-connector top">
               <span></span>
             </div>
-            <img src="https://placehold.co/150x150/e8e8e8/2c3e50?text=Integrante" alt="Foto del integrante" class="member-image" />
+            <img src="/assets/img/humano1.jpg" alt="Foto del integrante" class="member-image" />
             <div class="line-connector bottom">
               <span></span>
             </div>
             <ion-icon name="leaf-outline" class="leaf-icon bottom-left"></ion-icon>
             <ion-icon name="leaf-outline" class="leaf-icon bottom-right"></ion-icon>
           </div>
-          <h3 class="member-name">Nombre del Integrante</h3>
-          <p class="member-role">Rol en el Grupo</p>
+          <h3 class="member-name">Dr. Alejandro Vargas</h3>
+          <p class="member-role">Investigador Principal</p>
           <div class="member-details">
             <div class="projects-title-container">
               <div class="projects-line left"></div>
@@ -167,15 +169,15 @@
             <div class="line-connector top">
               <span></span>
             </div>
-            <img src="https://placehold.co/150x150/e8e8e8/2c3e50?text=Integrante" alt="Foto del integrante" class="member-image" />
+            <img src="/assets/img/humano2.jpg" alt="Foto del integrante" class="member-image" />
             <div class="line-connector bottom">
               <span></span>
             </div>
             <ion-icon name="leaf-outline" class="leaf-icon bottom-left"></ion-icon>
             <ion-icon name="leaf-outline" class="leaf-icon bottom-right"></ion-icon>
           </div>
-          <h3 class="member-name">Nombre del Integrante</h3>
-          <p class="member-role">Rol en el Grupo</p>
+          <h3 class="member-name">Dra. Sofia Reyes</h3>
+          <p class="member-role">Líder de Proyecto</p>
           <div class="member-details">
             <div class="projects-title-container">
               <div class="projects-line left"></div>
@@ -202,15 +204,15 @@
             <div class="line-connector top">
               <span></span>
             </div>
-            <img src="https://placehold.co/150x150/e8e8e8/2c3e50?text=Integrante" alt="Foto del integrante" class="member-image" />
+            <img src="/assets/img/humano3.jpg" alt="Foto del integrante" class="member-image" />
             <div class="line-connector bottom">
               <span></span>
             </div>
             <ion-icon name="leaf-outline" class="leaf-icon bottom-left"></ion-icon>
             <ion-icon name="leaf-outline" class="leaf-icon bottom-right"></ion-icon>
           </div>
-          <h3 class="member-name">Nombre del Integrante</h3>
-          <p class="member-role">Rol en el Grupo</p>
+          <h3 class="member-name">M.C. Ricardo Morales</h3>
+          <p class="member-role">Desarrollador Senior</p>
           <div class="member-details">
             <div class="projects-title-container">
               <div class="projects-line left"></div>
@@ -248,10 +250,10 @@
       <ion-col size-lg="4" size-md="6" size-xs="12">
         <div class="member-card" (click)="toggleMemberCard($event)">
           <div class="member-image-container">
-            <img src="https://placehold.co/150x150/e8e8e8/2c3e50?text=Colaborador" alt="Foto del integrante" class="member-image" />
+            <img src="/assets/img/humano4.jpg" alt="Foto del integrante" class="member-image" />
           </div>
-          <h3 class="member-name">Nombre del Colaborador</h3>
-          <p class="member-role">Rol en el Grupo</p>
+          <h3 class="member-name">Ing. Valeria Castillo</h3>
+          <p class="member-role">Analista de Datos</p>
           <div class="member-details">
             <div class="projects-title-container">
               <div class="projects-line left"></div>
@@ -275,10 +277,10 @@
       <ion-col size-lg="4" size-md="6" size-xs="12">
         <div class="member-card" (click)="toggleMemberCard($event)">
           <div class="member-image-container">
-            <img src="https://placehold.co/150x150/e8e8e8/2c3e50?text=Colaborador" alt="Foto del integrante" class="member-image" />
+            <img src="/assets/img/humano5.jpg" alt="Foto del integrante" class="member-image" />
           </div>
-          <h3 class="member-name">Nombre del Colaborador</h3>
-          <p class="member-role">Rol en el Grupo</p>
+          <h3 class="member-name">Dr. Mateo Herrera</h3>
+          <p class="member-role">Especialista en IA</p>
           <div class="member-details">
             <div class="projects-title-container">
               <div class="projects-line left"></div>
@@ -302,10 +304,10 @@
       <ion-col size-lg="4" size-md="6" size-xs="12">
         <div class="member-card" (click)="toggleMemberCard($event)">
           <div class="member-image-container">
-            <img src="https://placehold.co/150x150/e8e8e8/2c3e50?text=Colaborador" alt="Foto del integrante" class="member-image" />
+            <img src="/assets/img/humano6.jpg" alt="Foto del integrante" class="member-image" />
           </div>
-          <h3 class="member-name">Nombre del Colaborador</h3>
-          <p class="member-role">Rol en el Grupo</p>
+          <h3 class="member-name">Lic. Camila Soto</h3>
+          <p class="member-role">Coordinadora Académica</p>
           <div class="member-details">
             <div class="projects-title-container">
               <div class="projects-line left"></div>
@@ -329,10 +331,10 @@
       <ion-col size-lg="4" size-md="6" size-xs="12">
         <div class="member-card" (click)="toggleMemberCard($event)">
           <div class="member-image-container">
-            <img src="https://placehold.co/150x150/e8e8e8/2c3e50?text=Colaborador" alt="Foto del integrante" class="member-image" />
+            <img src="/assets/img/humano7.jpg" alt="Foto del integrante" class="member-image" />
           </div>
-          <h3 class="member-name">Nombre del Colaborador</h3>
-          <p class="member-role">Rol en el Grupo</p>
+          <h3 class="member-name">Dr. Sebastián Rojas</h3>
+          <p class="member-role">Investigador Asociado</p>
           <div class="member-details">
             <div class="projects-title-container">
               <div class="projects-line left"></div>
@@ -356,10 +358,10 @@
       <ion-col size-lg="4" size-md="6" size-xs="12">
         <div class="member-card" (click)="toggleMemberCard($event)">
           <div class="member-image-container">
-            <img src="https://placehold.co/150x150/e8e8e8/2c3e50?text=Colaborador" alt="Foto del integrante" class="member-image" />
+            <img src="/assets/img/humano8.jpg" alt="Foto del integrante" class="member-image" />
           </div>
-          <h3 class="member-name">Nombre del Colaborador</h3>
-          <p class="member-role">Rol en el Grupo</p>
+          <h3 class="member-name">M.C. Isabella Flores</h3>
+          <p class="member-role">Diseñadora UX/UI</p>
           <div class="member-details">
             <div class="projects-title-container">
               <div class="projects-line left"></div>
@@ -383,10 +385,10 @@
       <ion-col size-lg="4" size-md="6" size-xs="12">
         <div class="member-card" (click)="toggleMemberCard($event)">
           <div class="member-image-container">
-            <img src="https://placehold.co/150x150/e8e8e8/2c3e50?text=Colaborador" alt="Foto del integrante" class="member-image" />
+            <img src="/assets/img/humano9.jpg" alt="Foto del integrante" class="member-image" />
           </div>
-          <h3 class="member-name">Nombre del Colaborador</h3>
-          <p class="member-role">Rol en el Grupo</p>
+          <h3 class="member-name">Ing. Leonardo Navarro</h3>
+          <p class="member-role">Asistente de Investigación</p>
           <div class="member-details">
             <div class="projects-title-container">
               <div class="projects-line left"></div>

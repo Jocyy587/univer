@@ -93,7 +93,7 @@ try {
       const newUserRef = await usersRef.push({
         nombre,
         apellidos,
-        matricula,
+        matricula: String(matricula), // Forzamos que la matrícula se guarde como string
         correo,
         contraseña: password, // Guardamos la contraseña
         Rol: 'estudiante' // Rol asignado automáticamente
@@ -203,29 +203,112 @@ try {
 
       // Si es un estudiante, personalizamos el estado de cada tarea
       if (userId) {
+        // LÓGICA PARA ESTUDIANTE
         const tareasUsuarioRef = db.ref(`TareasPorUsuario/${userId}`);
         const snapshotTareasUsuario = await tareasUsuarioRef.once('value');
         const tareasDelUsuario = snapshotTareasUsuario.val() || {};
 
         tareasArray = tareasArray.map(tarea => {
-          const estadoPersonal = tareasDelUsuario[tarea.id];
-          if (estadoPersonal) {
-            // Si el estudiante tiene un registro para esta tarea (ej: una entrega), usamos su estado y datos
+          const entregaData = tareasDelUsuario[tarea.id];
+          if (entregaData) {
+            // Si hay datos de entrega, la tarea está 'Done' (si está calificada) o 'Doing' (si solo está entregada)
+            const estadoEstudiante = entregaData.estado === 'Calificado' ? 'Done' : 'Doing';
             return {
               ...tarea,
-              estado: estadoPersonal.estado,
-              entrega: estadoPersonal.entrega
+              estado: estadoEstudiante,
+              entrega: entregaData.entrega,
+              calificacion: entregaData.calificacion // Incluimos la calificación si existe
             };
           } else {
             // Si no tiene un registro, la tarea está "pendiente" para este estudiante.
-            return { ...tarea, estado: 'Doing' }; // Por defecto, las tareas no entregadas están en "Doing"
+            return { ...tarea, estado: 'To-do' }; // Las tareas no tocadas son 'To-do'
           }
+        });
+      } else {
+        // LÓGICA PARA PROFESOR/ADMIN
+        const entregasRef = db.ref('TareasPorUsuario');
+        const entregasSnapshot = await entregasRef.once('value');
+        const todasLasEntregas = entregasSnapshot.val() || {};
+
+        const usersRef = db.ref('usuarios');
+        const usersSnapshot = await usersRef.once('value');
+        const todosLosUsuarios = usersSnapshot.val() || {};
+
+        tareasArray = tareasArray.map(tarea => {
+          tarea.entregas = [];
+          // Buscamos en todas las entregas de todos los usuarios
+          for (const studentId in todasLasEntregas) {
+            if (todasLasEntregas[studentId][tarea.id]) {
+              const entrega = todasLasEntregas[studentId][tarea.id];
+              const studentInfo = todosLosUsuarios[studentId];
+              // Añadimos la entrega a la tarea, incluyendo quién la hizo
+              tarea.entregas.push({ ...entrega, studentId, studentNombre: studentInfo?.nombre || 'Usuario Desconocido' });
+            }
+          }
+          // Lógica de estado para el profesor:
+          if (tarea.entregas && tarea.entregas.length > 0) {
+            // Si CUALQUIER entrega está pendiente de calificar, la tarea está en 'Doing'.
+            if (tarea.entregas.some(e => e.estado === 'Entregado')) {
+              tarea.estado = 'Doing';
+            } else {
+              // Si TODAS las entregas están calificadas, la tarea está 'Done'.
+              tarea.estado = 'Done';
+            }
+          }
+          return tarea;
         });
       }
 
       res.json(tareasArray);
     } catch (error) {
       console.error('Error al obtener las tareas:', error);
+      res.status(500).json({ message: 'Error interno del servidor.' });
+    }
+  });
+
+  // Endpoint para actualizar una tarea (nombre y descripción)
+  app.put('/tareas/:id', async (req, res) => {
+    const { id } = req.params;
+    const { nombre, descripcion } = req.body;
+
+    if (!nombre || !descripcion) {
+      return res.status(400).json({ message: 'El nombre y la descripción son requeridos.' });
+    }
+
+    try {
+      const tareaRef = db.ref(`tareas/${id}`);
+      await tareaRef.update({ nombre, descripcion });
+      res.json({ message: 'Tarea actualizada correctamente.' });
+    } catch (error) {
+      console.error('Error al actualizar la tarea:', error);
+      res.status(500).json({ message: 'Error interno del servidor.' });
+    }
+  });
+
+  // Endpoint para que un profesor califique una entrega
+  app.post('/calificar', async (req, res) => {
+    const { studentId, taskId, nota, frase } = req.body;
+
+    if (!studentId || !taskId || !nota || !frase) {
+      return res.status(400).json({ message: 'Se requieren todos los datos para calificar.' });
+    }
+
+    try {
+      const entregaRef = db.ref(`TareasPorUsuario/${studentId}/${taskId}`);
+
+      // Actualizamos la entrega con la calificación y cambiamos el estado
+      await entregaRef.update({
+        estado: 'Calificado',
+        calificacion: {
+          nota,
+          frase,
+          fecha: new Date().toISOString()
+        }
+      });
+
+      res.json({ message: 'Tarea calificada correctamente.' });
+    } catch (error) {
+      console.error('Error al calificar la tarea:', error);
       res.status(500).json({ message: 'Error interno del servidor.' });
     }
   });
@@ -250,7 +333,7 @@ try {
       
       // Actualizamos la tarea en la base de datos con el nombre del archivo
       await tareaUsuarioRef.set({
-        estado: 'Done',
+        estado: 'Entregado',
         entrega: {
           fecha: new Date().toISOString(),
           nombreArchivo: file.originalname
@@ -308,6 +391,190 @@ try {
       res.json(tareasCompletadas);
     } catch (error) {
       console.error('Error al buscar entregas del estudiante:', error);
+      res.status(500).json({ message: 'Error interno del servidor.' });
+    }
+  });
+
+  // --- ENDPOINTS DE GESTIÓN DE USUARIOS (SOLO ADMIN) ---
+
+  // Obtener todos los usuarios
+  app.get('/usuarios', async (req, res) => {
+    try {
+      const usersRef = db.ref('usuarios');
+      const snapshot = await usersRef.once('value');
+      if (!snapshot.exists()) {
+        return res.json([]);
+      }
+      const usersData = snapshot.val();
+      // Mapeamos los usuarios para incluir su ID y quitar la contraseña
+      const usersList = Object.keys(usersData).map(key => {
+        const { contraseña, ...user } = usersData[key];
+        return { id: key, ...user };
+      });
+      res.json(usersList);
+    } catch (error) {
+      console.error('Error al obtener usuarios:', error);
+      res.status(500).json({ message: 'Error interno del servidor.' });
+    }
+  });
+
+  // Crear un nuevo usuario (desde el panel de admin)
+  app.post('/usuarios', async (req, res) => {
+    const { nombre, apellidos, matricula, correo, contraseña, Rol } = req.body;
+
+    if (!nombre || !apellidos || !matricula || !correo || !contraseña || !Rol) {
+      return res.status(400).json({ message: 'Todos los campos son requeridos.' });
+    }
+
+    try {
+      const usersRef = db.ref('usuarios');
+
+      const matriculaSnapshot = await usersRef.orderByChild('matricula').equalTo(String(matricula)).once('value');
+      if (matriculaSnapshot.exists()) {
+        return res.status(409).json({ message: 'La matrícula ya está en uso.' });
+      }
+
+      const newUserRef = await usersRef.push({
+        nombre,
+        apellidos,
+        matricula: String(matricula), // Forzamos que la matrícula se guarde como string
+        correo,
+        contraseña,
+        Rol
+      });
+      res.status(201).json({ message: 'Usuario creado exitosamente', id: newUserRef.key });
+    } catch (error) {
+      console.error('Error al crear usuario:', error);
+      res.status(500).json({ message: 'Error interno del servidor.' });
+    }
+  });
+
+  // Actualizar un usuario
+  app.put('/usuarios/:id', async (req, res) => {
+    const { id } = req.params;
+    const { nombre, apellidos, matricula, Rol } = req.body;
+
+    if (!nombre || !apellidos || !matricula || !Rol) {
+      return res.status(400).json({ message: 'Todos los campos son requeridos.' });
+    }
+
+    try {
+      const userRef = db.ref(`usuarios/${id}`);
+      await userRef.update({ nombre, apellidos, matricula, Rol });
+      res.json({ message: 'Usuario actualizado correctamente.' });
+    } catch (error) {
+      console.error('Error al actualizar usuario:', error);
+      res.status(500).json({ message: 'Error interno del servidor.' });
+    }
+  });
+
+  // Reiniciar la contraseña de un usuario
+  app.put('/usuarios/:id/reset-password', async (req, res) => {
+    const { id } = req.params;
+    const { nuevaContraseña } = req.body;
+
+    if (!nuevaContraseña) {
+      return res.status(400).json({ message: 'La nueva contraseña es requerida.' });
+    }
+
+    try {
+      const userRef = db.ref(`usuarios/${id}`);
+      await userRef.update({ contraseña: nuevaContraseña });
+      res.json({ message: 'Contraseña reiniciada correctamente.' });
+    } catch (error) {
+      console.error('Error al reiniciar contraseña:', error);
+      res.status(500).json({ message: 'Error interno del servidor.' });
+    }
+  });
+
+  // Eliminar un usuario
+  app.delete('/usuarios/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+      const userRef = db.ref(`usuarios/${id}`);
+      await userRef.remove();
+      // Consideración: También podrías querer eliminar datos relacionados
+      // como sus registros en 'registros_extracurriculares' o 'TareasPorUsuario'.
+      res.json({ message: 'Usuario eliminado correctamente.' });
+    } catch (error) {
+      console.error('Error al eliminar usuario:', error);
+      res.status(500).json({ message: 'Error interno del servidor.' });
+    }
+  });
+
+  // Endpoint para que un estudiante obtenga sus tareas calificadas
+  app.get('/mis-calificaciones/:userId', async (req, res) => {
+    const { userId } = req.params;
+
+    if (!userId) {
+      return res.status(400).json({ message: 'El ID de usuario es requerido.' });
+    }
+
+    try {
+      // 1. Obtener las tareas entregadas por ese usuario
+      const tareasUsuarioRef = db.ref(`TareasPorUsuario/${userId}`);
+      const entregasSnapshot = await tareasUsuarioRef.once('value');
+
+      if (!entregasSnapshot.exists()) {
+        return res.json([]); // El estudiante no ha entregado ninguna tarea
+      }
+
+      const entregas = entregasSnapshot.val();
+      // 2. Filtrar solo las que tienen estado 'Calificado'
+      const tareasCalificadasIds = Object.keys(entregas).filter(taskId => entregas[taskId].estado === 'Calificado');
+
+      if (tareasCalificadasIds.length === 0) {
+        return res.json([]); // No hay tareas calificadas todavía
+      }
+
+      // 3. Obtener los detalles de cada tarea y añadir la calificación
+      const tareasRef = db.ref('tareas');
+      const tareasSnapshot = await tareasRef.once('value');
+      const todasLasTareas = tareasSnapshot.val() || {};
+
+      const resultado = tareasCalificadasIds.map(taskId => ({ ...todasLasTareas[taskId], id: taskId, ...entregas[taskId] }));
+
+      res.json(resultado);
+    } catch (error) {
+      console.error('Error al obtener las calificaciones del estudiante:', error);
+      res.status(500).json({ message: 'Error interno del servidor.' });
+    }
+  });
+
+  // Endpoint para que un estudiante obtenga sus tareas EN REVISIÓN
+  app.get('/mis-revisiones/:userId', async (req, res) => {
+    const { userId } = req.params;
+
+    if (!userId) {
+      return res.status(400).json({ message: 'El ID de usuario es requerido.' });
+    }
+
+    try {
+      // 1. Obtener las tareas entregadas por ese usuario
+      const tareasUsuarioRef = db.ref(`TareasPorUsuario/${userId}`);
+      const entregasSnapshot = await tareasUsuarioRef.once('value');
+
+      if (!entregasSnapshot.exists()) {
+        return res.json([]); // El estudiante no ha entregado ninguna tarea
+      }
+
+      const entregas = entregasSnapshot.val();
+      // 2. Filtrar solo las que tienen estado 'Entregado' (pendientes de calificar)
+      const tareasEnRevisionIds = Object.keys(entregas).filter(taskId => entregas[taskId].estado === 'Entregado');
+
+      if (tareasEnRevisionIds.length === 0) {
+        return res.json([]); // No hay tareas en revisión
+      }
+
+      // 3. Obtener los detalles de cada tarea
+      const tareasRef = db.ref('tareas');
+      const tareasSnapshot = await tareasRef.once('value');
+      const todasLasTareas = tareasSnapshot.val() || {};
+
+      const resultado = tareasEnRevisionIds.map(taskId => ({ ...todasLasTareas[taskId], id: taskId, ...entregas[taskId] }));
+      res.json(resultado);
+    } catch (error) {
+      console.error('Error al obtener las tareas en revisión del estudiante:', error);
       res.status(500).json({ message: 'Error interno del servidor.' });
     }
   });

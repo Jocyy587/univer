@@ -1,13 +1,70 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>cat19</ion-title>
+<ion-header>
+  <ion-toolbar class="header-dark">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Gestión de Usuarios</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">cat19</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <!-- Formas decorativas para el fondo -->
+  <div class="shape shape-1"></div>
+  <div class="shape shape-2"></div>
+
+  <!-- Decoradores de esquina y líneas (estilo Home) -->
+  <div class="shape-container top-left">
+    <div class="shape green-solid"></div>
+    <div class="shape orange-outline"></div>
+    <div class="shape green-outline"></div>
+  </div>
+  <div class="shape-container bottom-right">
+    <div class="shape green-solid"></div>
+    <div class="shape green-outline"></div>
+  </div>
+  <div class="decorative-line-container">
+    <div class="decorative-line from-left"></div>
+  </div>
+
+  <div class="admin-view">
+    <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <div class="user-list">
+      <h2 class="category-title">Todos los Usuarios</h2>
+      <ion-accordion-group *ngIf="users.length > 0">
+        <ion-accordion *ngFor="let user of users" class="user-accordion">
+          <ion-item slot="header" lines="none">
+            <ion-icon [name]="getIconForRole(user.Rol)" slot="start" [color]="getColorForRole(user.Rol)"></ion-icon>
+            <ion-label>
+              {{ user.nombre }} {{ user.apellidos }}
+              <p>{{ user.matricula }} - {{ user.Rol }}</p>
+            </ion-label>
+          </ion-item>
+          <div class="ion-padding" slot="content">
+            <p><strong>Correo:</strong> {{ user.correo }}</p>
+            <ion-button expand="block" class="edit-button" (click)="openEditModal(user)">
+              <ion-icon name="pencil-outline" slot="start"></ion-icon>
+              Gestionar Usuario
+            </ion-button>
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
+
+      <div *ngIf="users.length === 0" class="empty-state">
+        <ion-icon name="people-outline"></ion-icon>
+        <p>No se encontraron usuarios.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botón Flotante para Agregar Usuario -->
+  <div class="fab-container">
+    <ion-fab vertical="top" horizontal="center" slot="fixed">
+      <ion-fab-button color="success" (click)="openAddModal()">
+        <ion-icon name="add-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </div>
 </ion-content>

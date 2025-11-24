@@ -59,10 +59,10 @@
   // --- Columna Izquierda ---
   .video-placeholder {
     position: relative;
-    width: 70%; // Reducimos aún más el ancho del contenedor del video
+    width: 85%; // Hacemos el contenedor un poco más ancho
     margin: 2rem auto; // Lo centramos y añadimos un margen vertical
     cursor: pointer;
-    aspect-ratio: 16 / 9; // Forzamos una proporción de 16:9
+    aspect-ratio: 21 / 9; // Una proporción más ancha, cinematográfica
     
     .main-image {
       width: 100%;

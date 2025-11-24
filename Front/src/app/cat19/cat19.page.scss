@@ -1,0 +1,173 @@
+// Importamos los estilos base para no repetir código
+@import '../components/student-activitie/student-activitie.component.scss';
+
+// Sobrescribimos el fondo del contenido para que sea consistente
+:host {
+  --background: var(--brand-dark);
+}
+
+// Renombramos la clase principal para que coincida con nuestra página
+.admin-view {
+  @extend .student-view; // Hereda todos los estilos de .student-view
+  position: relative; // Asegura que el contenido principal tenga su propio contexto de apilamiento.
+  z-index: 2; // Lo coloca por encima de las decoraciones de fondo (que tienen z-index 0 y 1).
+  background: transparent; // Hacemos su fondo transparente para que las decoraciones se vean a través.
+
+  .user-accordion {
+    @extend .task-accordion; // Hereda los estilos del acordeón
+
+    // Efecto hover mejorado
+    &:hover {
+      transform: translateY(-3px) scale(1.01);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+    }
+  }
+
+  .edit-button {
+    --background: var(--brand-orange); // Un color diferente para el botón de editar
+    --color: white;
+    --box-shadow: none;
+    margin-top: 16px;
+  }
+
+  ion-label p {
+    font-size: 0.8rem;
+    color: var(--text-light-secondary);
+    opacity: 0.8;
+  }
+}
+
+// Estilos para el contenedor del botón flotante y su etiqueta
+.fab-container {
+  position: fixed;
+  top: 60px; // Ajusta para que quede debajo de la barra de título
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  // Hacemos que no intercepte clics fuera del botón
+  pointer-events: none; 
+
+  ion-fab-button {
+    pointer-events: all; // El botón sí debe ser clickeable
+  }
+}
+
+.fab-label {
+  color: var(--text-light);
+  margin-top: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+// Estilos para las formas decorativas del fondo
+.shape {
+  position: absolute;
+  z-index: 0;
+  opacity: 0.08;
+  pointer-events: none; // Para que no interfieran con los clics
+}
+
+.shape-1 {
+  width: 200px;
+  height: 200px;
+  background: var(--brand-green);
+  border-radius: 50%;
+  top: 10%;
+  left: -80px;
+  filter: blur(50px);
+}
+
+.shape-2 {
+  width: 150px;
+  height: 150px;
+  background: var(--brand-orange);
+  bottom: 5%;
+  right: -70px;
+  transform: rotate(45deg);
+  filter: blur(40px);
+}
+
+// Damos más profundidad a los títulos
+.category-title {
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+ion-title {
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/*
+======================================================
+NUEVOS ESTILOS DECORATIVOS (Inspirados en Home)
+======================================================
+*/
+
+.shape-container {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  pointer-events: none;
+  z-index: 1;
+
+  &.top-left {
+    top: 50px;
+    left: 0;
+  }
+
+  &.bottom-right {
+    bottom: 0;
+    right: 0;
+  }
+
+  .shape {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.2;
+
+    &.green-solid {
+      background: var(--brand-green);
+      width: 80px;
+      height: 80px;
+      top: 10px;
+      left: 20px;
+      filter: blur(10px);
+    }
+
+    &.orange-outline {
+      border: 2px solid var(--brand-orange);
+      width: 100px;
+      height: 100px;
+      top: 30px;
+      left: 40px;
+    }
+
+    &.green-outline {
+      border: 1px solid var(--brand-green);
+      width: 140px;
+      height: 140px;
+      top: 0;
+      left: 10px;
+    }
+  }
+}
+
+.decorative-line-container {
+  position: absolute;
+  top: 150px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  pointer-events: none;
+  z-index: 1;
+
+  .decorative-line {
+    height: 100%;
+    width: 60%;
+    background: linear-gradient(90deg, var(--brand-green), transparent);
+    opacity: 0.3;
+  }
+}

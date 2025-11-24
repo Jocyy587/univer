@@ -59,7 +59,14 @@
                 <div class="accordion-main-content"><ion-label>{{ task.nombre }}</ion-label></div>
                 <ion-icon name="leaf-outline" class="header-leaf-icon"></ion-icon>
               </div>
-              <div class="ion-padding" slot="content"><p>{{ task.descripcion }}</p></div>
+              <div class="ion-padding" slot="content">
+                <p>{{ task.descripcion }}</p>
+                <!-- Botón de Editar Tarea -->
+                <ion-button fill="clear" size="small" class="edit-task-button" (click)="openEditTaskModal(task); $event.stopPropagation();">
+                  <ion-icon slot="icon-only" name="duplicate-outline"></ion-icon>
+                  Editar
+                </ion-button>
+              </div>
             </ion-accordion>
           </ion-accordion-group>
         </ion-card-content>
@@ -76,11 +83,30 @@
           <!-- Contenido del acordeón para Doing -->
           <ion-accordion-group *ngIf="doingTasks.length > 0" [multiple]="true">
             <ion-accordion *ngFor="let task of doingTasks; let i = index" [value]="'doing-' + i">
+              <!-- Cabecera de la Tarea -->
               <div class="accordion-header-wrapper" slot="header">
                 <div class="accordion-main-content"><ion-label>{{ task.nombre }}</ion-label></div>
                 <ion-icon name="leaf-outline" class="header-leaf-icon"></ion-icon>
               </div>
-              <div class="ion-padding" slot="content"><p>{{ task.descripcion }}</p></div>
+              <!-- Contenido de la Tarea: Lista de Entregas -->
+              <div class="ion-padding" slot="content">
+                <p>{{ task.descripcion }}</p>
+
+                <!-- Sub-lista de entregas de estudiantes -->
+                <ion-list *ngIf="task.entregas && task.entregas.length > 0" class="submission-list">
+                  <ion-item *ngFor="let entrega of task.entregas" lines="full" class="submission-item">
+                    <ion-label>
+                      <h3>{{ entrega.studentNombre }}</h3>
+                      <p>Entregado: {{ entrega.entrega.fecha | date:'short' }}</p>
+                      <p *ngIf="entrega.estado === 'Calificado'">Calificación: {{ entrega.calificacion.nota }}</p>
+                    </ion-label>
+                    <ion-button *ngIf="entrega.estado === 'Entregado'" slot="end" fill="clear" (click)="openGradeModal(entrega, task.id)">
+                      <ion-icon slot="icon-only" name="checkmark-done-circle-outline"></ion-icon>
+                    </ion-button>
+                  </ion-item>
+                </ion-list>
+
+              </div>
             </ion-accordion>
           </ion-accordion-group>
         </ion-card-content>

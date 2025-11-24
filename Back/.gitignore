@@ -5,8 +5,9 @@
 
 # Archivos de secretos y configuración de entorno
 # ¡NUNCA subas archivos con claves privadas o contraseñas!
-/firebase-service-account.json
 firebase-service-account.json
+/Back/firebase-service-account.json
+/firebase-service-account.json
 
 # Archivos de build y caché de Angular/Ionic
 # Estos archivos se generan automáticamente al compilar.
