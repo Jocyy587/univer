@@ -1,71 +1,65 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { IonicModule, ModalController, ToastController } from '@ionic/angular';
+import { ModalController, IonicModule } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-
-// Suponiendo que tienes una interfaz de Tarea, si no, puedes crearla.
-export interface Task {
-  id: string;
-  nombre: string;
-  descripcion: string;
-  // ... otras propiedades de la tarea
-}
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { AuthService } from 'src/app/services/auth.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-task-edit-modal',
   templateUrl: './task-edit-modal.component.html',
   styleUrls: ['./task-edit-modal.component.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, FormsModule, CommonModule]
 })
 export class TaskEditModalComponent implements OnInit {
-  @Input() task!: Task;
+  @Input() task: any;
+  maestros: any[] = []; // NUEVO: Para la lista de maestros
 
   constructor(
     private modalCtrl: ModalController,
     private http: HttpClient,
-    private toastCtrl: ToastController
-  ) { }
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
-    // Hacemos una copia para no modificar el objeto original hasta guardar
-    this.task = { ...this.task };
+    this.loadMaestros(); // NUEVO: Cargamos los maestros al iniciar
+    // Aseguramos que la propiedad 'colaboradores' exista
+    if (!this.task.colaboradores) {
+      this.task.colaboradores = [];
+    }
+  }
+
+  // NUEVO: Método para cargar la lista de maestros
+  loadMaestros() {
+    this.http.get<any[]>(`${environment.apiUrl}/usuarios/maestros`).subscribe({
+      next: (data) => { this.maestros = data; },
+      error: (err) => console.error('Error al cargar la lista de maestros', err)
+    });
+  }
+
+  // NUEVO: Función para comparar objetos en el ion-select
+  compareCollaborators(c1: { id: string }, c2: { id: string }) {
+    return c1 && c2 ? c1.id === c2.id : c1 === c2;
   }
 
   cancel() {
-    return this.modalCtrl.dismiss(null, 'cancel');
-  }
-
-  confirm() {
-    return this.modalCtrl.dismiss(this.task, 'confirm');
+    this.modalCtrl.dismiss(null, 'cancel');
   }
 
   saveChanges() {
-    const updateData = {
-      nombre: this.task.nombre,
-      descripcion: this.task.descripcion
-    };
-
-    this.http.put(`${environment.apiUrl}/tareas/${this.task.id}`, updateData).subscribe({
-      next: async () => {
-        const toast = await this.toastCtrl.create({
-          message: 'Tarea actualizada con éxito.',
-          duration: 2000,
-          color: 'success'
-        });
-        toast.present();
-        this.confirm();
-      },
-      error: async (err) => {
-        const toast = await this.toastCtrl.create({
-          message: 'Error al actualizar la tarea.',
-          duration: 3000,
-          color: 'danger'
-        });
-        toast.present();
-      }
+    this.authService.currentUser.pipe(take(1)).subscribe(user => {
+      const updateData = {
+        ...this.task,
+        userId: user?.id,
+        userRole: user?.Rol?.toLowerCase()
+      };
+      this.http.put(`${environment.apiUrl}/tareas/${this.task.id}`, updateData).subscribe({
+        next: () => this.modalCtrl.dismiss(this.task, 'confirm'),
+        error: (err) => console.error('Error al actualizar la tarea', err)
+      });
     });
   }
 }

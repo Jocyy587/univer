@@ -161,22 +161,24 @@ try {
 
   // Endpoint para crear una nueva tarea
   app.post('/tareas', async (req, res) => {
-    const { nombre, descripcion, creadorId, creadorNombre, estado } = req.body;
+    const { nombre, descripcion, creadorId, creadorNombre, estado, colaboradores } = req.body;
 
     if (!nombre || !descripcion || !creadorId || !creadorNombre) {
       return res.status(400).json({ message: 'El nombre, descripción y los datos del creador son requeridos.' });
     }
 
     try {
-      const tareasRef = db.ref('tareas');
-      const nuevaTarea = await tareasRef.push({
+      const taskRef = db.ref('tareas');
+
+      const newTask = await taskRef.push({
         nombre,
         descripcion,
         estado: estado || 'To-do', // Usamos el estado del body, o 'To-do' si no se proporciona
         fechaCreacion: new Date().toISOString(),
-        creador: { id: creadorId, nombre: creadorNombre }
+        creador: { id: creadorId, nombre: creadorNombre },
+        colaboradores: colaboradores || [] // Guardamos los colaboradores o un array vacío
       });
-      res.status(201).json({ message: 'Tarea creada exitosamente', id: nuevaTarea.key });
+      res.status(201).json({ message: 'Tarea creada exitosamente', id: newTask.key });
     } catch (error) {
       console.error('Error al crear la tarea:', error);
       res.status(500).json({ message: 'Error interno del servidor.' });
@@ -246,19 +248,21 @@ try {
             }
           }
           // Lógica de estado para el profesor:
-          if (tarea.entregas && tarea.entregas.length > 0) {
-            // Si CUALQUIER entrega está pendiente de calificar, la tarea está en 'Doing'.
-            if (tarea.entregas.some(e => e.estado === 'Entregado')) {
-              tarea.estado = 'Doing';
-            } else {
-              // Si TODAS las entregas están calificadas, la tarea está 'Done'.
-              tarea.estado = 'Done';
-            }
+          if (!tarea.entregas || tarea.entregas.length === 0) {
+            // 1. Si no hay entregas, la tarea está PENDIENTE.
+            tarea.estado = 'To-do';
+          } else if (tarea.entregas.some(e => e.estado === 'Entregado')) {
+            // 2. Si hay AL MENOS UNA entrega sin calificar, la tarea está EN REVISIÓN.
+            tarea.estado = 'Doing';
+          } else {
+            // 3. Si todas las entregas existen y NINGUNA está pendiente (o sea, todas están calificadas),
+            // la tarea está REVISADA.
+            tarea.estado = 'Done';
           }
           return tarea;
         });
       }
-
+      
       res.json(tareasArray);
     } catch (error) {
       console.error('Error al obtener las tareas:', error);
@@ -269,15 +273,32 @@ try {
   // Endpoint para actualizar una tarea (nombre y descripción)
   app.put('/tareas/:id', async (req, res) => {
     const { id } = req.params;
-    const { nombre, descripcion } = req.body;
+    const { nombre, descripcion, colaboradores, userId, userRole } = req.body; // Recibimos el usuario y los colaboradores
 
     if (!nombre || !descripcion) {
       return res.status(400).json({ message: 'El nombre y la descripción son requeridos.' });
     }
+    if (!userId) {
+      return res.status(401).json({ message: 'No autorizado.' });
+    }
 
     try {
       const tareaRef = db.ref(`tareas/${id}`);
-      await tareaRef.update({ nombre, descripcion });
+      const tareaSnapshot = await tareaRef.once('value');
+      if (!tareaSnapshot.exists()) {
+        return res.status(404).json({ message: 'Tarea no encontrada.' });
+      }
+
+      const tarea = tareaSnapshot.val();
+      const esCreador = tarea.creador.id === userId;
+      const esColaborador = tarea.colaboradores?.some(c => c.id === userId);
+      const esAdmin = userRole === 'admin';
+
+      if (!esCreador && !esColaborador && !esAdmin) {
+        return res.status(403).json({ message: 'No tienes permiso para editar esta tarea.' });
+      }
+
+      await tareaRef.update({ nombre, descripcion, colaboradores: colaboradores || [] });
       res.json({ message: 'Tarea actualizada correctamente.' });
     } catch (error) {
       console.error('Error al actualizar la tarea:', error);
@@ -285,15 +306,92 @@ try {
     }
   });
 
+  // Endpoint para eliminar una tarea
+  app.delete('/tareas', async (req, res) => {
+    const { id, userId, userRole } = req.query; // Leemos el ID y el usuario desde los query parameters
+
+    if (!id) {
+      return res.status(400).json({ message: 'El ID de la tarea es requerido.' });
+    }
+    if (!userId) {
+      return res.status(401).json({ message: 'No autorizado.' });
+    }
+
+    try {
+      // Buscamos la tarea primero en 'tareas' (estudiantes)
+      let tareaRef = db.ref(`tareas/${id}`);
+      let tareaSnapshot = await tareaRef.once('value');
+
+      // Si no la encontramos, la buscamos en 'asignacionesMaestros'
+      if (!tareaSnapshot.exists()) {
+        tareaRef = db.ref('asignacionesMaestros/${id}');
+        tareaSnapshot = await tareaRef.once('value');
+        if (!tareaSnapshot.exists()) {
+          return res.status(404).json({ message: 'Tarea no encontrada en ninguna colección.' });
+        }
+      }
+
+      const tarea = tareaSnapshot.val();
+      const esCreador = tarea.creador.id === userId;
+      const esAdmin = userRole === 'admin';
+
+      if (!esCreador && !esAdmin) {
+        return res.status(403).json({ message: 'No tienes permiso para eliminar esta tarea.' });
+      }
+
+      // Eliminamos la tarea del path correcto donde fue encontrada
+      await tareaRef.remove();
+
+      // 2. Eliminar las entregas asociadas de todos los estudiantes
+      const tareasPorUsuarioRef = db.ref('TareasPorUsuario');
+      const snapshot = await tareasPorUsuarioRef.once('value');
+      if (snapshot.exists()) {
+        const updates = {};
+        snapshot.forEach(studentSnapshot => {
+          const studentId = studentSnapshot.key;
+          if (studentSnapshot.hasChild(id)) {
+            // Preparamos la eliminación de la entrega para este estudiante
+            updates[`${studentId}/${id}`] = null;
+          }
+        });
+        // Ejecutamos todas las eliminaciones de entregas en una sola operación
+        await tareasPorUsuarioRef.update(updates);
+      }
+
+      res.json({ message: 'Tarea y todas sus entregas asociadas han sido eliminadas correctamente.' });
+    } catch (error) {
+      console.error('Error al eliminar la tarea:', error);
+      res.status(500).json({ message: 'Error interno del servidor.' });
+    }
+  });
+
   // Endpoint para que un profesor califique una entrega
   app.post('/calificar', async (req, res) => {
-    const { studentId, taskId, nota, frase } = req.body;
+    const { studentId, taskId, nota, frase, userId, userRole } = req.body;
 
     if (!studentId || !taskId || !nota || !frase) {
       return res.status(400).json({ message: 'Se requieren todos los datos para calificar.' });
     }
+    if (!userId) {
+      return res.status(401).json({ message: 'No autorizado.' });
+    }
 
     try {
+      const tareaRef = db.ref(`tareas/${taskId}`);
+      const tareaSnapshot = await tareaRef.once('value');
+      if (!tareaSnapshot.exists()) {
+        return res.status(404).json({ message: 'Tarea no encontrada.' });
+      }
+
+      const tarea = tareaSnapshot.val();
+      const esCreador = tarea.creador.id === userId;
+      const esColaborador = tarea.colaboradores?.some(c => c.id === userId);
+      const esAdmin = userRole === 'admin';
+
+      if (!esCreador && !esColaborador && !esAdmin) {
+        return res.status(403).json({ message: 'No tienes permiso para calificar esta tarea.' });
+      }
+
       const entregaRef = db.ref(`TareasPorUsuario/${studentId}/${taskId}`);
 
       // Actualizamos la entrega con la calificación y cambiamos el estado
@@ -418,6 +516,26 @@ try {
     }
   });
 
+  // Endpoint para obtener todos los usuarios que son maestros/profesores
+  app.get('/usuarios/maestros', async (req, res) => {
+    try {
+      const usersRef = db.ref('usuarios');
+      const snapshot = await usersRef.once('value');
+      if (!snapshot.exists()) {
+        return res.json([]);
+      }
+      const usersData = snapshot.val();
+      const maestros = Object.keys(usersData)
+        .map(key => ({ id: key, ...usersData[key] }))
+        .filter(user => user.Rol?.toLowerCase() === 'profesor' || user.Rol?.toLowerCase() === 'maestro');
+      
+      res.json(maestros);
+    } catch (error) {
+      console.error('Error al obtener la lista de maestros:', error);
+      res.status(500).json({ message: 'Error interno del servidor.' });
+    }
+  });
+
   // Crear un nuevo usuario (desde el panel de admin)
   app.post('/usuarios', async (req, res) => {
     const { nombre, apellidos, matricula, correo, contraseña, Rol } = req.body;
@@ -452,15 +570,15 @@ try {
   // Actualizar un usuario
   app.put('/usuarios/:id', async (req, res) => {
     const { id } = req.params;
-    const { nombre, apellidos, matricula, Rol } = req.body;
+    const { nombre, apellidos, matricula, correo, Rol } = req.body;
 
-    if (!nombre || !apellidos || !matricula || !Rol) {
+    if (!nombre || !apellidos || !matricula || !correo || !Rol) {
       return res.status(400).json({ message: 'Todos los campos son requeridos.' });
     }
 
     try {
       const userRef = db.ref(`usuarios/${id}`);
-      await userRef.update({ nombre, apellidos, matricula, Rol });
+      await userRef.update({ nombre, apellidos, matricula, correo, Rol });
       res.json({ message: 'Usuario actualizado correctamente.' });
     } catch (error) {
       console.error('Error al actualizar usuario:', error);

@@ -50,7 +50,7 @@
     <section class="task-cards-section">
       <!-- Card 1: To-do -->
       <ion-card class="task-card">
-        <ion-card-header><ion-card-title>To-do</ion-card-title></ion-card-header>
+        <ion-card-header><ion-card-title>ASIGNACION</ion-card-title></ion-card-header>
         <ion-card-content>
           <!-- Contenido del acordeón para To-do -->
           <ion-accordion-group *ngIf="todoTasks.length > 0" [multiple]="true">
@@ -61,11 +61,27 @@
               </div>
               <div class="ion-padding" slot="content">
                 <p>{{ task.descripcion }}</p>
-                <!-- Botón de Editar Tarea -->
-                <ion-button fill="clear" size="small" class="edit-task-button" (click)="openEditTaskModal(task); $event.stopPropagation();">
-                  <ion-icon slot="icon-only" name="duplicate-outline"></ion-icon>
-                  Editar
-                </ion-button>
+                <!-- Información adicional de la tarea -->
+                <div class="task-meta-info">
+                  <ion-note>Creado por: {{ task.creador.nombre }}</ion-note><br>
+                  <ion-note>Fecha: {{ task.fechaCreacion | date:'dd/MM/yyyy, h:mm a' }}</ion-note>
+                  <div *ngIf="task.colaboradores && task.colaboradores.length > 0" class="collaborators-list">
+                    <ion-note>Colaboradores: {{ getCollaboratorNames(task) }}</ion-note>
+                  </div>
+                </div>
+                <!-- Botones de acción -->
+                <div class="task-actions" *ngIf="canManageTask(task)">
+                  <!-- Botón de Editar Tarea -->
+                  <ion-button fill="clear" size="small" class="edit-task-button" (click)="openEditTaskModal(task); $event.stopPropagation();">
+                    <ion-icon slot="start" name="duplicate-outline"></ion-icon>
+                    Editar
+                  </ion-button>
+                  <!-- Botón de Eliminar Tarea -->
+                  <ion-button fill="clear" size="small" color="danger" class="delete-task-button" (click)="deleteTask(task.id, task.creador.id); $event.stopPropagation();">
+                    <ion-icon slot="start" name="trash-outline"></ion-icon>
+                    Eliminar
+                  </ion-button>
+                </div>
               </div>
             </ion-accordion>
           </ion-accordion-group>
@@ -78,7 +94,7 @@
 
       <!-- Card 2: Doing -->
       <ion-card class="task-card">
-        <ion-card-header><ion-card-title>Doing</ion-card-title></ion-card-header>
+        <ion-card-header><ion-card-title>ASIGNACION EN REVISION</ion-card-title></ion-card-header>
         <ion-card-content>
           <!-- Contenido del acordeón para Doing -->
           <ion-accordion-group *ngIf="doingTasks.length > 0" [multiple]="true">
@@ -91,6 +107,14 @@
               <!-- Contenido de la Tarea: Lista de Entregas -->
               <div class="ion-padding" slot="content">
                 <p>{{ task.descripcion }}</p>
+                <!-- Información adicional de la tarea -->
+                <div class="task-meta-info">
+                  <ion-note>Creado por: {{ task.creador.nombre }}</ion-note><br>
+                  <ion-note>Fecha: {{ task.fechaCreacion | date:'dd/MM/yyyy, h:mm a' }}</ion-note>
+                  <div *ngIf="task.colaboradores && task.colaboradores.length > 0" class="collaborators-list">
+                    <ion-note>Colaboradores: {{ getCollaboratorNames(task) }}</ion-note>
+                  </div>
+                </div>
 
                 <!-- Sub-lista de entregas de estudiantes -->
                 <ion-list *ngIf="task.entregas && task.entregas.length > 0" class="submission-list">
@@ -100,12 +124,24 @@
                       <p>Entregado: {{ entrega.entrega.fecha | date:'short' }}</p>
                       <p *ngIf="entrega.estado === 'Calificado'">Calificación: {{ entrega.calificacion.nota }}</p>
                     </ion-label>
-                    <ion-button *ngIf="entrega.estado === 'Entregado'" slot="end" fill="clear" (click)="openGradeModal(entrega, task.id)">
-                      <ion-icon slot="icon-only" name="checkmark-done-circle-outline"></ion-icon>
-                    </ion-button>
+                    <!-- CORRECCIÓN: El botón con slot="icon-only" se auto-cierra -->
+                    <ion-button *ngIf="entrega.estado === 'Entregado' && canManageTask(task)" slot="end" fill="clear" (click)="openGradeModal(entrega, task.id)"><ion-icon slot="icon-only" name="checkmark-done-circle-outline"></ion-icon></ion-button>
                   </ion-item>
                 </ion-list>
 
+                <!-- Botones de acción para la sección "Doing" -->
+                <div class="task-actions" *ngIf="canManageTask(task)">
+                  <!-- Botón de Editar Tarea -->
+                  <ion-button fill="clear" size="small" class="edit-task-button" (click)="openEditTaskModal(task); $event.stopPropagation();">
+                    <ion-icon slot="start" name="duplicate-outline"></ion-icon>
+                    Editar
+                  </ion-button>
+                  <!-- Botón de Eliminar Tarea -->
+                  <ion-button fill="clear" size="small" color="danger" class="delete-task-button" (click)="deleteTask(task.id, task.creador.id); $event.stopPropagation();">
+                    <ion-icon slot="start" name="trash-outline"></ion-icon>
+                    Eliminar
+                  </ion-button>
+                </div>
               </div>
             </ion-accordion>
           </ion-accordion-group>
@@ -118,7 +154,7 @@
 
       <!-- Card 3: Done -->
       <ion-card class="task-card">
-        <ion-card-header><ion-card-title>Done</ion-card-title></ion-card-header>
+        <ion-card-header><ion-card-title>ASIGNACION REVISADO</ion-card-title></ion-card-header>
         <ion-card-content>
           <!-- Contenido del acordeón para Done -->
           <ion-accordion-group *ngIf="doneTasks.length > 0" [multiple]="true">
@@ -129,9 +165,35 @@
               </div>
               <div class="ion-padding" slot="content">
                 <p>{{ task.descripcion }}</p>
-                <div *ngIf="task.entrega?.archivoUrl">
-                  <ion-button expand="block" color="tertiary" [href]="task.entrega?.archivoUrl" target="_blank">Ver Entrega</ion-button>
+                <!-- Información adicional de la tarea -->
+                <div class="task-meta-info">
+                  <ion-note>Creado por: {{ task.creador.nombre }}</ion-note><br>
+                  <ion-note>Fecha: {{ task.fechaCreacion | date:'dd/MM/yyyy, h:mm a' }}</ion-note>
+                  <div *ngIf="task.colaboradores && task.colaboradores.length > 0" class="collaborators-list">
+                    <ion-note>Colaboradores: {{ getCollaboratorNames(task) }}</ion-note>
+                  </div>
                 </div>
+
+                <!-- Lista de entregas y calificaciones para tareas revisadas -->
+                <ion-list *ngIf="task.entregas && task.entregas.length > 0" class="submission-list">
+                  <ion-item *ngFor="let entrega of task.entregas" lines="full" class="submission-item">
+                    <ion-label>
+                      <h3>{{ entrega.studentNombre }}</h3>
+                      <p>Entregado: {{ entrega.entrega.fecha | date:'short' }}</p>
+                      <p *ngIf="entrega.estado === 'Calificado'">Calificación: <strong>{{ entrega.calificacion.nota }}</strong></p>
+                    </ion-label>
+                  </ion-item>
+                </ion-list>
+
+                <!-- Botones de acción para la sección "Done" -->
+                <div class="task-actions" *ngIf="canManageTask(task)">
+                  <!-- Botón de Eliminar Tarea (solo para el creador o admin) -->
+                  <ion-button *ngIf="isAdmin || task.creador.id === currentUserId" fill="clear" size="small" color="danger" class="delete-task-button" (click)="deleteTask(task.id, task.creador.id); $event.stopPropagation();">
+                    <ion-icon slot="start" name="trash-outline"></ion-icon>
+                    Eliminar
+                  </ion-button>
+                </div>
+
               </div>
             </ion-accordion>
           </ion-accordion-group>
@@ -152,9 +214,6 @@
   <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="canCreateTasks$ | async">
     <ion-fab-button (click)="openAddTaskModal()">
       <ion-icon name="add-outline"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-button color="secondary" (click)="openSearchStudentModal()">
-      <ion-icon name="search-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 </ion-content>

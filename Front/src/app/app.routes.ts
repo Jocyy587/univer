@@ -34,6 +34,10 @@ export const routes: Routes = [
     path: 'cat19',
     loadComponent: () => import('./cat19/cat19.page').then( m => m.Cat19Page)
   },
+  {
+    path: 'asignaciones',
+    loadComponent: () => import('./asignaciones/asignaciones.page').then( m => m.AsignacionesPage)
+  },
 
 
 

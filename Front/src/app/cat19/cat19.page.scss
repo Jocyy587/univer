@@ -1,9 +1,13 @@
 // Importamos los estilos base para no repetir código
-@import '../components/student-activitie/student-activitie.component.scss';
+@import '../components/student-activitie/_student-view-styles.scss';
 
-// Sobrescribimos el fondo del contenido para que sea consistente
 :host {
-  --background: var(--brand-dark);
+  // Aplicamos un fondo degradado a toda la página
+  ion-content {
+    // Degradado lineal de negro (arriba) a verde (abajo)
+    // Cambiamos el verde por el tono dorado/marrón más sobrio que pediste.
+    --background: linear-gradient(to bottom, var(--brand-dark, #1a1a1a) 0%, #8c6d36 100%);
+  }
 }
 
 // Renombramos la clase principal para que coincida con nuestra página
@@ -19,7 +23,7 @@
     // Efecto hover mejorado
     &:hover {
       transform: translateY(-3px) scale(1.01);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
     }
   }
 
@@ -32,7 +36,7 @@
 
   ion-label p {
     font-size: 0.8rem;
-    color: var(--text-light-secondary);
+    color: var(--ion-color-step-600, #666666);
     opacity: 0.8;
   }
 }
@@ -56,11 +60,11 @@
 }
 
 .fab-label {
-  color: var(--text-light);
+  color: var(--ion-color-text, #000);
   margin-top: 8px;
   font-size: 0.9rem;
   font-weight: 600;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  text-shadow: 0 1px 2px rgba(255,255,255,0.5);
 }
 
 // Estilos para las formas decorativas del fondo
@@ -93,11 +97,11 @@
 
 // Damos más profundidad a los títulos
 .category-title {
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
 ion-title {
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
 /*

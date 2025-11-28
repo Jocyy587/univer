@@ -1,20 +1,41 @@
+// Usamos :host para encapsular los estilos y definir variables locales
+:host {
+  --brand-dark: #000000;
+  --brand-green: #5a9c00;
+  --brand-header: #1e1a0d;
+  --text-light: #f4f4f4;
+}
+
 ion-toolbar {
-  --background: var(--ion-color-primary);
-  --color: var(--ion-color-primary-contrast);
+  --background: var(--brand-header);
+  --color: var(--text-light);
+  border-bottom: 1px solid var(--brand-green);
 }
 
 ion-content {
-  --background: var(--ion-color-light);
+  --background: var(--brand-dark);
 }
 
 ion-item {
-  --background: var(--ion-color-light-tint);
+  --background: rgba(255, 255, 255, 0.05);
   --border-radius: 8px;
+  --border-color: rgba(90, 156, 0, 0.3);
+  --highlight-color-focused: var(--brand-green);
   margin-bottom: 1rem;
+
+  ion-label {
+    color: var(--brand-green);
+  }
+
+  ion-input,
+  ion-textarea,
+  ion-select {
+    color: var(--text-light);
+  }
 }
 
 ion-button[type="submit"] {
-  --background: var(--ion-color-primary);
+  --background: var(--brand-green);
   --border-radius: 8px;
   font-weight: bold;
   margin-top: 1.5rem;

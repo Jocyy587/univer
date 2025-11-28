@@ -1,8 +1,8 @@
 {
-  "name": "Mi App Universitaria",
+  "name": "UTCJ CA",
   "short_name": "UniverApp",
-  "theme_color": "#488aff",
-  "background_color": "#f4f5f8",
+  "theme_color": "#8c6d36",
+  "background_color": "#8c6d36",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",

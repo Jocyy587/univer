@@ -25,7 +25,7 @@ export interface User {
   templateUrl: './cat19.page.html',
   styleUrls: ['./cat19.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule, UserEditModalComponent]
 })
 export class Cat19Page implements OnInit {
 

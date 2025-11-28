@@ -1,0 +1,79 @@
+/* Definimos las variables de color aquí para usarlas en este componente */
+:host {
+  // --- Variables de la página Home ---
+  --brand-green: #5a9c00;
+  --brand-divider: #8c6d36;
+  --brand-orange: #d35400;
+  --text-light: #f4f4f4;
+  --brand-dark: #241b1b;
+
+  // --- Estilos para el contenido del modal ---
+  ion-content {
+    --background: var(--brand-dark);
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+  }
+}
+
+/* Estilo base para los botones con degradado */
+.gradient-button {
+  --background: linear-gradient(90deg, var(--brand-divider), var(--brand-green));
+  --background-hover: linear-gradient(90deg, var(--brand-divider), #6ebf00); // Un verde más claro en hover
+  --background-activated: linear-gradient(90deg, #a17c3c, var(--brand-green)); // Un color más claro al activar
+  --color: var(--text-light);
+  --border-radius: 8px;
+  --box-shadow: 0 4px 15px rgba(16, 17, 17, 0.911);
+  --transition: all 0.3s ease-in-out;
+  text-transform: none;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+
+/* Estilo específico para el botón de eliminar */
+.gradient-button.danger {
+  --background: linear-gradient(90deg, var(--brand-orange), #c0392b); // De naranja a un rojo oscuro
+  --background-hover: linear-gradient(90deg, #e67e22, #e74c3c); // Colores más brillantes en hover
+  --background-activated: linear-gradient(90deg, #f39c12, #ff5252); // Colores aún más brillantes al activar
+}
+
+/* Estilos para la cabecera del modal */
+.header-dark {
+  --background: #1e1a0d; // Tomado de home.page.scss
+  --color: var(--text-light);
+  border-bottom: 1px solid var(--brand-green);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+/* --- Estilos para la línea decorativa --- */
+.line-separator-container {
+  padding: 1.5rem 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.line-with-circles {
+  position: relative;
+  width: 90%;
+  height: 2px;
+  background-color: var(--brand-green);
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    border: 1px solid var(--brand-green);
+    background-color: var(--brand-dark);
+    z-index: 2;
+  }
+
+  &::before { left: -5px; }
+  &::after { right: -5px; }
+}
+
+.danger-zone .gradient-button { margin-top: 0; }

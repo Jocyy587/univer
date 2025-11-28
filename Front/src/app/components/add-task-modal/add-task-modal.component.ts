@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ModalController, IonicModule } from '@ionic/angular';
-import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -9,31 +10,42 @@ import { CommonModule } from '@angular/common';
   templateUrl: './add-task-modal.component.html',
   styleUrls: ['./add-task-modal.component.scss'],
   standalone: true,
-  imports: [IonicModule, ReactiveFormsModule, CommonModule]
+  imports: [IonicModule, CommonModule, ReactiveFormsModule] // Imports necesarios para el componente
 })
 export class AddTaskModalComponent implements OnInit {
   taskForm: FormGroup;
+  maestros: any[] = []; // <-- La propiedad que faltaba
 
   constructor(
+    private fb: FormBuilder,
     private modalCtrl: ModalController,
-    private fb: FormBuilder
+    private http: HttpClient
   ) {
     this.taskForm = this.fb.group({
-      nombre: ['', [Validators.required, Validators.minLength(3)]],
-      descripcion: ['', [Validators.required, Validators.minLength(10)]]
+      nombre: ['', Validators.required],
+      descripcion: ['', Validators.required],
+      colaboradores: [[]]
     });
   }
 
-  ngOnInit() {}
-
-  cancel() {
-    return this.modalCtrl.dismiss(null, 'cancel');
+  ngOnInit() {
+    this.loadMaestros();
   }
 
+  loadMaestros() {
+    this.http.get<any[]>(`${environment.apiUrl}/usuarios/maestros`).subscribe({
+      next: (data) => { this.maestros = data; },
+      error: (err) => console.error('Error al cargar la lista de maestros', err)
+    });
+  }
+
+  cancel() { return this.modalCtrl.dismiss(null, 'cancel'); }
+
   submit() {
-    if (this.taskForm.valid) {
-      return this.modalCtrl.dismiss(this.taskForm.value, 'confirm');
+    if (this.taskForm.invalid) {
+      return; // Si el formulario no es válido, no hacemos nada.
     }
-    return this.modalCtrl.dismiss(null, 'invalid');
+    // Si el formulario es válido, cerramos el modal y enviamos los datos.
+    return this.modalCtrl.dismiss(this.taskForm.value, 'confirm');
   }
 }

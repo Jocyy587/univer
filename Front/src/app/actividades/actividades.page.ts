@@ -11,7 +11,7 @@ import { environment } from 'src/environments/environment';
 import { CommonModule } from '@angular/common';
 import { Chart, registerables } from 'chart.js';
 import { addIcons } from 'ionicons';
-import { duplicateOutline, addOutline, leafOutline, documentAttachOutline, searchOutline, checkmarkCircle, hourglassOutline, checkmarkDoneCircleOutline, cloudUploadOutline, sunnyOutline, schoolOutline } from 'ionicons/icons';
+import { duplicateOutline, addOutline, leafOutline, documentAttachOutline, searchOutline, checkmarkCircle, hourglassOutline, checkmarkDoneCircleOutline, cloudUploadOutline, sunnyOutline, schoolOutline, trashOutline } from 'ionicons/icons';
 import { StudentActivitieComponent } from 'src/app/components/student-activitie/student-activitie.component';
 
 // Definimos una interfaz para las tareas para tener un tipado fuerte
@@ -20,8 +20,10 @@ interface Tarea {
   nombre: string;
   descripcion: string;
   estado: 'To-do' | 'Doing' | 'Done';
+  type?: 'student' | 'teacher'; // Tipo de tarea
   creador: { id: string; nombre: string; };
   fechaCreacion: string;
+  colaboradores?: { id: string; nombre: string; }[]; // Propiedad añadida
   entrega?: { fecha: string; nombreArchivo: string; archivoUrl?: string; }; // Para estudiante
   entregas?: any[]; // Para profesor
   calificacion?: { nota: string, frase: string }; // Para estudiante
@@ -42,7 +44,9 @@ export class ActividadesPage implements OnInit, AfterViewInit {
   todoTasks: Tarea[] = [];
   doingTasks: Tarea[] = [];
   doneTasks: Tarea[] = [];
-
+                                                                                                                                                                                                                                                                                        
+  currentUserId: string | null = null; // Cambiado a público
+  isAdmin = false; // Cambiado a público
   @ViewChild('donutCanvas') private donutCanvas?: ElementRef;
   donutChart: any;
   private userSubscription: Subscription | undefined;
@@ -53,7 +57,7 @@ export class ActividadesPage implements OnInit, AfterViewInit {
     private http: HttpClient,
     private alertCtrl: AlertController // Inyectamos el AlertController
   ) {
-    addIcons({ duplicateOutline, addOutline, leafOutline, documentAttachOutline, searchOutline, checkmarkCircle, hourglassOutline, checkmarkDoneCircleOutline, cloudUploadOutline, sunnyOutline, schoolOutline });
+    addIcons({ duplicateOutline, addOutline, leafOutline, documentAttachOutline, searchOutline, checkmarkCircle, hourglassOutline, checkmarkDoneCircleOutline, cloudUploadOutline, sunnyOutline, schoolOutline, trashOutline });
     Chart.register(...registerables);
     this.canCreateTasks$ = this.authService.currentUser.pipe(
       map(user => {
@@ -71,6 +75,9 @@ export class ActividadesPage implements OnInit, AfterViewInit {
       // Solo cargamos las tareas si hay un usuario y NO es estudiante,
       // ya que el componente de estudiante maneja su propia carga.
       if (user && user.Rol?.toLowerCase() !== 'estudiante') {
+        this.currentUserId = user.id;
+        const userRole = user.Rol?.toLowerCase();
+        this.isAdmin = userRole === 'admin';
         this.loadTasks();
       }
     });
@@ -92,15 +99,14 @@ export class ActividadesPage implements OnInit, AfterViewInit {
           // Lógica solo para profesores/admin
           this.todoTasks = tasks.filter(t => t.estado === 'To-do');
           this.doingTasks = tasks.filter(t => t.estado === 'Doing');
+
           // Para el profesor, una tarea está "Done" si TODAS sus entregas están calificadas.
-          // O podemos simplificar y mostrar en "Done" las tareas que tienen al menos una entrega calificada.
-          // Por ahora, mantendremos la lógica simple y mostraremos las entregas en "Doing".
-          // Las tareas en "Done" serán las que no tienen entregas pendientes.
-          this.doneTasks = tasks.filter(t => t.estado === 'Done' || (t.entregas && t.entregas.every(e => e.estado === 'Calificado')));
+          // CORRECCIÓN: Una tarea solo está "Done" si su estado es 'Done' O si tiene entregas y TODAS están calificadas.
+          // La condición `t.entregas.length > 0` evita que las tareas nuevas sin entregas se marquen como "Done".
+          this.doneTasks = tasks.filter(t => t.estado === 'Done' || (t.entregas && t.entregas.length > 0 && t.entregas.every(e => e.estado === 'Calificado')));
 
           // Actualizamos el gráfico de dona con los datos reales
           this.updateDonutChartData();
-
           console.log('Tareas cargadas y personalizadas:', { todo: this.todoTasks, doing: this.doingTasks, done: this.doneTasks });
         },
         error: (err) => {
@@ -109,6 +115,33 @@ export class ActividadesPage implements OnInit, AfterViewInit {
       });
     });
   }
+
+  // Función auxiliar para mostrar los nombres de los colaboradores
+  getCollaboratorNames(task: Tarea): string {
+    if (!task.colaboradores || task.colaboradores.length === 0) {
+      return '';
+    }
+    return task.colaboradores.map(c => c.nombre).join(', ');
+  }
+
+  // Nueva función para verificar permisos sobre una tarea
+  canManageTask(task: Tarea): boolean {
+    // El admin siempre tiene permiso
+    if (this.isAdmin) {
+      return true;
+    }
+    // Si no hay usuario logueado, no hay permisos
+    if (!this.currentUserId) {
+      return false;
+    }
+    // El creador tiene permiso
+    if (task.creador.id === this.currentUserId) {
+      return true;
+    }
+    // Un colaborador tiene permiso
+    return task.colaboradores?.some(c => c.id === this.currentUserId) || false;
+  }
+
 
   async openAddTaskModal() {
     const modal = await this.modalCtrl.create({
@@ -124,7 +157,8 @@ export class ActividadesPage implements OnInit, AfterViewInit {
           const taskData = {
             ...data,
             creadorId: user.id,
-            creadorNombre: user.nombre
+            creadorNombre: user.nombre,
+            colaboradores: data.colaboradores || [] // Aseguramos que se envíe el campo
           };
           this.http.post(`${environment.apiUrl}/tareas`, taskData).subscribe({
             next: (res) => {
@@ -159,9 +193,48 @@ export class ActividadesPage implements OnInit, AfterViewInit {
 
     if (role === 'confirm') {
       // Si el modal se cerró con 'confirm', significa que se guardaron cambios.
-      // Recargamos la lista de tareas para ver los cambios reflejados.
-      this.loadTasks();
+      // Recargamos la página completa para asegurar que todos los cambios se reflejen.
+      window.location.reload();
     }
+  }
+
+  async deleteTask(taskId: string, creatorId: string) {
+    const alert = await this.alertCtrl.create({
+      header: 'Confirmar Eliminación',
+      message: '¿Estás seguro de que quieres eliminar esta tarea? Esta acción no se puede deshacer.',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary'
+        }, {
+          text: 'Eliminar',
+          handler: () => {
+            // Añadimos el ID del usuario y su rol a los parámetros para la verificación en el backend
+            const params = new HttpParams()
+              .set('id', taskId)
+              .set('userId', this.currentUserId || '')
+              .set('userRole', this.isAdmin ? 'admin' : 'profesor');
+
+            this.http.delete(`${environment.apiUrl}/tareas`, { params }).subscribe({
+              next: () => {
+                console.log(`Tarea con ID ${taskId} eliminada.`);
+                // Filtramos la tarea eliminada de todas las listas locales
+                this.todoTasks = this.todoTasks.filter(t => t.id !== taskId);
+                this.doingTasks = this.doingTasks.filter(t => t.id !== taskId);
+                this.doneTasks = this.doneTasks.filter(t => t.id !== taskId);
+                // Actualizamos el gráfico
+                this.updateDonutChartData();
+              },
+              error: (err) => {
+                console.error('Error al eliminar la tarea', err);
+              }
+            });
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 
   async openGradeModal(entrega: any, taskId: string) {
@@ -192,7 +265,10 @@ export class ActividadesPage implements OnInit, AfterViewInit {
               studentId: entrega.studentId,
               taskId: taskId,
               nota: notaSeleccionada,
-              frase: frasesCalificacion[notaSeleccionada as keyof typeof frasesCalificacion]
+              frase: frasesCalificacion[notaSeleccionada as keyof typeof frasesCalificacion],
+              // Añadimos el ID y rol del usuario que califica para la verificación en el backend
+              userId: this.currentUserId,
+              userRole: this.isAdmin ? 'admin' : 'profesor'
             };
                 // La solución: Llamamos a loadTasks() DENTRO del subscribe,
                 // asegurando que se ejecute solo DESPUÉS de que el servidor confirme la calificación.

@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar class="header-dark">
+  <ion-toolbar>
     <ion-title>Editar Tarea</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="cancel()">Cerrar</ion-button>
@@ -17,6 +17,15 @@
       <ion-item>
         <ion-label position="floating">Descripción</ion-label>
         <ion-textarea [(ngModel)]="task.descripcion" name="descripcion" required auto-grow="true"></ion-textarea>
+      </ion-item>
+      <!-- NUEVO: Campo para seleccionar colaboradores -->
+      <ion-item>
+        <ion-label position="floating">Colaboradores</ion-label>
+        <ion-select [(ngModel)]="task.colaboradores" name="colaboradores" multiple="true" placeholder="Seleccionar maestros" [compareWith]="compareCollaborators">
+          <ion-select-option *ngFor="let maestro of maestros" [value]="{id: maestro.id, nombre: maestro.nombre}">
+            {{ maestro.nombre }} {{ maestro.apellidos }}
+          </ion-select-option>
+        </ion-select>
       </ion-item>
     </ion-list>
     <ion-button type="submit" expand="block" [disabled]="!editForm.valid">Guardar Cambios</ion-button>

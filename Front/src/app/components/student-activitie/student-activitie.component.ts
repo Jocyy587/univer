@@ -1,27 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { IonicModule, ToastController } from '@ionic/angular';
+import { Component, Input, OnInit } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { IonicModule, ToastController } from '@ionic/angular';
+import { take } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { environment } from 'src/environments/environment';
-import { take } from 'rxjs';
-import { addIcons } from 'ionicons';
-import { hourglassOutline, cloudUploadOutline, sunnyOutline, checkmarkDoneCircleOutline, schoolOutline, documentTextOutline, readerOutline } from 'ionicons/icons';
 
-// Interfaz actualizada para la Tarea del estudiante
+// Definimos una interfaz para las tareas para tener un tipado fuerte
 interface Tarea {
   id: string;
   nombre: string;
   descripcion: string;
   estado: 'To-do' | 'Doing' | 'Done';
   creador: { id: string; nombre: string; };
-  entrega?: { fecha: string; };
-  // La calificación ahora es parte de la interfaz
-  calificacion?: {
-    nota: string;
-    frase: string;
-  };
+  fechaCreacion: string;
+  colaboradores?: { id: string; nombre: string; }[];
+  entrega?: { fecha: string; nombreArchivo?: string; archivoUrl?: string; };
+  calificacion?: { nota: string, frase: string };
 }
 
 @Component({
@@ -29,85 +24,75 @@ interface Tarea {
   templateUrl: './student-activitie.component.html',
   styleUrls: ['./student-activitie.component.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule]
 })
 export class StudentActivitieComponent implements OnInit {
 
-  // Propiedades para las tres listas de tareas
   todoTasks: Tarea[] = [];
-  doingTasks: Tarea[] = []; // Array para "En Revisión"
-  doneTasks: Tarea[] = [];
+  doingTasks: Tarea[] = [];
+  doneTasks: Tarea[] = []; // Lo mantenemos por si se usa en el futuro
 
-  private currentUser: any;
+  private currentUserId: string | null = null;
 
   constructor(
     private http: HttpClient,
     private authService: AuthService,
-    private toastCtrl: ToastController
-  ) {
-    addIcons({ hourglassOutline, cloudUploadOutline, sunnyOutline, checkmarkDoneCircleOutline, schoolOutline, documentTextOutline, readerOutline });
-  }
+    private toastController: ToastController
+  ) {}
 
   ngOnInit() {
     this.authService.currentUser.pipe(take(1)).subscribe(user => {
-      if (user && user.Rol.toLowerCase() === 'estudiante') {
-        this.currentUser = user;
+      if (user) {
+        this.currentUserId = user.id;
         this.loadTasks();
       }
     });
   }
 
   loadTasks() {
-    if (!this.currentUser) return;
+    if (!this.currentUserId) return;
 
-    const params = new HttpParams().set('userId', this.currentUser.id);
-    this.http.get<Tarea[]>(`${environment.apiUrl}/tareas`, { params }).subscribe({
+    const endpoint = `${environment.apiUrl}/tareas`;
+    const params = new HttpParams().set('userId', this.currentUserId);
+
+    this.http.get<Tarea[]>(endpoint, { params }).subscribe({
       next: (tasks) => {
-        // Filtramos las tareas en sus respectivos arrays
         this.todoTasks = tasks.filter(t => t.estado === 'To-do');
-        this.doingTasks = tasks.filter(t => t.estado === 'Doing'); // Tareas entregadas, pendientes de calificar
-        this.doneTasks = tasks.filter(t => t.estado === 'Done');   // Tareas ya calificadas
+        this.doingTasks = tasks.filter(t => t.estado === 'Doing');
+        this.doneTasks = tasks.filter(t => t.estado === 'Done');
       },
-      error: (err) => console.error('Error al cargar las tareas del estudiante', err)
+      error: (err) => console.error('Error al cargar las asignaciones', err)
     });
   }
 
+  // Lógica para que un estudiante suba un archivo (ya existente)
   triggerFileUpload(taskId: string) {
-    const fileInput = document.getElementById(`file-upload-${taskId}`);
-    if (fileInput) {
-      fileInput.click();
-    }
+    document.getElementById(`file-upload-${taskId}`)?.click();
   }
 
-  onFileSelected(event: Event, taskId: string) {
-    const input = event.target as HTMLInputElement;
-    if (!input.files?.length) {
-      return;
+  onFileSelected(event: any, taskId: string) {
+    const file: File = event.target.files[0];
+    if (file && this.currentUserId) {
+      const formData = new FormData();
+      formData.append('archivo', file);
+      formData.append('studentId', this.currentUserId);
+
+      const endpoint = `${environment.apiUrl}/tareas/${taskId}/entregar`;
+
+      this.http.post(endpoint, formData).subscribe({
+        next: async () => {
+          const toast = await this.toastController.create({
+            message: 'Tarea entregada con éxito.',
+            duration: 2000,
+            color: 'success'
+          });
+          toast.present();
+          this.loadTasks(); // Recargamos las tareas para que se mueva a la columna "En Revisión"
+        },
+        error: (err) => {
+          console.error('Error al entregar la tarea', err);
+        }
+      });
     }
-
-    const file = input.files[0];
-    const formData = new FormData();
-    formData.append('archivo', file);
-    formData.append('studentId', this.currentUser.id);
-
-    this.http.post(`${environment.apiUrl}/tareas/${taskId}/entregar`, formData).subscribe({
-      next: async () => {
-        const toast = await this.toastCtrl.create({
-          message: '¡Tarea entregada con éxito! Ahora está en revisión.',
-          duration: 3000,
-          color: 'success'
-        });
-        toast.present();
-        this.loadTasks(); // Recargamos para que la tarea se mueva a "En Revisión"
-      },
-      error: async () => {
-        const toast = await this.toastCtrl.create({
-          message: 'Error al entregar la tarea.',
-          duration: 3000,
-          color: 'danger'
-        });
-        toast.present();
-      }
-    });
   }
 }

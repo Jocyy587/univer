@@ -24,7 +24,7 @@
       </ion-item>
       <ion-item>
         <ion-label position="floating">Correo</ion-label>
-        <ion-input [(ngModel)]="user.correo" name="correo" type="email" required [readonly]="isEditMode"></ion-input>
+        <ion-input [(ngModel)]="user.correo" name="correo" type="email" required></ion-input>
       </ion-item>
       <ion-item>
         <ion-label>Rol</ion-label>
@@ -40,13 +40,15 @@
         <ion-input [(ngModel)]="password" name="password" type="password" required></ion-input>
       </ion-item>
     </ion-list>
-    <ion-button type="submit" expand="block" [disabled]="!editForm.valid">Guardar Cambios</ion-button>
+    <ion-button class="gradient-button" type="submit" expand="block" [disabled]="!editForm.valid">Guardar Cambios</ion-button>
   </form>
 
   <!-- Zona de peligro solo para editar -->
   <div class="danger-zone" *ngIf="isEditMode">
-    <ion-item-divider></ion-item-divider>
-    <ion-button expand="block" color="warning" (click)="resetPassword()">Reiniciar Contraseña</ion-button>
-    <ion-button expand="block" color="danger" (click)="deleteUser()">Eliminar Usuario</ion-button>
+    <div class="line-separator-container">
+      <div class="line-with-circles"></div>
+    </div>
+    <ion-button class="gradient-button" expand="block" (click)="resetPassword()">Reiniciar Contraseña</ion-button>
+    <ion-button class="gradient-button" expand="block" (click)="deleteUser()">Eliminar Usuario</ion-button>
   </div>
 </ion-content>
