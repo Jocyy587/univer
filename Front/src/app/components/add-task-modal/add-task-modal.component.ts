@@ -4,6 +4,8 @@ import { ModalController, IonicModule } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { CommonModule } from '@angular/common';
+import { AuthService } from 'src/app/services/auth.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-add-task-modal',
@@ -19,12 +21,15 @@ export class AddTaskModalComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private modalCtrl: ModalController,
-    private http: HttpClient
+    private http: HttpClient,
+    private authService: AuthService // Inyectamos el servicio de autenticación
   ) {
     this.taskForm = this.fb.group({
+      tipo: ['estudiante', Validators.required], // Nuevo campo para el tipo
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
-      colaboradores: [[]]
+      // Los colaboradores ahora son solo un array de IDs
+      colaboradores: [[]] 
     });
   }
 
@@ -41,11 +46,45 @@ export class AddTaskModalComponent implements OnInit {
 
   cancel() { return this.modalCtrl.dismiss(null, 'cancel'); }
 
-  submit() {
+  // La función que se ejecuta al enviar el formulario
+  saveTask() {
     if (this.taskForm.invalid) {
-      return; // Si el formulario no es válido, no hacemos nada.
+      return;
     }
-    // Si el formulario es válido, cerramos el modal y enviamos los datos.
-    return this.modalCtrl.dismiss(this.taskForm.value, 'confirm');
+
+    this.authService.currentUser.pipe(take(1)).subscribe(user => {
+      if (!user) {
+        console.error('No se pudo obtener el usuario actual');
+        return;
+      }
+
+      const formValue = this.taskForm.value;
+
+      // 1. Determinamos el endpoint basado en el tipo seleccionado
+      const endpoint = formValue.tipo === 'maestro' 
+        ? `${environment.apiUrl}/asignaciones` 
+        : `${environment.apiUrl}/tareas`;
+
+      // 2. Construimos el objeto de datos a enviar
+      const taskData = {
+        nombre: formValue.nombre,
+        descripcion: formValue.descripcion,
+        creadorId: user.id,
+        creadorNombre: user.nombre,
+        // Mapeamos los IDs de colaboradores a objetos {id, nombre}
+        colaboradores: this.maestros
+          .filter(m => formValue.colaboradores.includes(m.id))
+          .map(m => ({ id: m.id, nombre: m.nombre }))
+      };
+
+      // 3. Enviamos la petición POST
+      this.http.post(endpoint, taskData).subscribe({
+        next: () => {
+          // Si tiene éxito, cerramos el modal y enviamos una señal de 'confirm'
+          this.modalCtrl.dismiss({ saved: true }, 'confirm');
+        },
+        error: (err) => console.error(`Error al crear en ${endpoint}`, err)
+      });
+    });
   }
 }

@@ -185,6 +185,125 @@ try {
     }
   });
 
+  // --- ENDPOINTS PARA ASIGNACIONES DE MAESTROS ---
+
+  // Endpoint para crear una nueva asignación para maestros
+  app.post('/asignaciones', async (req, res) => {
+    const { nombre, descripcion, creadorId, creadorNombre, estado, colaboradores } = req.body;
+
+    if (!nombre || !descripcion || !creadorId || !creadorNombre) {
+      return res.status(400).json({ message: 'El nombre, descripción y los datos del creador son requeridos.' });
+    }
+
+    try {
+      const asignacionRef = db.ref('asignaciones');
+
+      const newAsignacion = await asignacionRef.push({
+        nombre,
+        descripcion,
+        estado: estado || 'To-do',
+        fechaCreacion: new Date().toISOString(),
+        creador: { id: creadorId, nombre: creadorNombre },
+        colaboradores: colaboradores || []
+      });
+      res.status(201).json({ message: 'Asignación creada exitosamente', id: newAsignacion.key });
+    } catch (error) {
+      console.error('Error al crear la asignación:', error);
+      res.status(500).json({ message: 'Error interno del servidor.' });
+    }
+  });
+
+  // Endpoint para obtener todas las asignaciones (para maestros y admin)
+  app.get('/asignaciones', async (req, res) => {
+    const { userId } = req.query; // ID del maestro que hace la petición
+
+    try {
+      const asignacionesRef = db.ref('asignaciones');
+      const snapshot = await asignacionesRef.once('value');
+
+      if (!snapshot.exists()) {
+        return res.json([]);
+      }
+
+      const asignacionesData = snapshot.val();
+      let asignacionesArray = Object.keys(asignacionesData).map(key => ({
+        id: key,
+        ...asignacionesData[key]
+      }));
+
+      // Si es un maestro, personalizamos el estado de cada asignación
+      if (userId) {
+        // LÓGICA PARA MAESTRO INDIVIDUAL
+        const asignacionesUsuarioRef = db.ref(`AsignacionesPorUsuario/${userId}`);
+        const snapshotAsignacionesUsuario = await asignacionesUsuarioRef.once('value');
+        const asignacionesDelUsuario = snapshotAsignacionesUsuario.val() || {};
+
+        // Filtramos para que el maestro solo vea las tareas que ha creado O en las que es colaborador
+        asignacionesArray = asignacionesArray.filter(asig => 
+          asig.creador.id === userId ||
+          asig.colaboradores?.some(c => c.id === userId)
+        );
+
+        asignacionesArray = asignacionesArray.map(asignacion => {
+          const completadaData = asignacionesDelUsuario[asignacion.id];
+          if (completadaData) {
+            // Si el maestro ya la completó, verificamos si ha sido revisada.
+            const estadoMaestro = (completadaData.estado === 'Revisado' || completadaData.estado === 'Rechazado') ? 'Done' : 'Doing';
+            return { 
+              ...asignacion, 
+              estado: estadoMaestro, 
+              entrega: completadaData 
+            };
+          } else {
+            // Si no, está 'To-do'
+            return { ...asignacion, estado: 'To-do' };
+          }
+        });
+      } else {
+        // LÓGICA PARA ADMIN (vista general)
+        const completadasRef = db.ref('AsignacionesPorUsuario');
+        const completadasSnapshot = await completadasRef.once('value');
+        const todasLasCompletadas = completadasSnapshot.val() || {};
+
+        const usersRef = db.ref('usuarios');
+        const usersSnapshot = await usersRef.once('value');
+        const todosLosUsuarios = usersSnapshot.val() || {};
+
+        asignacionesArray = asignacionesArray.map(asignacion => {
+          asignacion.entregas = []; // Usamos 'entregas' para mantener consistencia con 'tareas'
+          for (const teacherId in todasLasCompletadas) {
+            if (todasLasCompletadas[teacherId][asignacion.id]) {
+              const completada = todasLasCompletadas[teacherId][asignacion.id];
+              const teacherInfo = todosLosUsuarios[teacherId];
+              asignacion.entregas.push({ 
+                ...completada, 
+                teacherId, 
+                teacherNombre: teacherInfo?.nombre || 'Maestro Desconocido' 
+              });
+            }
+          }
+
+          // Lógica de estado para la vista del admin
+          if (!asignacion.entregas || asignacion.entregas.length === 0) {
+            // 1. Si no hay entregas, está PENDIENTE.
+            asignacion.estado = 'To-do';
+          } else if (asignacion.entregas.some(e => !e.estado || e.estado !== 'Revisado' && e.estado !== 'Rechazado')) {
+            // 2. Si hay AL MENOS UNA entrega sin estado (recién completada), está EN REVISIÓN.
+            asignacion.estado = 'Doing';
+          } else {
+            // 3. Si TODAS las entregas tienen un estado ('Revisado' o 'Rechazado'), está REVISADA.
+            asignacion.estado = 'Done';
+          }
+          return asignacion;
+        });
+      }
+      res.json(asignacionesArray);
+    } catch (error) {
+      console.error('Error al obtener las asignaciones:', error);
+      res.status(500).json({ message: 'Error interno del servidor.' });
+    }
+  });
+
   // Endpoint para obtener todas las tareas
   app.get('/tareas', async (req, res) => {
     const { userId } = req.query; // Recibimos el ID del usuario que hace la petición
@@ -304,6 +423,75 @@ try {
       console.error('Error al actualizar la tarea:', error);
       res.status(500).json({ message: 'Error interno del servidor.' });
     }
+  });
+
+  // Endpoint para que un maestro marque una asignación como completada
+  app.post('/asignaciones/:id/completar', upload.single('archivo'), async (req, res) => {
+    const { id } = req.params;
+    const file = req.file;
+    const { teacherId } = req.body;
+
+    if (!teacherId) {
+      return res.status(400).json({ message: 'El ID del maestro es requerido.' });
+    }
+
+    const asignacionCompletadaRef = db.ref(`AsignacionesPorUsuario/${teacherId}/${id}`);    
+    await asignacionCompletadaRef.set({
+      fecha: new Date().toISOString(),
+      nombreArchivo: file ? file.originalname : 'Completado sin archivo'
+    });
+    res.json({ message: 'Asignación marcada como completada.' });
+  });
+
+  // Endpoint para que un admin revise la asignación completada por un maestro
+  app.post('/asignaciones/revisar', async (req, res) => {
+    const { teacherId, asignacionId, estado, frase, revisorId, revisorRole } = req.body;
+
+    if (!teacherId || !asignacionId || !estado || !frase) {
+      return res.status(400).json({ message: 'Faltan datos para la revisión.' });
+    }
+
+    try {
+      // Nueva lógica de permisos: Cualquier admin o maestro/profesor puede revisar.
+      const revisorRoleLower = revisorRole?.toLowerCase();
+      if (revisorRoleLower !== 'admin' && revisorRoleLower !== 'profesor' && revisorRoleLower !== 'maestro') {
+        return res.status(403).json({ message: 'No tienes permiso para revisar esta asignación.' });
+      }
+
+      const entregaRef = db.ref(`AsignacionesPorUsuario/${teacherId}/${asignacionId}`);
+      const snapshot = await entregaRef.once('value');
+      if (!snapshot.exists()) return res.status(404).json({ message: 'Entrega de asignación no encontrada.' });
+
+      await entregaRef.update({
+        estado: estado, // "Revisado" o "Rechazado"
+        revision: { fecha: new Date().toISOString(), revisorId: revisorId, frase: frase }
+      });
+
+      res.json({ message: 'Asignación revisada correctamente.' });
+    } catch (error) { res.status(500).json({ message: 'Error al revisar la asignación.' }); }
+  });
+
+  // Endpoint para eliminar una asignación de maestro
+  app.delete('/asignaciones', async (req, res) => {
+    const { id, userId, userRole } = req.query;
+
+    if (!id || !userId) {
+      return res.status(400).json({ message: 'ID de asignación y usuario son requeridos.' });
+    }
+
+    try {
+      const asignacionRef = db.ref(`asignaciones/${id}`);
+      const snapshot = await asignacionRef.once('value');
+      if (!snapshot.exists()) return res.status(404).json({ message: 'Asignación no encontrada.' });
+
+      const asignacion = snapshot.val();
+      if (userRole !== 'admin' && asignacion.creador.id !== userId) {
+        return res.status(403).json({ message: 'No tienes permiso para eliminar esta asignación.' });
+      }
+
+      await asignacionRef.remove();
+      res.json({ message: 'Asignación eliminada correctamente.' });
+    } catch (error) { res.status(500).json({ message: 'Error al eliminar la asignación.' }); }
   });
 
   // Endpoint para eliminar una tarea
@@ -427,10 +615,11 @@ try {
 
     try {
       // Guardamos la entrega en la nueva tabla: TareasPorUsuario/{studentId}/{taskId}
+      // 1. Guardamos la entrega en la tabla individual del estudiante
       const tareaUsuarioRef = db.ref(`TareasPorUsuario/${studentId}/${id}`);
       
-      // Actualizamos la tarea en la base de datos con el nombre del archivo
-      await tareaUsuarioRef.set({
+      // 2. Actualizamos la tarea en la base de datos con el nombre del archivo
+      await tareaUsuarioRef.update({
         estado: 'Entregado',
         entrega: {
           fecha: new Date().toISOString(),

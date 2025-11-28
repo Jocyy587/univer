@@ -8,23 +8,36 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <form [formGroup]="taskForm" (ngSubmit)="submit()">
+  <!-- El ngSubmit ahora llama a saveTask() -->
+  <form [formGroup]="taskForm" (ngSubmit)="saveTask()">
+
+    <!-- Selector de Tipo de Tarea -->
+    <ion-segment formControlName="tipo" value="estudiante" class="ion-margin-bottom">
+      <ion-segment-button value="estudiante">
+        <ion-label>Para Estudiantes</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="maestro">
+        <ion-label>Para Maestros</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
     <ion-item>
       <ion-label position="floating">Nombre de la tarea</ion-label>
       <ion-input formControlName="nombre" type="text"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Descripción</ion-label>
-      <ion-textarea formControlName="descripcion" rows="5"></ion-textarea>
+      <ion-textarea formControlName="descripcion" rows="4"></ion-textarea>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Colaboradores</ion-label>
       <ion-select formControlName="colaboradores" multiple="true" placeholder="Seleccionar maestros">
-        <ion-select-option *ngFor="let maestro of maestros" [value]="{id: maestro.id, nombre: maestro.nombre}">
+        <!-- El valor ahora es solo el ID del maestro -->
+        <ion-select-option *ngFor="let maestro of maestros" [value]="maestro.id">
           {{ maestro.nombre }} {{ maestro.apellidos }}
         </ion-select-option>
       </ion-select>
     </ion-item>
-    <ion-button expand="block" type="submit" [disabled]="taskForm.invalid" class="ion-margin-top">Subir Tarea</ion-button>
+    <ion-button expand="block" type="submit" [disabled]="taskForm.invalid" class="ion-margin-top">Crear</ion-button>
   </form>
 </ion-content>

@@ -8,5 +8,79 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <!-- Contenido de la página de asignaciones (actualmente vacío) -->
+  <div class="student-view">
+    <!-- Tareas Pendientes -->
+    <div class="task-category">
+      <h2 class="category-title">Asignaciones Pendientes</h2>
+      <ion-accordion-group *ngIf="todoTasks.length > 0">
+        <ion-accordion *ngFor="let task of todoTasks" class="task-accordion pending">
+          <ion-item slot="header" lines="none">
+            <ion-icon name="hourglass-outline" slot="start" color="warning"></ion-icon>
+            <ion-label>{{ task.nombre }}</ion-label>
+          </ion-item>
+          <div class="ion-padding" slot="content">
+            <p>{{ task.descripcion }}</p>
+            <div class="task-meta">Asignado por: <strong>{{ task.creador.nombre }}</strong></div>
+            <!-- Botón para que el maestro suba un archivo -->
+            <ion-button expand="block" class="submit-button" (click)="triggerFileUpload(task.id)">
+              <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
+              Entregar Asignación
+            </ion-button>
+            <input type="file" [id]="'file-upload-' + task.id" (change)="onFileSelected($event, task.id)" style="display: none;">
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
+      <div *ngIf="todoTasks.length === 0" class="empty-state">
+        <ion-icon name="sunny-outline"></ion-icon>
+        <p>¡Felicidades! No tienes asignaciones pendientes.</p>
+      </div>
+    </div>
+  
+    <!-- Tareas en Revisión -->
+    <div class="task-category">
+      <h2 class="category-title">Asignaciones Completadas</h2>
+      <ion-accordion-group *ngIf="doingTasks.length > 0">
+        <ion-accordion *ngFor="let task of doingTasks" class="task-accordion in-review">
+          <ion-item slot="header" lines="none">
+            <ion-icon name="document-text-outline" slot="start" color="secondary"></ion-icon>
+            <ion-label>{{ task.nombre }}</ion-label>
+          </ion-item>
+          <div class="ion-padding" slot="content">
+            <p>Completaste esta asignación.</p>
+            <div class="task-meta">Completado el: <strong>{{ task.entrega?.fecha | date: 'medium' }}</strong></div>
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
+      <div *ngIf="doingTasks.length === 0" class="empty-state">
+        <ion-icon name="reader-outline"></ion-icon>
+        <p>No has completado ninguna asignación.</p>
+      </div>
+    </div>
+  
+    <!-- Tareas Completadas -->
+    <div class="task-category">
+      <h2 class="category-title">Asignaciones Revisadas</h2>
+      <ion-accordion-group *ngIf="doneTasks.length > 0">
+        <ion-accordion *ngFor="let task of doneTasks" class="task-accordion completed">
+          <ion-item slot="header" lines="none">
+            <ion-icon name="checkmark-done-circle-outline" slot="start" color="success"></ion-icon>
+            <ion-label>{{ task.nombre }}</ion-label>
+            <ion-badge slot="end" [color]="task.entrega?.estado === 'Rechazado' ? 'danger' : 'success'">
+              {{ task.entrega?.estado }}
+            </ion-badge>
+          </ion-item>
+          <div class="ion-padding" slot="content">
+            <p class="feedback-phrase">"{{ task.entrega?.revision?.frase }}"</p>
+            <div class="task-meta">
+              <p>Entregado el: <strong>{{ task.entrega?.fecha | date: 'medium' }}</strong></p>
+            </div>
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
+      <div *ngIf="doneTasks.length === 0" class="empty-state">
+        <ion-icon name="school-outline"></ion-icon>
+        <p>No hay asignaciones en este estado.</p>
+      </div>
+    </div>
+  </div>
 </ion-content>

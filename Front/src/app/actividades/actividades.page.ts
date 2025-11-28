@@ -11,8 +11,21 @@ import { environment } from 'src/environments/environment';
 import { CommonModule } from '@angular/common';
 import { Chart, registerables } from 'chart.js';
 import { addIcons } from 'ionicons';
-import { duplicateOutline, addOutline, leafOutline, documentAttachOutline, searchOutline, checkmarkCircle, hourglassOutline, checkmarkDoneCircleOutline, cloudUploadOutline, sunnyOutline, schoolOutline, trashOutline } from 'ionicons/icons';
+import { createOutline, duplicateOutline, addOutline, leafOutline, documentAttachOutline, searchOutline, checkmarkCircle, hourglassOutline, checkmarkDoneCircleOutline, cloudUploadOutline, sunnyOutline, schoolOutline, trashOutline } from 'ionicons/icons';
 import { StudentActivitieComponent } from 'src/app/components/student-activitie/student-activitie.component';
+
+// Interfaz para Asignaciones de Maestros
+interface Asignacion {
+  id: string;
+  nombre: string;
+  descripcion: string;
+  estado: 'To-do' | 'Doing' | 'Done';
+  creador: { id: string; nombre: string; };
+  fechaCreacion: string;
+  colaboradores?: { id: string; nombre: string; }[];
+  entregas?: any[]; // Array de maestros que han completado
+}
+
 
 // Definimos una interfaz para las tareas para tener un tipado fuerte
 interface Tarea {
@@ -44,6 +57,11 @@ export class ActividadesPage implements OnInit, AfterViewInit {
   todoTasks: Tarea[] = [];
   doingTasks: Tarea[] = [];
   doneTasks: Tarea[] = [];
+
+  // Arreglos para almacenar las asignaciones de maestros
+  todoAsignaciones: Asignacion[] = [];
+  doingAsignaciones: Asignacion[] = [];
+  doneAsignaciones: Asignacion[] = [];
                                                                                                                                                                                                                                                                                         
   currentUserId: string | null = null; // Cambiado a público
   isAdmin = false; // Cambiado a público
@@ -57,7 +75,7 @@ export class ActividadesPage implements OnInit, AfterViewInit {
     private http: HttpClient,
     private alertCtrl: AlertController // Inyectamos el AlertController
   ) {
-    addIcons({ duplicateOutline, addOutline, leafOutline, documentAttachOutline, searchOutline, checkmarkCircle, hourglassOutline, checkmarkDoneCircleOutline, cloudUploadOutline, sunnyOutline, schoolOutline, trashOutline });
+    addIcons({ createOutline, duplicateOutline, addOutline, leafOutline, documentAttachOutline, searchOutline, checkmarkCircle, hourglassOutline, checkmarkDoneCircleOutline, cloudUploadOutline, sunnyOutline, schoolOutline, trashOutline });
     Chart.register(...registerables);
     this.canCreateTasks$ = this.authService.currentUser.pipe(
       map(user => {
@@ -108,6 +126,27 @@ export class ActividadesPage implements OnInit, AfterViewInit {
           // Actualizamos el gráfico de dona con los datos reales
           this.updateDonutChartData();
           console.log('Tareas cargadas y personalizadas:', { todo: this.todoTasks, doing: this.doingTasks, done: this.doneTasks });
+
+          // Una vez cargadas las tareas, cargamos las asignaciones
+          this.loadAsignaciones();
+        },
+        error: (err) => {
+          console.error('Error al cargar las tareas', err);
+        }
+      });
+    });
+  }
+
+  loadAsignaciones() {
+    this.authService.currentUser.pipe(take(1)).subscribe(user => {
+      if (!user || user.Rol?.toLowerCase() === 'estudiante') return;
+
+      this.http.get<Asignacion[]>(`${environment.apiUrl}/asignaciones`).subscribe({
+        next: (asignaciones) => {
+          this.todoAsignaciones = asignaciones.filter(a => a.estado === 'To-do');
+          this.doingAsignaciones = asignaciones.filter(a => a.estado === 'Doing');
+          this.doneAsignaciones = asignaciones.filter(a => a.estado === 'Done');
+          this.updateDonutChartData(); // Actualizamos el gráfico de nuevo con los datos combinados
         },
         error: (err) => {
           console.error('Error al cargar las tareas', err);
@@ -117,7 +156,7 @@ export class ActividadesPage implements OnInit, AfterViewInit {
   }
 
   // Función auxiliar para mostrar los nombres de los colaboradores
-  getCollaboratorNames(task: Tarea): string {
+  getCollaboratorNames(task: Tarea | Asignacion): string {
     if (!task.colaboradores || task.colaboradores.length === 0) {
       return '';
     }
@@ -125,7 +164,7 @@ export class ActividadesPage implements OnInit, AfterViewInit {
   }
 
   // Nueva función para verificar permisos sobre una tarea
-  canManageTask(task: Tarea): boolean {
+  canManageTask(task: Tarea | Asignacion): boolean {
     // El admin siempre tiene permiso
     if (this.isAdmin) {
       return true;
@@ -149,26 +188,13 @@ export class ActividadesPage implements OnInit, AfterViewInit {
     });
     await modal.present();
 
-    const { data, role } = await modal.onWillDismiss();
+    // Esperamos a que el modal se cierre
+    const { data } = await modal.onWillDismiss();
 
-    if (role === 'confirm' && data) {
-      this.authService.currentUser.pipe(take(1)).subscribe(user => {
-        if (user) {
-          const taskData = {
-            ...data,
-            creadorId: user.id,
-            creadorNombre: user.nombre,
-            colaboradores: data.colaboradores || [] // Aseguramos que se envíe el campo
-          };
-          this.http.post(`${environment.apiUrl}/tareas`, taskData).subscribe({
-            next: (res) => {
-              console.log('Tarea creada', res);
-              this.loadTasks(); // Recargamos las tareas para ver la nueva
-            },
-            error: (err) => console.error('Error al crear tarea', err)
-          });
-        }
-      });
+    // Si el modal nos devuelve { saved: true }, significa que la operación fue exitosa
+    // y debemos recargar la lista de tareas.
+    if (data?.saved) {
+      this.loadTasks();
     }
   }
 
@@ -179,7 +205,7 @@ export class ActividadesPage implements OnInit, AfterViewInit {
     await modal.present();
   }
 
-  async openEditTaskModal(task: Tarea) {
+  async openEditTaskModal(task: Tarea | Asignacion) {
     const modal = await this.modalCtrl.create({
       component: TaskEditModalComponent,
       componentProps: {
@@ -198,7 +224,7 @@ export class ActividadesPage implements OnInit, AfterViewInit {
     }
   }
 
-  async deleteTask(taskId: string, creatorId: string) {
+  async deleteTask(taskId: string, creatorId: string, type: 'tarea' | 'asignacion' = 'tarea') {
     const alert = await this.alertCtrl.create({
       header: 'Confirmar Eliminación',
       message: '¿Estás seguro de que quieres eliminar esta tarea? Esta acción no se puede deshacer.',
@@ -210,19 +236,24 @@ export class ActividadesPage implements OnInit, AfterViewInit {
         }, {
           text: 'Eliminar',
           handler: () => {
+            const endpoint = type === 'asignacion' ? `${environment.apiUrl}/asignaciones` : `${environment.apiUrl}/tareas`;
+
             // Añadimos el ID del usuario y su rol a los parámetros para la verificación en el backend
             const params = new HttpParams()
               .set('id', taskId)
               .set('userId', this.currentUserId || '')
               .set('userRole', this.isAdmin ? 'admin' : 'profesor');
 
-            this.http.delete(`${environment.apiUrl}/tareas`, { params }).subscribe({
+            this.http.delete(endpoint, { params }).subscribe({
               next: () => {
                 console.log(`Tarea con ID ${taskId} eliminada.`);
                 // Filtramos la tarea eliminada de todas las listas locales
                 this.todoTasks = this.todoTasks.filter(t => t.id !== taskId);
                 this.doingTasks = this.doingTasks.filter(t => t.id !== taskId);
                 this.doneTasks = this.doneTasks.filter(t => t.id !== taskId);
+                this.todoAsignaciones = this.todoAsignaciones.filter(a => a.id !== taskId);
+                this.doingAsignaciones = this.doingAsignaciones.filter(a => a.id !== taskId);
+                this.doneAsignaciones = this.doneAsignaciones.filter(a => a.id !== taskId);
                 // Actualizamos el gráfico
                 this.updateDonutChartData();
               },
@@ -230,6 +261,41 @@ export class ActividadesPage implements OnInit, AfterViewInit {
                 console.error('Error al eliminar la tarea', err);
               }
             });
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  async openReviewModal(entrega: any, asignacionId: string) {
+    const frasesRevision = {
+      'Revisado': 'La asignación cumple con lo esperado. ¡Buen trabajo!',
+      'Rechazado': 'La asignación requiere ajustes. Por favor, revisa y vuelve a entregar.'
+    };
+
+    const alert = await this.alertCtrl.create({
+      header: `Revisar entrega de ${entrega.teacherNombre || 'maestro'}`,
+      inputs: Object.keys(frasesRevision).map(estado => ({
+        name: 'revision',
+        type: 'radio',
+        label: `${estado} - ${frasesRevision[estado as keyof typeof frasesRevision]}`,
+        value: estado,
+        checked: estado === 'Revisado' // 'Revisado' por defecto
+      })),
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Confirmar',
+          handler: (estadoSeleccionado: string) => {
+            if (!estadoSeleccionado) return false;
+            const reviewData = {
+              teacherId: entrega.teacherId, asignacionId, estado: estadoSeleccionado, 
+              frase: frasesRevision[estadoSeleccionado as keyof typeof frasesRevision],
+              revisorId: this.currentUserId, revisorRole: this.isAdmin ? 'admin' : 'profesor'
+            };
+            this.http.post(`${environment.apiUrl}/asignaciones/revisar`, reviewData).subscribe({ next: () => window.location.reload() });
+            return true;
           }
         }
       ]
@@ -317,7 +383,11 @@ export class ActividadesPage implements OnInit, AfterViewInit {
 
   updateDonutChartData() {
     if (this.donutChart) {
-      const data = [this.todoTasks.length, this.doingTasks.length, this.doneTasks.length];
+      const data = [
+        this.todoTasks.length + this.todoAsignaciones.length, 
+        this.doingTasks.length + this.doingAsignaciones.length, 
+        this.doneTasks.length + this.doneAsignaciones.length
+      ];
       this.donutChart.data.datasets[0].data = data;
       this.donutChart.update();
     }
