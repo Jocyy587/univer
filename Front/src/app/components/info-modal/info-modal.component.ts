@@ -1,4 +1,6 @@
 import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common'; // 1. Importar CommonModule
+
 import {
   IonHeader,
   IonToolbar,
@@ -7,10 +9,12 @@ import {
   IonButtons,
   IonButton,
   IonIcon,
+  
   ModalController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { close } from 'ionicons/icons';
+
 
 @Component({
   selector: 'app-info-modal',
@@ -25,7 +29,7 @@ import { close } from 'ionicons/icons';
     IonButtons,
     IonButton,
     IonIcon,
-  ],
+    CommonModule  ],
 })
 export class InfoModalComponent {
   // @Input() permite que pasemos el título desde la página principal

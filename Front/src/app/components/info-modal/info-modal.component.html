@@ -15,7 +15,20 @@
 <!-- Aplicamos la clase para el contenido oscuro y el padding -->
 <ion-content class="modal-content ion-padding">
   <h2>{{ title }}</h2>
-  <p>
-    Este es un texto genérico de explicación sobre el tema seleccionado. Aquí iría la descripción detallada de la noticia, proyecto o actividad. Por ahora, sirve como un marcador de posición para demostrar la funcionalidad del modal.
-  </p>
+
+  <!-- Usamos ngSwitch para mostrar el contenido correcto basado en el título -->
+  <div [ngSwitch]="title">
+    <p *ngSwitchCase="'UTCJ Sustentable'">
+      Es un programa de la Universidad Tecnológica de Ciudad Juárez que tiene como propósito incrementar la educación y concientización ambiental, por medio de proyectos enfocados en los tres ejes centrales de la sustentabilidad, para garantizar el compromiso de la Universidad Tecnológica de Ciudad Juárez con el medio ambiente, la comunidad universitaria y la sociedad.
+    </p>
+    <p *ngSwitchCase="'Proyectos del cuerpo Académico'">
+      Descubre los innovadores proyectos de investigación y desarrollo liderados por nuestro cuerpo académico. Estas iniciativas abarcan áreas como inteligencia artificial, desarrollo de software, y la aplicación de tecnologías de la información en el sector educativo y productivo, buscando siempre generar un impacto positivo y soluciones vanguardistas.
+    </p>
+    <p *ngSwitchCase="'Cuerpo Académico'">
+      Conoce a los miembros que conforman nuestro distinguido cuerpo académico. Un grupo de investigadores, doctores y maestros comprometidos con la excelencia educativa, la investigación de vanguardia y la formación de profesionales altamente capacitados para enfrentar los retos del futuro.
+    </p>
+    <p *ngSwitchDefault>
+      Información sobre este tema no disponible actualmente.
+    </p>
+  </div>
 </ion-content>

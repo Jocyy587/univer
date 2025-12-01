@@ -64,7 +64,9 @@ export class UserEditModalComponent implements OnInit {
         this.showToast('El correo y la contraseña son obligatorios para crear un usuario.', 'danger');
         return;
       }
-      const newUser = { ...this.user, contraseña: this.password };
+      // Corregimos el nombre del campo de 'contraseña' a 'password' para que coincida con el backend.
+      const newUser = { ...this.user, password: this.password };
+
       this.http.post(`${environment.apiUrl}/usuarios`, newUser).subscribe({
         next: () => {
           this.showToast('Usuario creado con éxito.', 'success');

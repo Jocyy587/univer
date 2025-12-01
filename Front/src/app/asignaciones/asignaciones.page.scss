@@ -5,5 +5,6 @@
   // Aplicamos el fondo oscuro a toda la página de asignaciones
   ion-content {
   --background: linear-gradient(to bottom, var(--brand-dark, #1a1a1a) 0%, #8c6d36 100%);
+    --background: linear-gradient(to bottom, var(--brand-dark, #1a1a1a) 0%, #8c6d36 100%);
   }
 }

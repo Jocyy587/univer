@@ -219,3 +219,18 @@
   /* Lo subimos */
   transform: translateY(-120px) scale(0.8);
 }
+
+.forgot-password-link {
+  text-align: center;
+  margin-top: 1rem;
+
+  ion-button {
+    --color: var(--ion-color-light, #f4f4f4);
+    font-size: 0.9rem;
+    text-transform: none;
+
+    &:hover {
+      --color: var(--ion-color-success, #6ff34a);
+    }
+  }
+}

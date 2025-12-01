@@ -23,7 +23,7 @@ interface ExtracurricularData {
 @Component({
   selector: 'app-extracurricular',
   templateUrl: './extracurricular.page.html',
-  styleUrls: ['./extracurricular.page.scss'],
+  styleUrls: ['./extracurricular.page.scss'], // Aseguramos que el archivo de estilos esté vinculado
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule, RouterLink, StudentActivitieComponent],
 })

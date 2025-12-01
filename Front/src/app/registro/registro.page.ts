@@ -29,6 +29,7 @@ import { leafOutline } from 'ionicons/icons';
 export class RegistroPage {
   credentials = {
     nombre: '',
+    apellidos: '',
     matricula: '',
     correo: '',
     password: '',

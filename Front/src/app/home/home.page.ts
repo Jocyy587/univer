@@ -21,6 +21,7 @@ import {
 import { addIcons } from 'ionicons';
 import { leafOutline, playCircleOutline, chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
 import { RouterModule } from '@angular/router';
+import { DatePipe } from '@angular/common'; // 1. Importar DatePipe
 import { InfoModalComponent } from '../components/info-modal/info-modal.component';
 
 @Component({
@@ -45,12 +46,17 @@ import { InfoModalComponent } from '../components/info-modal/info-modal.componen
     IonThumbnail,
     IonLabel,
     IonCard,
-  RouterModule, // Añadimos RouterModule para que [routerLink] funcione
+    RouterModule, // Añadimos RouterModule para que [routerLink] funcione
     InfoModalComponent,
+    DatePipe, // 2. Añadir DatePipe a los imports
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class HomePage {
+  currentDate = new Date(); // 3. Añadir la propiedad currentDate
+
+  @ViewChild('content') content!: IonContent;
+
   @ViewChild('projectsSlides') projectsSlides: any;
   constructor(private modalCtrl: ModalController) {
     // Registra los íconos para que puedan ser usados en el template
@@ -126,6 +132,7 @@ export class HomePage {
       componentProps: {
         title: cardTitle,
       },
+      cssClass: 'info-modal-circular', // Añadimos una clase CSS para el estilo circular
     });
     await modal.present();
   }
@@ -143,5 +150,14 @@ export class HomePage {
 
     // Abrimos o cerramos la tarjeta clickeada
     clickedCard.classList.toggle('active');
+  }
+
+  scrollToElement(elementId: string): void {
+    const element = document.getElementById(elementId);
+    if (element) {
+      const y = element.offsetTop;
+      // La duración del scroll es de 1000ms (1 segundo). Puedes ajustarlo.
+      this.content.scrollToPoint(0, y, 1000);
+    }
   }
 }

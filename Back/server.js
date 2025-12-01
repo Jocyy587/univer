@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const bcrypt = require('bcrypt'); // 1. Importamos bcrypt
 const multer = require('multer');
 const admin = require('firebase-admin');
 
@@ -51,8 +52,10 @@ try {
       const userKey = Object.keys(snapshot.val())[0];
       const userData = snapshot.val()[userKey];
 
-      // 🚨 ADVERTENCIA DE SEGURIDAD: Comparación en texto plano. ¡No usar en producción!
-      if (userData.contraseña !== password) {
+      // 3. Comparamos la contraseña enviada con el hash guardado en la BD
+      const isMatch = await bcrypt.compare(password, userData.contraseña);
+
+      if (!isMatch) {
         return res.status(401).json({ message: 'Credenciales inválidas (contraseña incorrecta).' });
       }
 
@@ -89,18 +92,56 @@ try {
         return res.status(409).json({ message: 'El correo electrónico ya está en uso.' });
       }
 
+      // 2. Hasheamos la contraseña antes de guardarla
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+
       // Crear el nuevo usuario con el rol de "estudiante"
       const newUserRef = await usersRef.push({
         nombre,
         apellidos,
         matricula: String(matricula), // Forzamos que la matrícula se guarde como string
         correo,
-        contraseña: password, // Guardamos la contraseña
+        contraseña: hashedPassword, // Guardamos la contraseña hasheada
         Rol: 'estudiante' // Rol asignado automáticamente
       });
       res.status(201).json({ message: 'Usuario registrado exitosamente', id: newUserRef.key });
     } catch (error) {
       console.error('Error en el registro:', error);
+      res.status(500).json({ message: 'Error interno del servidor.' });
+    }
+  });
+
+  // Endpoint PÚBLICO para restablecer contraseña (usado en "¿Olvidaste tu contraseña?")
+  app.post('/reset-password-public', async (req, res) => {
+    const { matricula, newPassword } = req.body;
+
+    if (!matricula || !newPassword) {
+      return res.status(400).json({ message: 'La matrícula y la nueva contraseña son requeridas.' });
+    }
+
+    try {
+      const usersRef = db.ref('usuarios');
+      const snapshot = await usersRef.orderByChild('matricula').equalTo(String(matricula)).once('value');
+
+      if (!snapshot.exists()) {
+        return res.status(404).json({ message: 'No se encontró ningún usuario con esa matrícula.' });
+      }
+
+      // Obtenemos el ID del usuario para poder actualizarlo
+      const userId = Object.keys(snapshot.val())[0];
+      const userRef = db.ref(`usuarios/${userId}`);
+
+      // Hasheamos la nueva contraseña
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+      // Actualizamos solo la contraseña
+      await userRef.update({ contraseña: hashedPassword });
+
+      res.json({ message: 'Contraseña actualizada correctamente.' });
+    } catch (error) {
+      console.error('Error al restablecer la contraseña públicamente:', error);
       res.status(500).json({ message: 'Error interno del servidor.' });
     }
   });
@@ -727,14 +768,18 @@ try {
 
   // Crear un nuevo usuario (desde el panel de admin)
   app.post('/usuarios', async (req, res) => {
-    const { nombre, apellidos, matricula, correo, contraseña, Rol } = req.body;
+    const { nombre, apellidos, matricula, correo, password, Rol } = req.body; // Cambiado a 'password' para consistencia
 
-    if (!nombre || !apellidos || !matricula || !correo || !contraseña || !Rol) {
+    if (!nombre || !apellidos || !matricula || !correo || !password || !Rol) {
       return res.status(400).json({ message: 'Todos los campos son requeridos.' });
     }
 
     try {
       const usersRef = db.ref('usuarios');
+
+      // 1. Hashear la contraseña antes de guardarla
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
 
       const matriculaSnapshot = await usersRef.orderByChild('matricula').equalTo(String(matricula)).once('value');
       if (matriculaSnapshot.exists()) {
@@ -746,7 +791,7 @@ try {
         apellidos,
         matricula: String(matricula), // Forzamos que la matrícula se guarde como string
         correo,
-        contraseña,
+        contraseña: hashedPassword, // 2. Guardar la contraseña hasheada
         Rol
       });
       res.status(201).json({ message: 'Usuario creado exitosamente', id: newUserRef.key });
@@ -786,7 +831,11 @@ try {
 
     try {
       const userRef = db.ref(`usuarios/${id}`);
-      await userRef.update({ contraseña: nuevaContraseña });
+      // 1. Hashear la nueva contraseña
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(nuevaContraseña, salt);
+      // 2. Actualizar con la contraseña hasheada
+      await userRef.update({ contraseña: hashedPassword });
       res.json({ message: 'Contraseña reiniciada correctamente.' });
     } catch (error) {
       console.error('Error al reiniciar contraseña:', error);

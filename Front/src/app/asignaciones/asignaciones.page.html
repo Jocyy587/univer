@@ -11,7 +11,7 @@
   <div class="student-view">
     <!-- Tareas Pendientes -->
     <div class="task-category">
-      <h2 class="category-title">Asignaciones Pendientes</h2>
+      <h2 class="category-title">Proyectos pendientes</h2>
       <ion-accordion-group *ngIf="todoTasks.length > 0">
         <ion-accordion *ngFor="let task of todoTasks" class="task-accordion pending">
           <ion-item slot="header" lines="none">
@@ -38,7 +38,7 @@
   
     <!-- Tareas en Revisión -->
     <div class="task-category">
-      <h2 class="category-title">Asignaciones Completadas</h2>
+      <h2 class="category-title">Proyectos asignados</h2>
       <ion-accordion-group *ngIf="doingTasks.length > 0">
         <ion-accordion *ngFor="let task of doingTasks" class="task-accordion in-review">
           <ion-item slot="header" lines="none">
@@ -59,7 +59,7 @@
   
     <!-- Tareas Completadas -->
     <div class="task-category">
-      <h2 class="category-title">Asignaciones Revisadas</h2>
+      <h2 class="category-title">Proyectos en proceso</h2>
       <ion-accordion-group *ngIf="doneTasks.length > 0">
         <ion-accordion *ngFor="let task of doneTasks" class="task-accordion completed">
           <ion-item slot="header" lines="none">

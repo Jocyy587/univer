@@ -1,4 +1,4 @@
-<ion-content [fullscreen]="true" class="login-page">
+<ion-content [fullscreen]="true" class="login-page" [class.registered-background]="isRegistered$ | async">
   <!-- Contenedor que muestra el formulario de registro SI NO está registrado -->
   <ng-container *ngIf="!(isRegistered$ | async); else activitiesView">
     <ion-grid>

@@ -7,6 +7,12 @@
     padding-left: 2rem;
   }
 
+  // Estilo para el enlace del logo, para quitar el subrayado
+  .logo-link {
+    text-decoration: none;
+    color: inherit;
+  }
+
   .logo-container {
     position: relative;
     display: flex;

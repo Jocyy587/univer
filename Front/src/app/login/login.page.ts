@@ -1,19 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ModalController, IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
 import { leafOutline } from 'ionicons/icons';
-import { 
-  IonContent, 
-  IonItem, 
-  IonLabel, 
-  IonInput, 
-  IonButton,
-  IonIcon,
-  ToastController,
-  AlertController
-} from '@ionic/angular/standalone';
+import { PasswordResetModalComponent } from '../components/password-reset-modal/password-reset-modal.component';
+import { ToastController, AlertController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -21,16 +14,7 @@ import { AuthService } from '../services/auth.service';
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [
-    CommonModule, 
-    FormsModule, 
-    IonContent, 
-    IonItem, 
-    IonLabel, 
-    IonInput, 
-    IonButton,
-    IonIcon
-  ],
+  imports: [CommonModule, FormsModule, IonicModule, PasswordResetModalComponent],
 })
 export class LoginPage {
   credentials = {
@@ -42,7 +26,8 @@ export class LoginPage {
     private router: Router,
     private toastController: ToastController,
     private authService: AuthService, // Inyectar el servicio de autenticación
-    private alertController: AlertController // Inyectar el controlador de alertas
+    private alertController: AlertController, // Inyectar el controlador de alertas
+    private modalCtrl: ModalController
   ) {
     addIcons({ leafOutline });
   }
@@ -73,5 +58,12 @@ export class LoginPage {
       position: 'bottom'
     });
     await toast.present();
+  }
+
+  async openPasswordResetModal() {
+    const modal = await this.modalCtrl.create({
+      component: PasswordResetModalComponent,
+    });
+    await modal.present();
   }
 }

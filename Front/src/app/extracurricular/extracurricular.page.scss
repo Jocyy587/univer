@@ -8,7 +8,7 @@
   min-height: 100vh;
   padding: 0;
   overflow: hidden;
-  --background: #000; // Fondo negro
+  --background: #414141; // Fondo negro
 }
 
 .bg-video {
@@ -336,7 +336,7 @@
     height: 9px;
     border-radius: 50%;
     border: 1px solid var(--ion-color-success, #5a9c00);
-    background-color: #000; // Asumiendo fondo negro
+    background-color: #272727; // Asumiendo fondo negro
     z-index: 1;
   }
 
@@ -361,4 +361,8 @@
     height: auto;
     text-transform: none;
   }
+}
+/* Fondo que se aplica a ion-content cuando el estudiante ya está registrado */
+.registered-background {
+  --background: linear-gradient(to bottom, var(--brand-dark, #1a1a1a) 0%, #8c6d36 100%) !important;
 }

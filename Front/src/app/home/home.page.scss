@@ -7,13 +7,15 @@
   // --- Variables de color (tomadas de la imagen) ---
   --brand-green: #5a9c00;   /* El verde específico para títulos y enlaces */
   --brand-neon: #6ff34a;    /* Verde brillante para títulos grandes */
-  --brand-dark: #000000;    /* Fondo negro puro */
+  --brand-dark: #272727;    /* Fondo gris oscuro */
   --brand-header: #1e1a0d;  /* El marrón/oliva oscuro del header */
   --brand-yellow: #f1c40f;  /* Amarillo para las tarjetas de noticias */
   --brand-orange: #d35400; /* Naranja para los nuevos divisores */
   --brand-divider: #8c6d36; /* El color dorado/marrón de las líneas */
   --text-light: #f4f4f4;
   --text-muted: #ccc;
+    --brand-divider2: #363636; /* El color dorado/marrón de las líneas */
+
 
   // --- Estilos del Header ---
   // Hacemos referencia a la clase que pusimos en el HTML
@@ -86,6 +88,11 @@
       transform: translate(-50%, -50%) scale(1.1);
       color: rgba(255, 255, 255, 1);
     }
+  }
+
+  // Estilo para el enlace del título principal
+  .main-title-link {
+    text-decoration: none; // Quita el subrayado
   }
 
   .main-title {
@@ -225,6 +232,10 @@
     margin-left: auto;
     margin-right: auto;
   }
+  .card-link-area {
+  text-decoration: none; /* Quita el subrayado del enlace */
+  cursor: pointer;       /* Cambia el cursor a una mano al pasar por encima */
+}
 
   .news-list {
     background: transparent;
@@ -935,11 +946,30 @@ clip-path: path('M 90 0 C 100 15 60 100 10 150 C 1 1 1 200 0 55 C 5 30 30 5 85 0
 
     .project-carousel-image {
       width: 100%;
-      height: auto;
+      /* Forzar un alto fijo y usar object-fit para recortar centrado.
+         Esto asegura que todas las imágenes del carrusel parezcan del mismo tamaño
+         independientemente de su resolución/orientación original. */
+      height: 220px;
+      max-height: 320px;
+      object-fit: cover;
+      object-position: center center;
       border-radius: 12px;
       display: block;
       transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
       z-index: 2; /* image below the title when title is brought forward */
+    }
+
+    /* Ajustes responsivos: aumentar altura en pantallas más grandes */
+    @media (min-width: 768px) {
+      .project-carousel-image {
+        height: 260px;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .project-carousel-image {
+        height: 300px;
+      }
     }
 
     .project-carousel-title {

@@ -32,17 +32,22 @@
     <div class="login-panel">
       <form (ngSubmit)="onRegister()" #registroForm="ngForm" class="login-form">
         <ion-item lines="none" class="input-item">
-          <ion-label position="stacked">Nombre Completo</ion-label>
+          <ion-label position="stacked">Nombre completo</ion-label>
           <ion-input type="text" [(ngModel)]="credentials.nombre" name="nombre" required></ion-input>
         </ion-item>
 
         <ion-item lines="none" class="input-item">
-          <ion-label position="stacked">Matrícula</ion-label>
+          <ion-label position="stacked">Apellidos</ion-label>
+          <ion-input type="text" [(ngModel)]="credentials.apellidos" name="apellidos" required></ion-input>
+        </ion-item>
+
+        <ion-item lines="none" class="input-item">
+          <ion-label position="stacked">Matrícula/No. Relog</ion-label>
           <ion-input type="text" [(ngModel)]="credentials.matricula" name="matricula" required></ion-input>
         </ion-item>
 
         <ion-item lines="none" class="input-item">
-          <ion-label position="stacked">Correo Electrónico</ion-label>
+          <ion-label position="stacked">Correo electrónico</ion-label>
           <ion-input type="email" [(ngModel)]="credentials.correo" name="correo" required email></ion-input>
         </ion-item>
 
@@ -52,7 +57,7 @@
         </ion-item>
 
         <ion-item lines="none" class="input-item">
-          <ion-label position="stacked">Confirmar Contraseña</ion-label>
+          <ion-label position="stacked">Confirmar contraseña</ion-label>
           <ion-input type="password" [(ngModel)]="credentials.confirmPassword" name="confirmPassword" required></ion-input>
         </ion-item>
 

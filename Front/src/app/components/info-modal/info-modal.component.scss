@@ -45,3 +45,21 @@
     }
   }
 }
+
+/*
+  Estilos para el modal circular.
+  Estos estilos se aplican globalmente porque Ionic mueve el modal fuera del componente.
+  Usamos ::ng-deep para asegurarnos de que los estilos se apliquen correctamente.
+*/
+::ng-deep .info-modal-circular {
+  // Ajustamos el contenedor principal del modal
+  .modal-wrapper {
+    width: 90vw;
+    height: 90vw;
+    max-width: 500px;
+    max-height: 500px;
+    border-radius: 50%; // ¡La clave para hacerlo circular!
+    overflow: hidden; // Oculta las esquinas que se salen del círculo
+    border: 2px solid var(--brand-green); // Añadimos un borde para definir la forma
+  }
+}

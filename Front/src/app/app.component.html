@@ -3,10 +3,12 @@
     <ion-toolbar class="header-dark">
       <!-- Logo y Título a la Izquierda -->
       <ion-buttons slot="start" class="logo-section">
-        <div class="logo-container">
-          <ion-icon name="leaf-outline" class="leaf-icon bottom-left"></ion-icon>
-          <ion-title>UTCJ-CA-19</ion-title>
-        </div>
+        <a [routerLink]="['/home']" class="logo-link">
+          <div class="logo-container">
+            <ion-icon name="leaf-outline" class="leaf-icon bottom-left"></ion-icon>
+            <ion-title>UTCJ-CA-19</ion-title>
+          </div>
+        </a>
       </ion-buttons>
 
       <!-- Menú de hamburguesa para móviles -->
