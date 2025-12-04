@@ -7,7 +7,7 @@
   // --- Variables de color (tomadas de la imagen) ---
   --brand-green: #5a9c00;   /* El verde específico para títulos y enlaces */
   --brand-neon: #6ff34a;    /* Verde brillante para títulos grandes */
-  --brand-dark: #272727;    /* Fondo gris oscuro */
+  --brand-dark: #e0e0e0;    /* Fondo gris oscuro */
   --brand-header: #1e1a0d;  /* El marrón/oliva oscuro del header */
   --brand-yellow: #f1c40f;  /* Amarillo para las tarjetas de noticias */
   --brand-orange: #d35400; /* Naranja para los nuevos divisores */
@@ -27,13 +27,13 @@
 
   .logo-icon {
     color: var(--brand-green);
-    font-size: 1.8rem;
+    font-size: 2.8rem;
     margin-right: 8px;
   }
 
   .header-title {
     color: var(--text-light);
-    font-size: 1.1rem;
+    font-size: 2.1rem;
     font-weight: bold;
   }
 
@@ -61,10 +61,10 @@
   // --- Columna Izquierda ---
   .video-placeholder {
     position: relative;
-    width: 85%; // Hacemos el contenedor un poco más ancho
+    width: 45%; // Hacemos el contenedor un poco más ancho
     margin: 2rem auto; // Lo centramos y añadimos un margen vertical
     cursor: pointer;
-    aspect-ratio: 21 / 9; // Una proporción más ancha, cinematográfica
+    aspect-ratio: 1 / 1; // Proporción cuadrada
     
     .main-image {
       width: 100%;
@@ -79,7 +79,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 6rem;
+      font-size: 8rem;
       color: rgba(255, 255, 255, 0.85);
       transition: all 0.2s ease-in-out;
     }
@@ -204,12 +204,12 @@
     margin: 2rem 0;
     margin-left: auto;
     margin-right: auto;
-    font-size: 2rem;
+    font-size: 4rem;
   }
 
   .text-light {
     color: var(--text-light);
-    font-size: 1rem;
+    font-size: 2rem;
     line-height: 1.6;
     text-align: center;
     padding: 0 2rem; // Añadimos padding para que el texto no se pegue a los bordes
@@ -266,8 +266,7 @@
       // Lo sacamos del flujo normal para posicionarlo abajo
       position: absolute;
       bottom: 0;
-      left: 90px; // <-- Ajuste clave: El footer empieza después de la imagen
-      left: 106px; // Ajustamos para el tamaño original de la imagen (90px + 1rem de margen)
+      left: 166px; // Ajustamos para el nuevo tamaño de imagen (150px + 1rem de margen)
       right: 0;
       // Estilos que ya tenía
       display: flex;
@@ -287,12 +286,12 @@
     }
 
     ion-thumbnail {
-      --size: 70px; // Hacemos la imagen un poco más pequeña
-      --size: 90px; // Devolvemos al tamaño original para que el clip-path funcione
+      --size: 140px; // Aumentamos más el tamaño de la miniatura
       --border-radius: 8px;
       margin-right: 1rem;
-      /* Recortamos solo las miniaturas con la forma de hoja */
-clip-path: path('M 90 0 C 100 15 60 100 10 150 C 1 1 1 200 0 55 C 5 30 30 5 85 0 Z');    }
+      /* Recortamos solo las miniaturas con la forma de hoja - escala más grande */
+      clip-path: path('M 140 1 C 140 25 100 160 20 250 C 1 1 1 320 0 90 C 10 50 50 5 145 0 Z');
+    }
 
     ion-label {
       white-space: normal;
@@ -326,10 +325,19 @@ clip-path: path('M 90 0 C 100 15 60 100 10 150 C 1 1 1 200 0 55 C 5 30 30 5 85 0
     }
 
     h3.title-green {
-      font-size: 1.1rem; // Reajustamos el tamaño del título
+      font-size: 1.8rem; // Reajustamos el tamaño del título
       text-align: center; // Centramos el título
-      margin: 0 0 0.5rem 0;
+      margin: 0 0 0.3rem 0;
       color: var(--brand-yellow); // Cambiamos el color a amarillo
+    }
+
+    h4.subtitle-green {
+      font-size: 0.8rem;
+      font-weight: 400;
+      text-align: center;
+      margin: 0;
+      color: var(--brand-yellow);
+      letter-spacing: 0.5px;
     }
 
     .text-date {
@@ -898,7 +906,7 @@ clip-path: path('M 90 0 C 100 15 60 100 10 150 C 1 1 1 200 0 55 C 5 30 30 5 85 0
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       scroll-snap-type: x mandatory;
-      gap: 1rem;
+      gap: 0.5rem;
       /* ampliar el padding inferior para que los títulos que se mueven abajo queden visibles
          sin que el usuario tenga que scrollear la página */
       padding-bottom: 7rem;
@@ -949,8 +957,8 @@ clip-path: path('M 90 0 C 100 15 60 100 10 150 C 1 1 1 200 0 55 C 5 30 30 5 85 0
       /* Forzar un alto fijo y usar object-fit para recortar centrado.
          Esto asegura que todas las imágenes del carrusel parezcan del mismo tamaño
          independientemente de su resolución/orientación original. */
-      height: 220px;
-      max-height: 320px;
+      height: 280px;
+      max-height: 400px;
       object-fit: cover;
       object-position: center center;
       border-radius: 12px;
@@ -962,13 +970,13 @@ clip-path: path('M 90 0 C 100 15 60 100 10 150 C 1 1 1 200 0 55 C 5 30 30 5 85 0
     /* Ajustes responsivos: aumentar altura en pantallas más grandes */
     @media (min-width: 768px) {
       .project-carousel-image {
-        height: 260px;
+        height: 320px;
       }
     }
 
     @media (min-width: 1200px) {
       .project-carousel-image {
-        height: 300px;
+        height: 360px;
       }
     }
 
@@ -1028,8 +1036,8 @@ clip-path: path('M 90 0 C 100 15 60 100 10 150 C 1 1 1 200 0 55 C 5 30 30 5 85 0
       --background: rgba(0,0,0,0.45);
       color: var(--brand-green);
       border-radius: 50%;
-      width: 44px;
-      height: 44px;
+      width: 56px;
+      height: 56px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1040,7 +1048,7 @@ clip-path: path('M 90 0 C 100 15 60 100 10 150 C 1 1 1 200 0 55 C 5 30 30 5 85 0
     .carousel-nav.next { right: 8px; }
 
     .carousel-nav ion-icon {
-      font-size: 1.4rem;
+      font-size: 1.8rem;
       color: var(--brand-green);
     }
   }
@@ -1054,12 +1062,12 @@ clip-path: path('M 90 0 C 100 15 60 100 10 150 C 1 1 1 200 0 55 C 5 30 30 5 85 0
   }
 
   .letter {
-    font-size: 3rem;
+    font-size: 4.5rem;
     font-weight: 500;
   }
 
   .leaf-separator {
-    font-size: 2.2rem;
+    font-size: 3rem;
     margin: 0 0.25rem;
     --ionicon-stroke-width: 24px;
   }

@@ -40,3 +40,31 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+/* ========== Estilos personalizados para modal circular ========== */
+.info-modal-circular {
+  --width: 95vw;
+  --height: 95vw;
+  --max-width: 800px;
+  --max-height: 800px;
+  --border-radius: 5%;
+}
+
+.info-modal-circular ion-modal {
+  --width: 95vw;
+  --height: 95vw;
+  --max-width: 800px;
+  --max-height: 800px;
+  --border-radius: 50%;
+}
+
+.info-modal-circular ion-modal::part(content) {
+  border-radius: 50% !important;
+  overflow: auto !important;
+  border: 3px solid #5a9c00 !important;
+  box-shadow: 0 0 30px rgba(90, 156, 0, 0.3) !important;
+  width: 95vw !important;
+  height: 95vw !important;
+  max-width: 800px !important;
+  max-height: 800px !important;
+}
