@@ -4,7 +4,85 @@
 :host {
   // Aplicamos el fondo oscuro a toda la página de asignaciones
   ion-content {
-  --background: linear-gradient(to bottom, var(--brand-dark, #1a1a1a) 0%, #8c6d36 100%);
-    --background: linear-gradient(to bottom, var(--brand-dark, #1a1a1a) 0%, #8c6d36 100%);
+    --background: linear-gradient(to bottom, var(--brand-dark, #1a1a1a) 0%, #000000 100%) !important;
+  }
+}
+
+/* Trello board styles (match look used in other pages) */
+.trello-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  padding: 1rem;
+  align-items: start;
+}
+
+.board-column {
+  background: transparent;
+  min-height: 120px;
+}
+
+.board-column .task-category {
+  background: linear-gradient(180deg, rgba(10,10,12,0.6), rgba(18,18,20,0.55));
+  border-radius: 12px;
+  padding: 0.6rem;
+  box-shadow: 0 10px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+  display: flex;
+  flex-direction: column;
+  color: #e6eef8;
+}
+
+.board-column .category-title {
+  font-size: 1.05rem;
+  margin: 0 0 0.6rem 0;
+  color: #fff9c4; /* soft yellow accent for titles */
+  text-shadow: 0 1px 0 rgba(0,0,0,0.6);
+}
+
+.board-column .empty-state {
+  text-align: center;
+  opacity: 0.85;
+  padding: 1rem 0.6rem;
+  color: #cbd6e4;
+}
+
+/* Style the ion-accordion items so they look like dark Trello cards */
+::ng-deep .board-column ion-accordion.task-accordion {
+  margin: 0 0 0.6rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #0f1113, #17181b);
+  color: #e7eef8;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.02) inset;
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+::ng-deep .board-column ion-accordion.task-accordion ion-item[slot="header"] {
+  --background: transparent;
+  padding: 0.7rem 0.9rem;
+  color: #eef6ff;
+}
+
+::ng-deep .board-column ion-accordion.task-accordion ion-item[slot="header"] ion-label {
+  color: #eef6ff;
+}
+
+::ng-deep .board-column ion-accordion.task-accordion .ion-padding[slot="content"] {
+  padding: 0.8rem 0.9rem;
+  background: transparent;
+  color: #cfe3fb;
+}
+
+/* Badge adjustments for dark backgrounds */
+::ng-deep .board-column ion-badge {
+  --background: rgba(255,255,255,0.06);
+  color: #fff;
+  font-weight: 600;
+}
+
+
+@media (max-width: 900px) {
+  .trello-board {
+    grid-template-columns: 1fr;
   }
 }

@@ -38,6 +38,10 @@ export const routes: Routes = [
     path: 'asignaciones',
     loadComponent: () => import('./asignaciones/asignaciones.page').then( m => m.AsignacionesPage)
   },
+  {
+    path: 'alumnos',
+    loadComponent: () => import('./alumnos/alumnos.page').then( m => m.AlumnosPage)
+  },
 
 
 

@@ -3,6 +3,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { take } from 'rxjs';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { AuthService } from 'src/app/services/auth.service';
 import { environment } from 'src/environments/environment';
 
@@ -24,7 +26,7 @@ interface Tarea {
   templateUrl: './student-activitie.component.html',
   styleUrls: ['./student-activitie.component.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule]
+  imports: [IonicModule, CommonModule, DragDropModule]
 })
 export class StudentActivitieComponent implements OnInit {
 
@@ -47,6 +49,42 @@ export class StudentActivitieComponent implements OnInit {
         this.loadTasks();
       }
     });
+  }
+
+  drop(event: CdkDragDrop<Tarea[]>) {
+    // If dropped into same container -> reorder
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      // Move between containers
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+
+      // Persist change: update estado based on target container
+      const movedTask: Tarea = event.container.data[event.currentIndex];
+      let newEstado: 'To-do' | 'Doing' | 'Done' = 'To-do';
+      // Decide new state by which array it now belongs to
+      if (this.todoTasks.includes(movedTask)) newEstado = 'To-do';
+      else if (this.doingTasks.includes(movedTask)) newEstado = 'Doing';
+      else if (this.doneTasks.includes(movedTask)) newEstado = 'Done';
+
+      // Call backend to persist
+      this.updateTaskEstado(movedTask.id, newEstado).subscribe({
+        next: () => {
+          // optionally show toast
+        },
+        error: (err) => console.error('Error updating task state', err)
+      });
+    }
+  }
+
+  updateTaskEstado(taskId: string, estado: 'To-do' | 'Doing' | 'Done') {
+    const endpoint = `${environment.apiUrl}/tareas/${taskId}/estado`;
+    return this.http.patch(endpoint, { estado });
   }
 
   loadTasks() {

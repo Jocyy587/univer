@@ -4,7 +4,7 @@
     <ion-grid>
       <ion-row class="ion-align-items-center">
         <!-- Columna Izquierda (Formulario) -->
-        <ion-col size-lg="7" size-md="7" size-xs="12">
+        <ion-col size-lg="12" size-md="12" size-xs="12">
           <div class="login-wrapper">
             <!-- Formas decorativas de fondo, ahora relativas al wrapper -->
             <div class="shape-container top-left">
@@ -61,68 +61,15 @@
           </div>
         </ion-col>
   
-        <!-- Columna Derecha (Lista de noticias) -->
-        <ion-col size-lg="5" size-md="5" size-xs="12" class="ion-padding news-column">
-          <div class="news-list">
-            <!-- Item 1 -->
-            <ion-card class="news-card">
-              <ion-item lines="none" class="news-item">
-                <div class="card-link-area" [routerLink]="['/pueba']">
-                  <ion-thumbnail slot="start">
-                    <img src="/assets/img/img1.png" alt="Noticia 1" />
-                  </ion-thumbnail>
-                  <ion-label>
-                    <h3 class="title-green">UTCJ Sustentable</h3>
-                  </ion-label>
-                </div>
-                <div class="card-footer" slot="end">
-                  <p class="text-date">01-02-2003</p>
-                  <ion-button fill="clear" size="small" class="read-more-button" (click)="openModal('UTCJ Sustentable')">Leer más &gt;</ion-button>
-                </div>
-              </ion-item>
-            </ion-card>
-            <!-- Item 2 -->
-            <ion-card class="news-card">
-              <ion-item lines="none" class="news-item">
-                <div class="card-link-area" [routerLink]="['/pueba']">
-                  <ion-thumbnail slot="start">
-                    <img src="/assets/img/img1.png" alt="Noticia 2" />
-                  </ion-thumbnail>
-                  <ion-label>
-                    <h3 class="title-green">Proyectos del cuerpo Académico</h3>
-                  </ion-label>
-                </div>
-                <div class="card-footer" slot="end">
-                  <p class="text-date">01-02-2003</p>
-                  <ion-button fill="clear" size="small" class="read-more-button" (click)="openModal('Proyectos del cuerpo Académico')">Leer más &gt;</ion-button>
-                </div>
-              </ion-item>
-            </ion-card>
-            <!-- Item 3 -->
-            <ion-card class="news-card">
-              <ion-item lines="none" class="news-item">
-                <div class="card-link-area" [routerLink]="['/pueba']">
-                  <ion-thumbnail slot="start">
-                    <img src="/assets/img/img1.png" alt="Noticia 3" />
-                  </ion-thumbnail>
-                  <ion-label>
-                    <h3 class="title-green">Cuerpo Académico</h3>
-                  </ion-label>
-                </div>
-                <div class="card-footer" slot="end">
-                  <p class="text-date">01-02-2003</p>
-                  <ion-button fill="clear" size="small" class="read-more-button" (click)="openModal('Cuerpo Académico')">Leer más &gt;</ion-button>
-                </div>
-              </ion-item>
-            </ion-card>
-          </div>
-        </ion-col>
       </ion-row>
     </ion-grid>
   </ng-container>
   
   <!-- Template que se muestra SI el usuario YA está registrado -->
   <ng-template #activitiesView>
-    <app-student-activitie></app-student-activitie>
+    <div class="trello-board">
+      <!-- Usamos el componente existente, pero lo presentamos en un layout de 3 columnas -->
+      <app-student-activitie></app-student-activitie>
+    </div>
   </ng-template>
 </ion-content>

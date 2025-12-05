@@ -26,6 +26,9 @@
         <ion-button class="nav-link" routerLink="/asignaciones" *ngIf="(isAuthenticated$ | async) && !(isStudent$ | async)">ASIGNACIONES</ion-button>
         <ion-button class="nav-link" routerLink="/actividades" *ngIf="(isAuthenticated$ | async) && !(isStudent$ | async)">ACTIVIDADES</ion-button>
 
+        <!-- Alumnos: Visible solo para admin/maestro -->
+        <ion-button class="nav-link" routerLink="/alumnos" *ngIf="(isAuthenticated$ | async) && !(isStudent$ | async)">ALUMNOS</ion-button>
+
         <!-- CAT-19: Visible solo si está autenticado Y es admin -->
         <ion-button class="nav-link" routerLink="/cat19" *ngIf="(isAuthenticated$ | async) && (isAdmin$ | async)">ADMIN</ion-button>
 

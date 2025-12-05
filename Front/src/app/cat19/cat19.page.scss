@@ -6,7 +6,7 @@
   ion-content {
     // Degradado lineal de negro (arriba) a verde (abajo)
     // Cambiamos el verde por el tono dorado/marrón más sobrio que pediste.
-    --background: linear-gradient(to bottom, var(--brand-dark, #1a1a1a) 0%, #8c6d36 100%);
+  --background: linear-gradient(to bottom, var(--brand-dark, #1a1a1a) 0%, #000000 100%) !important;
   }
 }
 

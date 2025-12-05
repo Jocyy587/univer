@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Buscar Entregas de Estudiante</ion-title>
+    <ion-title>Entregas de Estudiante</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="cancel()">Cerrar</ion-button>
     </ion-buttons>
@@ -21,22 +21,66 @@
     <ion-spinner name="crescent"></ion-spinner>
   </div>
 
-  <div *ngIf="!isLoading && searched">
-    <div *ngIf="studentTasks.length > 0; else noResults">
-      <ion-list-header>
-        <ion-label>Tareas Entregadas</ion-label>
-      </ion-list-header>
-      <ion-list>
-        <ion-item *ngFor="let task of studentTasks">
-          <ion-label>
-            <h2>{{ task.nombre }}</h2>
-            <p>Entregado: {{ task.entrega.nombreArchivo }}</p>
-          </ion-label>
-        </ion-item>
-      </ion-list>
+  <div *ngIf="!isLoading && searched" class="trello-board">
+    <div *ngIf="studentTasks.length > 0; else noResults" class="board-columns">
+      <!-- Columna: To Do -->
+      <div class="column column-todo">
+        <h3 class="column-title">📋 Por Entregar</h3>
+        <div class="cards-container">
+          <div class="card" *ngFor="let task of getTasksByStatus('pending')">
+            <div class="card-header">{{ task.nombre }}</div>
+            <div class="card-body">
+              <p><strong>Fecha límite:</strong> {{ task.fechaLimite | date:'dd/MM/yyyy' }}</p>
+              <p><strong>Estado:</strong> <span class="badge pending">Pendiente</span></p>
+            </div>
+          </div>
+          <div class="empty-state" *ngIf="getTasksByStatus('pending').length === 0">
+            <p>Sin tareas pendientes</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna: Doing -->
+      <div class="column column-doing">
+        <h3 class="column-title">🔄 En Progreso</h3>
+        <div class="cards-container">
+          <div class="card" *ngFor="let task of getTasksByStatus('in_progress')">
+            <div class="card-header">{{ task.nombre }}</div>
+            <div class="card-body">
+              <p><strong>Progreso:</strong> {{ task.progress }}%</p>
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="task.progress"></div>
+              </div>
+              <p><strong>Estado:</strong> <span class="badge doing">En Progreso</span></p>
+            </div>
+          </div>
+          <div class="empty-state" *ngIf="getTasksByStatus('in_progress').length === 0">
+            <p>Sin tareas en progreso</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna: Done -->
+      <div class="column column-done">
+        <h3 class="column-title">✅ Completadas</h3>
+        <div class="cards-container">
+          <div class="card completed" *ngFor="let task of getTasksByStatus('completed')">
+            <div class="card-header">{{ task.nombre }}</div>
+            <div class="card-body">
+              <p><strong>Archivo:</strong> {{ task.entrega.nombreArchivo }}</p>
+              <p><strong>Fecha:</strong> {{ task.entrega.fechaEntrega | date:'dd/MM/yyyy HH:mm' }}</p>
+              <p><strong>Estado:</strong> <span class="badge done">Completada</span></p>
+            </div>
+          </div>
+          <div class="empty-state" *ngIf="getTasksByStatus('completed').length === 0">
+            <p>Sin tareas completadas</p>
+          </div>
+        </div>
+      </div>
     </div>
+
     <ng-template #noResults>
-      <p class="ion-text-center ion-padding">El estudiante no ha entregado ninguna tarea.</p>
+      <p class="ion-text-center ion-padding no-results">El estudiante no ha entregado ninguna tarea.</p>
     </ng-template>
   </div>
 </ion-content>

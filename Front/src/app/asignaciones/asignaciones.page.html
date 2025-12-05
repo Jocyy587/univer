@@ -8,9 +8,10 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div class="student-view">
-    <!-- Tareas Pendientes -->
-    <div class="task-category">
+  <div class="trello-board">
+    <div class="board-column">
+      <!-- Tareas Pendientes -->
+      <div class="task-category">
       <h2 class="category-title">Proyectos pendientes</h2>
       <ion-accordion-group *ngIf="todoTasks.length > 0">
         <ion-accordion *ngFor="let task of todoTasks" class="task-accordion pending">
@@ -34,10 +35,12 @@
         <ion-icon name="sunny-outline"></ion-icon>
         <p>¡Felicidades! No tienes asignaciones pendientes.</p>
       </div>
+      </div>
     </div>
-  
-    <!-- Tareas en Revisión -->
-    <div class="task-category">
+
+    <div class="board-column">
+      <!-- Tareas en Revisión -->
+      <div class="task-category">
       <h2 class="category-title">Proyectos asignados</h2>
       <ion-accordion-group *ngIf="doingTasks.length > 0">
         <ion-accordion *ngFor="let task of doingTasks" class="task-accordion in-review">
@@ -55,10 +58,12 @@
         <ion-icon name="reader-outline"></ion-icon>
         <p>No has completado ninguna asignación.</p>
       </div>
+      </div>
     </div>
-  
-    <!-- Tareas Completadas -->
-    <div class="task-category">
+
+    <div class="board-column">
+      <!-- Tareas Completadas -->
+      <div class="task-category">
       <h2 class="category-title">Proyectos en proceso</h2>
       <ion-accordion-group *ngIf="doneTasks.length > 0">
         <ion-accordion *ngFor="let task of doneTasks" class="task-accordion completed">
@@ -80,6 +85,7 @@
       <div *ngIf="doneTasks.length === 0" class="empty-state">
         <ion-icon name="school-outline"></ion-icon>
         <p>No hay asignaciones en este estado.</p>
+      </div>
       </div>
     </div>
   </div>

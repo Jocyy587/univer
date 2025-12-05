@@ -15,13 +15,8 @@ export class Firebase {
   constructor(private http: HttpClient) { }
 
   getUsuarios(): Observable<Usuario[]> {
-    return this.http.get<{ [key: string]: Omit<Usuario, 'id'> }>(`${environment.apiUrl}/usuarios`).pipe(
-      map(data => {
-        // Transformamos el objeto que devuelve Firebase en un array de Usuarios
-        // para que sea más fácil de usar en el frontend con *ngFor.
-        return Object.keys(data).map(key => ({ id: key, ...data[key] }));
-      })
-    );
+    // El backend ahora devuelve un array directamente, así que ya no necesitamos el 'map'.
+    return this.http.get<Usuario[]>(`${environment.apiUrl}/usuarios`);
   }
  getExtracurricularStatus(userId: string): Observable<{ isRegistered: boolean }> {
   return this.http.get<{ isRegistered: boolean }>(`${environment.apiUrl}/extracurricular/status/${userId}`);

@@ -727,6 +727,8 @@ try {
 
   // Obtener todos los usuarios
   app.get('/usuarios', async (req, res) => {
+    const { role } = req.query; // Capturamos el query param 'role'
+
     try {
       const usersRef = db.ref('usuarios');
       const snapshot = await usersRef.once('value');
@@ -735,10 +737,16 @@ try {
       }
       const usersData = snapshot.val();
       // Mapeamos los usuarios para incluir su ID y quitar la contraseña
-      const usersList = Object.keys(usersData).map(key => {
+      let usersList = Object.keys(usersData).map(key => {
         const { contraseña, ...user } = usersData[key];
         return { id: key, ...user };
       });
+
+      // Si se especifica un rol, filtramos la lista
+      if (role) {
+        usersList = usersList.filter(user => user.Rol && user.Rol.toLowerCase() === role.toLowerCase());
+      }
+
       res.json(usersList);
     } catch (error) {
       console.error('Error al obtener usuarios:', error);

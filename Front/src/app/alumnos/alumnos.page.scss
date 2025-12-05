@@ -1,0 +1,142 @@
+// Variables de color consistentes con el resto de la app
+:host {
+  --brand-green: #5a9c00;
+  --brand-neon: #6ff34a;
+  --brand-dark: #414141;
+  --brand-header: #1e1a0d;
+  --brand-orange: #d35400;
+  --text-light: #f4f4f4;
+  --text-muted: #ccc;
+  --card-bg: #2d2d2d;
+  --border-color: rgba(90, 156, 0, 0.3);
+}
+
+// Estilos del Header (similar a home)
+.header-dark {
+  --background: var(--brand-header);
+  --color: var(--text-light);
+  border-bottom: 1px solid var(--brand-green);
+
+  ion-title {
+    color: var(--text-light);
+  }
+}
+
+// Fondo del contenido
+ion-content.content-dark {
+  --background: var(--brand-dark);
+  --color: var(--text-light);
+}
+
+// Contenedor de la barra de búsqueda
+.search-container {
+  padding: 1rem 1rem 0;
+  background-color: var(--brand-dark);
+}
+
+// Estilo personalizado para la barra de búsqueda
+.custom-searchbar {
+  --background: var(--card-bg);
+  --color: var(--text-light);
+  --placeholder-color: var(--text-muted);
+  --icon-color: var(--brand-green);
+  --clear-button-color: var(--text-muted);
+  --border-radius: 25px;
+  padding: 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+// Contenedor para el spinner de carga
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+
+  ion-spinner {
+    width: 50px;
+    height: 50px;
+    --color: var(--brand-green);
+  }
+}
+
+// Avatar con la inicial
+.alumno-avatar {
+  --border-radius: 50%;
+  background-color: var(--brand-green);
+  color: var(--brand-header);
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 48px;
+}
+
+// Matrícula del alumno
+.matricula-note {
+  color: var(--brand-green);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+// Mensaje cuando no hay resultados
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  text-align: center;
+  color: var(--text-muted);
+  padding: 2rem;
+
+  ion-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    color: var(--brand-green);
+    opacity: 0.6;
+  }
+}
+
+/* --- Estilos del Acordeón --- */
+.alumnos-accordion-group {
+  margin: 1rem;
+  background: transparent;
+}
+
+.alumno-accordion {
+  background: var(--card-bg);
+  border-radius: 12px;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-color);
+
+  // Ocultamos el ícono de flecha por defecto
+  &::part(indicator) {
+    display: none;
+  }
+}
+
+.accordion-header {
+  --background: transparent;
+  --border-color: transparent;
+  --padding-start: 1rem;
+  --padding-end: 1rem;
+
+  h2 {
+    color: var(--text-light);
+    font-weight: 600;
+  }
+}
+
+.accordion-content {
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-color);
+
+  p {
+    margin: 0.5rem 0;
+    font-size: 0.95rem;
+  }
+}

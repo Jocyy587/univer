@@ -1,0 +1,47 @@
+<ion-header class="header-dark">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Alumnos Registrados</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="content-dark">
+  <div class="search-container">
+    <ion-searchbar 
+      placeholder="Buscar por nombre..." 
+      (ionInput)="search($event)"
+      debounce="300"
+      animated="true"
+      class="custom-searchbar">
+    </ion-searchbar>
+  </div>
+
+  <div *ngIf="isLoading" class="spinner-container">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <ion-accordion-group *ngIf="!isLoading" class="alumnos-accordion-group">
+    <ion-accordion *ngFor="let alumno of filteredAlumnos" class="alumno-accordion">
+      <ion-item slot="header" class="accordion-header">
+        <ion-avatar slot="start" class="alumno-avatar">
+          <span>{{ alumno.nombre.charAt(0) }}</span>
+        </ion-avatar>
+        <ion-label>
+          <h2>{{ alumno.nombre }}</h2>
+        </ion-label>
+        <ion-note slot="end" class="matricula-note">{{ alumno.matricula }}</ion-note>
+      </ion-item>
+      <div class="ion-padding accordion-content" slot="content">
+        <p><strong>Nombre Completo:</strong> {{ alumno.nombre }} {{ alumno.apellidos }}</p>
+        <p><strong>Correo:</strong> {{ alumno.correo }}</p>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
+
+  <div *ngIf="!isLoading && filteredAlumnos.length === 0" class="empty-state">
+    <ion-icon name="people-outline"></ion-icon>
+    <p>{{ allAlumnos.length > 0 ? 'No se encontraron alumnos con ese nombre.' : 'No hay alumnos registrados.' }}</p>
+  </div>
+</ion-content>

@@ -8,7 +8,7 @@
   min-height: 100vh;
   padding: 0;
   overflow: hidden;
-  --background: #414141; // Fondo negro
+  --background: #e0e0e0; // Fondo negro
 }
 
 .bg-video {
@@ -25,7 +25,7 @@
   display: flex;
   flex-direction: column; // Mantenemos la dirección de columna para el contenido del formulario
   justify-content: center;
-  align-items: flex-start; // Alinear a la izquierda
+  align-items: center; // Centrar el contenido ahora que ocupa toda la fila
   padding: 3rem;
 }
 
@@ -33,7 +33,7 @@
   color: var(--ion-color-success, #6ff34a);
   font-size: 2.8rem; // Reducimos un poco la fuente para que quepa mejor
   margin: 0 0 1rem 0;
-  text-align: left; // Alinear texto a la izquierda
+  text-align: center; // Centrar el título ahora que el layout es de una sola columna
   letter-spacing: 1px;
 }
 
@@ -364,5 +364,140 @@
 }
 /* Fondo que se aplica a ion-content cuando el estudiante ya está registrado */
 .registered-background {
-  --background: linear-gradient(to bottom, var(--brand-dark, #1a1a1a) 0%, #8c6d36 100%) !important;
+  --background: linear-gradient(to bottom, var(--brand-dark, #1a1a1a) 0%, #000000 100%) !important;
+}
+
+/* === Estilos tipo Trello para extracurricular === */
+.trello-board {
+  padding: 1rem 0;
+  margin-top: 3rem; /* bajar el tablero más hacia abajo */
+}
+
+.trello-board .board-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.trello-board .column {
+  background: rgba(20,20,20,0.45);
+  border: 1px solid rgba(111,243,74,0.06);
+  border-radius: 10px;
+  padding: 1rem;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.trello-board .column-title {
+  font-weight: 700;
+  color: var(--ion-color-success, #6ff34a);
+  margin: 0 0 0.75rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(111,243,74,0.04);
+}
+
+.trello-board .cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  overflow-y: auto;
+  padding-right: 6px; /* espacio para scrollbar */
+}
+
+.trello-board .card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.03);
+  border-radius: 8px;
+  padding: 0.85rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.trello-board .card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.45);
+}
+
+.trello-board .card-header {
+  color: var(--text-light, #c9d1d9);
+  font-weight: 600;
+  margin-bottom: 0.45rem;
+}
+
+.trello-board .card-body {
+  color: #9aa6b2;
+  font-size: 0.9rem;
+}
+
+.trello-board .progress-bar {
+  background: rgba(255,255,255,0.03);
+  height: 8px;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 0.5rem 0;
+}
+
+.trello-board .progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #58a6ff, #2ea1ff);
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.trello-board .badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.trello-board .badge.pending { color: #58a6ff; background: rgba(88,166,255,0.07); }
+.trello-board .badge.doing   { color: #d29922; background: rgba(210,153,34,0.06); }
+.trello-board .badge.done    { color: #2fb950; background: rgba(47,185,80,0.06); }
+
+/* Responsiveness */
+@media (max-width: 720px) {
+  .trello-board .board-columns {
+    grid-template-columns: 1fr;
+  }
+  .trello-board .column { min-height: 220px; }
+}
+
+/* Ajuste responsive para bajar menos en pantallas pequeñas */
+@media (max-width: 900px) {
+  .trello-board { margin-top: 1.2rem; }
+}
+
+/* Ajustes para el componente interno student-activitie: presentar sus 3 categorías en columnas */
+::ng-deep .trello-board app-student-activitie .student-view {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+::ng-deep .trello-board app-student-activitie .task-category {
+  background: rgba(20,20,20,0.45);
+  border: 1px solid rgba(111,243,74,0.06);
+  border-radius: 10px;
+  padding: 0.75rem;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+::ng-deep .trello-board app-student-activitie .category-title {
+  font-weight: 700;
+  color: var(--ion-color-success, #6ff34a);
+  margin: 0 0 0.5rem 0;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid rgba(111,243,74,0.04);
+}
+
+@media (max-width: 900px) {
+  ::ng-deep .trello-board app-student-activitie .student-view {
+    grid-template-columns: 1fr;
+  }
 }

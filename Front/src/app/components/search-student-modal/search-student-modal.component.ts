@@ -47,4 +47,24 @@ export class SearchStudentModalComponent {
       }
     });
   }
+
+  /**
+   * Clasifica las tareas por estado
+   * @param status Estado de la tarea: 'pending', 'in_progress', 'completed'
+   * @returns Array de tareas filtradas por estado
+   */
+  getTasksByStatus(status: string) {
+    return this.studentTasks.filter(task => {
+      if (!task.entrega) {
+        // Si no tiene entrega, está pendiente
+        return status === 'pending';
+      } else if (task.entrega.fechaEntrega) {
+        // Si tiene fecha de entrega, está completada
+        return status === 'completed';
+      } else {
+        // En progreso
+        return status === 'in_progress';
+      }
+    });
+  }
 }
